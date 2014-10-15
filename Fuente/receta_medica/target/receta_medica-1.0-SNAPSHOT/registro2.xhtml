@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:composition template="template.xhtml" >
+
+        <ui:define name="content">
+            <div align="center">
+                <p:outputLabel value="Formulario de inscripcion"/>
+                <br/><br/><br/>
+
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Contraseña"/>
+                    <p:password />
+                    <p:outputLabel value="Confirmar contraseña"/>
+                    <p:password/>
+                </h:panelGrid>
+                <br/><br/>
+                <p:outputLabel value="Escoger contraseña con"/><br/>
+                <p:outputLabel value="Minimo 8 caracteres"/><br/>
+                <p:outputLabel value="Minimo una letra mayuscula y una minuscula"/><br/>
+                <p:outputLabel value="Minimo un numero o caracter especial"/><br/>
+                <br/><br/><br/>
+                <p:commandButton value="Guardar"/>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
