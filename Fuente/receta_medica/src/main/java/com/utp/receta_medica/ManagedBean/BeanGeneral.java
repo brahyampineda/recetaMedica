@@ -67,15 +67,18 @@ public class BeanGeneral implements Serializable {
             System.out.println("2");
             registroActual.getRegistroPK().setAdministradoridAdministrador(getAdministrador().getIdAdministrador());
             registroActual.getRegistroPK().setUsuarioidUsuario(usuarioActual.getIdUsuario());
-//            crud.generarConsecutivo(registroActual);
             
-            registroActual.getRegistroPK().setIdRegistro(3);
+            
+            
+//            registroActual.getRegistroPK().setIdRegistro(3);
             registroActual.setAdministrador(administrador);
             registroActual.setUsuario(usuarioActual);
             registroActual.setEstado("en espera");
+            //NO SIRVE
+            crud.generarConsecutivo(registroActual);
             System.out.println("REGISTRO " + registroActual);
-            administrador.getRegistroCollection().add(registroActual);
-            crud.save(administrador);
+//            administrador.getRegistroCollection().add(registroActual);
+//            crud.save(administrador);
             crud.save(usuarioActual);
             crud.save(registroActual);
         } catch (Exception ex) {

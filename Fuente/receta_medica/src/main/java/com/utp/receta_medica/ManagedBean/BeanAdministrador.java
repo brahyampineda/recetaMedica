@@ -12,6 +12,7 @@ import com.utp.receta_medica.entidades.Medicamento;
 import com.utp.receta_medica.entidades.MedicoEspecialista;
 import com.utp.receta_medica.entidades.MedicoGeneral;
 import com.utp.receta_medica.entidades.Paciente;
+import com.utp.receta_medica.entidades.PacientePK;
 import com.utp.receta_medica.entidades.Registro;
 import com.utp.receta_medica.entidades.SolicitudQuejasReclamos;
 import com.utp.receta_medica.entidades.Usuario;
@@ -94,6 +95,7 @@ public class BeanAdministrador implements Serializable{
             if (registro.getPerfil().equals("Paciente")) {
                 Paciente paciente;
                 paciente = new Paciente();
+                paciente.setPacientePK(new PacientePK(idPaciente, perfil));
                 paciente.setUsuario(registro.getUsuario());
                 registro.getUsuario().getPacienteCollection().add(paciente);
                 crud.save(paciente);
