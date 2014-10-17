@@ -20,7 +20,9 @@ and open the template in the editor.-->
             <ui:define name="content">
                 <h:form>
                     <p:panel>
-                        <p:commandButton value="Administrador" action="#{administracion.prepararAdministracion()}"/>
+                        <p:commandButton value="Administrador" action="#{beanAdministrador.prepararAdministracion()}"/>
+                        <p:commandButton action="#{beanAdministrador.crearUsuario()}"/>
+                        <p:button value="Solicitudes, quejas y reclamos" outcome="solicitudes_quejas_reclamos"/>
                     </p:panel>   
                 </h:form>
             </ui:define>   

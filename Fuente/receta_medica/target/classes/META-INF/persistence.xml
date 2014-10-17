@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="com.utp_receta_medica_war_1.0-SNAPSHOTPU" transaction-type="JTA">
-    <jta-data-source>receta_medica</jta-data-source>
+    <jta-data-source>jdbc/medica</jta-data-source>
+    <class>com.utp.receta_medica.entidades.Administrador</class>
+    <class>com.utp.receta_medica.entidades.Medicamento</class>
+    <class>com.utp.receta_medica.entidades.MedicoEspecialista</class>
+    <class>com.utp.receta_medica.entidades.MedicoGeneral</class>
+    <class>com.utp.receta_medica.entidades.Paciente</class>
+    <class>com.utp.receta_medica.entidades.Registro</class>
+    <class>com.utp.receta_medica.entidades.SolicitudQuejasReclamos</class>
+    <class>com.utp.receta_medica.entidades.Tratamiento</class>
+    <class>com.utp.receta_medica.entidades.Usuario</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>

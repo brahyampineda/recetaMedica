@@ -23,15 +23,15 @@ and open the template in the editor.
                     </div>
                     <h:panelGrid columns="2">
                         <p:outputLabel value="Nombre"/>
-                        <p:inputText value="#{registrar.usuarioActual.nombre}"/>
+                        <p:inputText value="#{beanGeneral.usuarioActual.nombre}"/>
                         <p:outputLabel value="Apellidos"/>
-                        <p:inputText value="#{registrar.usuarioActual.apellidos}"/>
+                        <p:inputText value="#{beanGeneral.usuarioActual.apellidos}"/>
                         <p:outputLabel value="Numero de identificacion"/>
-                        <p:inputText value="#{registrar.usuarioActual.idUsuario}"/>
+                        <p:inputText value="#{beanGeneral.usuarioActual.idUsuario}"/>
                         <p:outputLabel value="Correo electrónico"/>
-                        <p:inputText value="#{registrar.usuarioActual.correo}"/>
+                        <p:inputText value="#{beanGeneral.usuarioActual.correo}"/>
                         <p:outputLabel value="Perfil"/>
-                        <p:selectOneMenu value="#{registrar.registroActual.perfil}">
+                        <p:selectOneMenu value="#{beanGeneral.registroActual.perfil}">
                             <f:selectItem itemLabel="Medico general" itemValue="Medico general" />
                             <f:selectItem itemLabel="Medico especialista" itemValue="Medico especialista" />
                             <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
@@ -39,7 +39,7 @@ and open the template in the editor.
                     </h:panelGrid>
                     <br/>  
                     <div align="center">
-                        <p:commandButton value="Registrar" action="#{registrar.registroUsuario()}"/>
+                        <p:commandButton value="Registrar" action="#{beanGeneral.registroUsuario()}"/>
                     </div>
                 </p:panel>
             </h:form>

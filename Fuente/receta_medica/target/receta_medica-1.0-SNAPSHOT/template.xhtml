@@ -19,8 +19,8 @@
             <div id="top">
                 <ui:insert name="top">
                     <div style="float:left; width: 30%; margin-top: 0px" >
-                        <p:graphicImage name="/resources/imagenes/utp.jpeg" width="20%" />
-                        <p:graphicImage name="/resources/imagenes/escudo_colombia.jpeg" width="20%"/>
+                        <!--<p:graphicImage name="/resources/imagenes/utp.jpg" width="20%" />-->
+                        <!--<p:graphicImage name="/resources/imagenes/escudo_colombia2.png" width="20%"/>-->
 
                         <!--                    <h:form>
                                                 <h3>Favoritos</h3>
@@ -31,17 +31,20 @@
                     <!--<h:form>-->
                     <div align="right">
                         <!--<h:form >-->
-                        <h:panelGrid columns="1" style="width: 215px">
-                            <!--render-->
-                            <p:outputLabel value="Usuario"/>
-                            <p:inputText />
-                            <p:outputLabel value="Contraseña"/>
-                            <p:inputText />
-                        </h:panelGrid>
-                        <h:panelGrid columns="2">
-                            <p:commandButton value="Iniciar sesion"/>
-                            <p:commandButton value="Registrarse" action="#{registrar.prepararRegistroUsuario()}"/>
-                        </h:panelGrid>
+                        <p:panel rendered="#{beanGeneral.esAdmin}">
+                            
+                            <h:panelGrid columns="1" style="width: 215px">
+                                <!--render-->
+                                <p:outputLabel value="Correo"/>
+                                <p:inputText value="#{loginBean.username}"/>
+                                <p:outputLabel value="Contraseña"/>
+                                <p:password value="#{loginBean.password}" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="Iniciar sesion" action="#{loginBean.doLogin()}"/>
+                                <p:commandButton value="Registrarse" ajax="false" action="#{beanGeneral.prepararRegistroUsuario()}"/>
+                            </h:panelGrid>
+                        </p:panel>
                         <!--</h:form>-->
                     </div>
 
@@ -75,7 +78,7 @@
                 <ui:insert name="bottom">
                     <div align="left">
                         <p:inputText/>
-                        <p:commandButton value="Buscar" />
+                        <p:commandButton value="Buscar" icon="ui-icon-search"/>
                         <p:link value="Mapa del sitio" style="float: right"/>
                     </div>
                     <div align="right">
