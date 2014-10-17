@@ -16,6 +16,7 @@ import com.utp.receta_medica.entidades.Paciente;
 import com.utp.receta_medica.entidades.PacientePK;
 import com.utp.receta_medica.entidades.Registro;
 import com.utp.receta_medica.entidades.SolicitudQuejasReclamos;
+import com.utp.receta_medica.entidades.Tratamiento;
 import com.utp.receta_medica.entidades.Usuario;
 import com.utp.receta_medica.facade.AbstractFacade;
 import com.utp.receta_medica.facade.LoginService;
@@ -60,6 +61,7 @@ public class BeanAdministrador implements Serializable{
     String perfil;
     Medicamento medicamentoActual;
     List<Medicamento> lstMedicamentos;
+    Tratamiento tratamientoActual;
     
     @PostConstruct
     private void init() {
@@ -77,6 +79,7 @@ public class BeanAdministrador implements Serializable{
             administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
             System.out.println("AMIN "+administrador);
             medicamentoActual = new Medicamento();
+            tratamientoActual = new Tratamiento();
             administrador = crud.find(administrador);
             System.out.println("AMIN22 "+administrador.getCorreo());
             for (Registro registro : administrador.getRegistroCollection()) {
@@ -144,33 +147,31 @@ public class BeanAdministrador implements Serializable{
         return "administrador";
     }
     
-    public String eliminarUsuario() {
-        Usuario user = new Usuario();
-        user.setIdUsuario("1088303030");
+    public String eliminarUsuario(Usuario user) {
         try {
-            user=crud.find(user);
             System.out.println("DSDSSDSD "+user.getNombre());
             crud.remove(user);
+            System.out.println("DSDSSDSD "+user.getNombre());
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "administrador";
+        return "index";
     }
     
-    public String crearUsuario() {
-        Usuario user = new Usuario();
-        user.setNombre("Estefania");
-        user.setApellidos("Romero");
-        user.setContrasena("estefania");
-        user.setCorreo("tefa@gmail.com");
-        user.setIdUsuario("1088303030");
-        System.out.println("USER "+user);
-//        user=crud.save(user);
-//        ejbFacadeU.create(user);
-        crud.save(user);
-        System.out.println("USER "+user);
-        return "administrador";
-    }
+//    public String crearUsuario() {
+//        Usuario user = new Usuario();
+//        user.setNombre("Estefania");
+//        user.setApellidos("Romero");
+//        user.setContrasena("estefania");
+//        user.setCorreo("tefa@gmail.com");
+//        user.setIdUsuario("1088303030");
+//        System.out.println("USER "+user);
+////        user=crud.save(user);
+////        ejbFacadeU.create(user);
+//        crud.save(user);
+//        System.out.println("USER "+user);
+//        return "administrador";
+//    }
     
     public String añadirMedicamento() {
         try {
@@ -182,9 +183,18 @@ public class BeanAdministrador implements Serializable{
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "administrador";
+        return "index";
     } 
     
+    public String añadirTratamiento() {
+        try {
+            crud.generarConsecutivo(tratamientoActual);
+            crud.save(tratamientoActual);
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }       
+        return "index";
+    }
     
 
     public LoginService getLoginService() {
@@ -260,4 +270,14 @@ public class BeanAdministrador implements Serializable{
         }
         this.lstMedicamentos = lstMedicamentos;
     }   
+
+    public Tratamiento getTratamientoActual() {
+        return tratamientoActual;
+    }
+
+    public void setTratamientoActual(Tratamiento tratamientoActual) {
+        this.tratamientoActual = tratamientoActual;
+    }
+    
+    
 }

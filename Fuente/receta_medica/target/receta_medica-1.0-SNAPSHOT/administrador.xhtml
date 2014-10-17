@@ -108,12 +108,12 @@ and open the template in the editor.
                                         <p:commandButton icon="ui-icon-wrench"/>
                                     </p:column>
                                     <p:column headerText="Eliminar">
-                                        <p:commandButton icon="ui-icon-trash"/>
+                                        <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(usuario)}"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="Añadir medicamento no POS" >
-                                <p:panelGrid columns="2">
+                                <h:panelGrid columns="4">
                                     <p:outputLabel value="Nombre"/>
                                     <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}"/>
                                     <p:outputLabel value="Precio"/>
@@ -132,19 +132,19 @@ and open the template in the editor.
                                     <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}"/>
                                     <p:outputLabel value="Cantidad"/>
                                     <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}"/>
-                                </p:panelGrid>
+                                </h:panelGrid>
                                 <br/>
                                 <p:commandButton value="Agregar" action="#{beanAdministrador.añadirMedicamento()}"/>
                             </p:tab>
                             <p:tab title="Añadir tratamiento" >
-                                <p:panelGrid columns="2">
+                                <p:panelGrid columns="4">
                                     <p:outputLabel value="Nombre"/>
-                                    <p:inputText/>
-                                    <p:outputLabel value="Duracion"/>
-                                    <p:inputText/>
+                                    <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}"/>
+<!--                                    <p:outputLabel value="Duracion"/>
+                                    <p:inputText/>-->
                                 </p:panelGrid>
                                 <br/>
-                                <p:commandButton value="Agregar" action="#{beanAdministrador.añadirMedicamento}"/>
+                                <p:commandButton value="Agregar" action="#{beanAdministrador.añadirTratamiento()}"/>
                             </p:tab>
                         </p:tabView>             
                     </div>
