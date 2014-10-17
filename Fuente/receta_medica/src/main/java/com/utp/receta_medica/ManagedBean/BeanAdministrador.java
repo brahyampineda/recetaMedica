@@ -10,6 +10,7 @@ import com.utp.receta_medica.facade.Crud;
 import com.utp.receta_medica.entidades.Administrador;
 import com.utp.receta_medica.entidades.Medicamento;
 import com.utp.receta_medica.entidades.MedicoEspecialista;
+import com.utp.receta_medica.entidades.MedicoEspecialistaPK;
 import com.utp.receta_medica.entidades.MedicoGeneral;
 import com.utp.receta_medica.entidades.Paciente;
 import com.utp.receta_medica.entidades.PacientePK;
@@ -93,12 +94,18 @@ public class BeanAdministrador implements Serializable{
         System.out.println("22222");
         if (perfil.equals("Aceptar")) {
             if (registro.getPerfil().equals("Paciente")) {
-                Paciente paciente;
-                paciente = new Paciente();
-                paciente.setPacientePK(new PacientePK(idPaciente, perfil));
-                paciente.setUsuario(registro.getUsuario());
-                registro.getUsuario().getPacienteCollection().add(paciente);
-                crud.save(paciente);
+                try {
+                    Paciente paciente;
+                    paciente = new Paciente();
+                    paciente.setPacientePK(new PacientePK());
+                    paciente.getPacientePK().setUsuarioidUsuario(registro.getRegistroPK().getUsuarioidUsuario());
+                    crud.generarConsecutivo(paciente);
+                    paciente.setUsuario(registro.getUsuario());
+                    registro.getUsuario().getPacienteCollection().add(paciente);
+                    crud.save(paciente);
+                } catch (Exception ex) {
+                    Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             if (registro.getPerfil().equals("Medico general")) {
                 MedicoGeneral medicoGeneral;
@@ -108,11 +115,18 @@ public class BeanAdministrador implements Serializable{
                 crud.save(medicoGeneral);
             }
             if (registro.getPerfil().equals("Medico especialista")) {
-                MedicoEspecialista medicoEspecialista;
-                medicoEspecialista = new MedicoEspecialista();
-                medicoEspecialista.setUsuario(registro.getUsuario());
-                registro.getUsuario().getMedicoEspecialistaCollection().add(medicoEspecialista);
-                crud.save(medicoEspecialista);
+                try {
+                    MedicoEspecialista medicoEspecialista;
+                    medicoEspecialista = new MedicoEspecialista();
+                    medicoEspecialista.setMedicoEspecialistaPK(new MedicoEspecialistaPK());
+                    medicoEspecialista.getMedicoEspecialistaPK().setUsuarioidUsuario(registro.getRegistroPK().getUsuarioidUsuario());
+                    medicoEspecialista.setUsuario(registro.getUsuario());
+                    crud.generarConsecutivo(medicoEspecialista);
+//                    registro.getUsuario().getMedicoEspecialistaCollection().add(medicoEspecialista);
+                    crud.save(medicoEspecialista);
+                } catch (Exception ex) {
+                    Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             try {
                 crud.remove(registro);
