@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.utp.receta_medica.ManagedBean;
 
-import com.utp.receta_medica.facade.Crud;
-//import com.recetamedica.ejb.facade.Crud;
 import com.utp.receta_medica.entidades.Administrador;
 import com.utp.receta_medica.entidades.Registro;
 import com.utp.receta_medica.entidades.RegistroPK;
@@ -31,6 +25,9 @@ import javax.faces.bean.ManagedProperty;
 @SessionScoped
 public class BeanGeneral implements Serializable {
 
+    //***************************************
+    // ATRIBUTOS
+    //***************************************
     @EJB
     private TablasFacade crud;
     
@@ -41,18 +38,36 @@ public class BeanGeneral implements Serializable {
     private Boolean esAdmin=true;
     /////////////////////////////////////////
 
+    
+    
     Usuario usuarioActual;
     Registro registroActual;
     Administrador administrador;
     String perfil;
 
+    
+    //***************************************
+    // METODOS
+    //***************************************
+    
     @PostConstruct
     private void init() {
-        administrador = new Administrador();
+        try {
+            //Cuando la aplicacion renderize asigna la fila administrador a la variable
+            administrador = new Administrador();
+            administrador.setIdAdministrador("1");
+            administrador = crud.find(administrador);
             //Comprueba si es administrador
 //        esAdmin = getLoginService().isAdmin();
+        } catch (Exception ex) {
+            Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-        
+     
+    /**
+     * Se inicializan las variables que contendran informacion del nuevo usuario y registro a guardar
+     * @return 
+     */
     public String prepararRegistroUsuario() {
         System.out.println("1");
         usuarioActual = new Usuario();
@@ -61,21 +76,30 @@ public class BeanGeneral implements Serializable {
         return "registro";
     }
 
+    /**
+     * Registra un nuevo usuario con los datos ingresados, se crea un registro asociado a ese usuario
+     * @return Vista "index"
+     */
     public String registroUsuario() {
         try {
             System.out.println("USUARIO " + usuarioActual);
-            System.out.println("2");
-            registroActual.getRegistroPK().setAdministradoridAdministrador(getAdministrador().getIdAdministrador());
+            System.out.println("ID ADMIN "+administrador.getIdAdministrador());
+            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getIdAdministrador());
+            System.out.println("ID USUARIO "+usuarioActual.getIdUsuario());
+            registroActual.getRegistroPK().setUsuarioidUsuario(usuarioActual.getIdUsuario());
+            System.out.println("REGISTRO "+registroActual);
+            
+            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getIdAdministrador());
             registroActual.getRegistroPK().setUsuarioidUsuario(usuarioActual.getIdUsuario());
             
-            
+            //NO SIRVE
+            crud.generarConsecutivo(registroActual);
             
 //            registroActual.getRegistroPK().setIdRegistro(3);
             registroActual.setAdministrador(administrador);
             registroActual.setUsuario(usuarioActual);
             registroActual.setEstado("en espera");
-            //NO SIRVE
-            crud.generarConsecutivo(registroActual);
+            
             System.out.println("REGISTRO " + registroActual);
 //            administrador.getRegistroCollection().add(registroActual);
 //            crud.save(administrador);
@@ -87,6 +111,11 @@ public class BeanGeneral implements Serializable {
         return "index";
     }
 
+    
+    //***************************************
+    // GETTERS Y SETTERS
+    //***************************************
+    
     public LoginService getLoginService() {
         return loginService;
     }

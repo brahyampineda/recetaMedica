@@ -61,7 +61,7 @@ public class LoginService implements Serializable {
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
             FacesContext.getCurrentInstance().addMessage(null, msg);
 
-            return "index";
+            return "index2";
         }
 
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();

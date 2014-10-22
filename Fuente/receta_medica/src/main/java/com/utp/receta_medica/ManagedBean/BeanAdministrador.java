@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.utp.receta_medica.ManagedBean;
 
-import com.utp.receta_medica.facade.Crud;
-//import com.recetamedica.ejb.facade.Crud;
 import com.utp.receta_medica.entidades.Administrador;
 import com.utp.receta_medica.entidades.Medicamento;
 import com.utp.receta_medica.entidades.MedicoEspecialista;
@@ -18,10 +12,8 @@ import com.utp.receta_medica.entidades.Registro;
 import com.utp.receta_medica.entidades.SolicitudQuejasReclamos;
 import com.utp.receta_medica.entidades.Tratamiento;
 import com.utp.receta_medica.entidades.Usuario;
-import com.utp.receta_medica.facade.AbstractFacade;
 import com.utp.receta_medica.facade.LoginService;
 import com.utp.receta_medica.facade.TablasFacade;
-//import com.utp.receta_medica.facade.UsuarioFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-//import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
@@ -45,6 +35,10 @@ import javax.faces.context.FacesContext;
 @SessionScoped
 public class BeanAdministrador implements Serializable{
 
+    //***************************************
+    // ATRIBUTOS
+    //***************************************
+    
     @EJB
     private TablasFacade crud;
     
@@ -63,13 +57,23 @@ public class BeanAdministrador implements Serializable{
     List<Medicamento> lstMedicamentos;
     Tratamiento tratamientoActual;
     
+    
+    //***************************************
+    // METODOS
+    //***************************************
+    
     @PostConstruct
     private void init() {
+        //Cuando la aplicacion renderize asigna la fila administrador a la variable
         administrador = new Administrador();
             //Comprueba si es administrador
 //        esAdmin = getLoginService().isAdmin();
     }
     
+    /**
+     * 
+     * @return 
+     */
     public String prepararAdministracion() {
         System.out.println("11111");
         try {
@@ -197,6 +201,10 @@ public class BeanAdministrador implements Serializable{
     }
     
 
+    //***************************************
+    // GETTERS Y SETTERS
+    //***************************************
+    
     public LoginService getLoginService() {
         return loginService;
     }
