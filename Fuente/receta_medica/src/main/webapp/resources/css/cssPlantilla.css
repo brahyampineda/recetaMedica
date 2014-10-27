@@ -15,7 +15,7 @@ div {
 
 
 #divCabecera {
-    /*background: black;*/
+    background: #c2dfef;
 }
 
 #divEnlaces {
@@ -58,7 +58,7 @@ div {
 }
 
 .styleInputText {
-    width: 90%;
+    width: 95%;
 }
 
 .stylePanelGrid {

@@ -37,7 +37,7 @@
                         <h1 style="margin-top: 30px ; float: right">TU RECETA MÉDICA</h1>
                     </div>
                     <div id="divIdioma" style="float: right ; width: 5%">
-                        <p:outputLabel value="Idioma" style="float: right"/>
+                        <p:outputLabel value="Idioma" style="float: right; color: black"/>
                         <p:graphicImage title="Español" id="imgEspañol" width="30px" height="15px" style="float: right ; margin: 5px 2px"
                                         value="http://www.keltibur.com/rdn/images/products/mini/sinescudogigante.jpg"/>
                         <p:graphicImage title="Inglés" id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <div id="divLogin" >
+                <div id="divLogin" align="right">
                     <p:panel >
                         <h:panelGrid columns="1" style="margin: 0 auto; width: 100%">
                             <ui:insert name="login" >
@@ -56,19 +56,19 @@
                             </ui:insert>
                         </h:panelGrid>
                     </p:panel>
-                    <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" modal="true" width="40%" >
+                    <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" modal="true" width="45%" >
                         <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Correo:"/>
-                            <p:inputText value="#{loginBean.username}" style="width: 60%"/>
+                            <p:inputText value="#{loginBean.username}" style="width: 80%"/>
                             <p:outputLabel value="Contraseña:"/>
-                            <p:password value="#{loginBean.password}" style="width: 60%"/>
+                            <p:password value="#{loginBean.password}" style="width: 80%"/>
                             <p:spacer />
                             <p:commandLink value="Olvidó su contraseña" />
                             <p:spacer />
                             <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}"/>
                         </h:panelGrid>
                     </p:dialog>
-                    <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" modal="true" width="40%" >
+                    <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" modal="true" width="45%" >
                         <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Nombre:"/>
                             <p:inputText styleClass="styleInputText"/>
@@ -117,7 +117,14 @@
 
                                 </p:tab>
                                 <p:tab title="Tratamientos" >
-
+                                    <p:dataTable value="#{beanAdministrador.lstTratamientos}" var="item" sortBy="#{item.idTratamiento}">
+                                        <p:column headerText="Código" sortBy="#{item.idTratamiento}" style="width: 10%">
+                                            <p:outputLabel value="#{item.idTratamiento}"/>
+                                        </p:column>
+                                        <p:column headerText="Nombre" sortBy="#{item.nombre}">
+                                            <p:outputLabel value="#{item.nombre}" />
+                                        </p:column>
+                                    </p:dataTable>
                                 </p:tab>
                                 <p:tab title="Médicos generales" >
 
@@ -148,11 +155,11 @@
                                     </p:inputText>
                                     <p:outputLabel value="Mensaje:" />
                                     <p:inputTextarea styleClass="styleInputText" required="true" requiredMessage="Se debe escribir un mensaje de contacto"
-                                                     autoResize="false" maxlength="300" />
+                                                     autoResize="false" maxlength="300" rows="7"/>
+                                    <p:spacer />
+                                    <p:commandButton value="Enviar" accesskey="enter" ajax="false" 
+                                                     style="margin: 0 auto"/>
                                 </h:panelGrid>
-                                <br/>
-                                <p:commandButton value="Enviar" accesskey="enter" ajax="false" 
-                                                 style="margin: 0 auto"/>
                             </p:panel>
                         </p:tab>
                     </p:tabView>

@@ -56,6 +56,23 @@ public class BeanAdministrador implements Serializable{
     Medicamento medicamentoActual;
     List<Medicamento> lstMedicamentos;
     Tratamiento tratamientoActual;
+    List<Tratamiento> lstTratamientos;
+
+    public List<Tratamiento> getLstTratamientos() {
+        try {
+            lstTratamientos = crud.findAll(new Tratamiento());
+            return lstTratamientos;
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+
+    public void setLstTratamientos(List<Tratamiento> lstTratamientos) {
+        this.lstTratamientos = lstTratamientos;
+    }
+    
+    
     
     
     //***************************************

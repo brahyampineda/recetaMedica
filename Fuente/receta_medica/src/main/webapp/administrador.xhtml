@@ -9,70 +9,21 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <ui:composition template="index.xhtml" >
         <ui:define name="titulo" >Administrador</ui:define>
         <ui:define name="login" >
-            <h3>Bienvenido, <br/>Administrador</h3>
+            <h4>Bienvenido Administrador</h4>
+            <p:commandButton value="Cerrar sesión" action="index" immediate="true"
+                             ajax="false" />
         </ui:define>
         <ui:define name="pestañas">
             <p:tab title="Perfil">
-                <!--                <c:if test="{!empty facesContext.messageList}">
-                                    <div id="msg-div" aria-live="polite" class="ui-message ui-message-{appBean.messageType} ui-widget ui-corner-all}">
-                                        <span class="ui-message-{appBean.messageType}-icon"/>
-                                        <span class="ui-message-{appBean.messageType}-summary">
-                                            <h:messages id="mensajes"/>
-                                        </span>
-                                    </div>
-                                </c:if>-->
                 <div align="center">
-                    <p:tabView>
-                        <!--                            <p:tab title="Peticiones medicamentos">
-                                                        <p:dataTable >
-                                                            <p:column headerText="Usuario">
-                                                                <p:outputLabel value=""/>
-                                                            </p:column>
-                                                            <p:column headerText="Perfil">
-                                                                <p:outputLabel value=""/>
-                                                            </p:column>
-                                                            <p:column headerText="Medicamento">
-                                                                <p:outputLabel value=""/>
-                                                            </p:column>
-                                                            <p:column headerText="Cantidad">
-                                                                <p:outputLabel value=""/>
-                                                            </p:column>                                    
-                                                        </p:dataTable>
-                                                        <br/>
-                                                        <p:button value="Agregar medicamento" outcome="/agregar_medicamento"/>
-                                                    </p:tab>-->
-
-                        <p:tab title="Usuarios Registrados"> 
-                            <p:dataTable value="#{beanAdministrador.lstUsuarios}" var="usuario"
-                                         emptyMessage="No hay usuarios">
-                                <p:column headerText="Numero de identificacion">
-                                    <p:outputLabel value="#{usuario.idUsuario}"/>
-                                </p:column>
-                                <p:column headerText="Nombre">
-                                    <p:outputLabel value="#{usuario.nombre}"/>
-                                </p:column>
-                                <p:column headerText="Apellidos">
-                                    <p:outputLabel value="#{usuario.apellidos}"/>
-                                </p:column>
-                                <p:column headerText="Correo">
-                                    <p:outputLabel value="#{usuario.correo}"/>
-                                </p:column>
-                                <p:column headerText="Modificar rol">
-                                    <p:commandButton icon="ui-icon-wrench"/>
-                                </p:column>
-                                <p:column headerText="Eliminar">
-                                    <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(usuario)}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:tab>
-                        
-                    </p:tabView>             
+                    <p:panel >
+                        <p:outputLabel value="Nombre: " />
+                    </p:panel>             
                 </div>
             </p:tab>
             <p:tab title="Solicitudes" >
@@ -125,44 +76,65 @@ and open the template in the editor.
             <p:tab title="Modificar contenido" >
                 <p:tabView >
                     <p:tab title="Añadir medicamento no POS" >
-                            <h:panelGrid columns="4" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda">
-                                <p:outputLabel value="Nombre:"/>
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText"/>
-                                <p:outputLabel value="Precio:"/>
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText"/>
-                                <p:outputLabel value="Composición:"/>
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText"
-                                                 autoResize="false"/>
-                                <p:outputLabel value="Indicaciones:"/>
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText"
-                                                 autoResize="false"/>
-                                <p:outputLabel value="Precauciones:"/>
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText"
-                                                 autoResize="false"/>
-                                <p:outputLabel value="Contraindicaciones:"/>
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText"
-                                                 autoResize="false"/>
-                                <p:outputLabel value="Presentación:"/>
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText"/>
-                                <p:outputLabel value="Dosis usual:"/>
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText"/>
-                                <p:outputLabel value="Cantidad:"/>
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText"/>
-                            </h:panelGrid>
-                            <br/>
-                            <p:commandButton value="Agregar" action="#{beanAdministrador.añadirMedicamento()}"/>
-                        </p:tab>
-                        <p:tab title="Añadir tratamiento" >
-                            <h:panelGrid columns="4" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda">
-                                <p:outputLabel value="Nombre:" />
-                                <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}" styleClass="styleInputText"/>
-                                <!--                                    <p:outputLabel value="Duracion"/>
-                                                                    <p:inputText/>-->
-                            </h:panelGrid>
-                            <br/>
+                        <h:panelGrid columns="4" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda">
+                            <p:outputLabel value="Nombre:"/>
+                            <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText"/>
+                            <p:outputLabel value="Precio:"/>
+                            <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText"/>
+                            <p:outputLabel value="Composición:"/>
+                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText"
+                                             autoResize="false"/>
+                            <p:outputLabel value="Indicaciones:"/>
+                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText"
+                                             autoResize="false"/>
+                            <p:outputLabel value="Precauciones:"/>
+                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText"
+                                             autoResize="false"/>
+                            <p:outputLabel value="Contraindicaciones:"/>
+                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText"
+                                             autoResize="false"/>
+                            <p:outputLabel value="Presentación:"/>
+                            <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText"/>
+                            <p:outputLabel value="Dosis usual:"/>
+                            <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText"/>
+                            <p:outputLabel value="Cantidad:"/>
+                            <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText"/>
+                        </h:panelGrid>
+                        <br/>
+                        <p:commandButton value="Agregar" action="#{beanAdministrador.añadirMedicamento()}"/>
+                    </p:tab>
+                    <p:tab title="Añadir tratamiento" >
+                        <h:panelGrid columns="2" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda">
+                            <p:outputLabel value="Nombre:" />
+                            <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}" style="width: 50%"/>
+                            <p:outputLabel value="Duración" />
+                            <p:inputText style="width: 50%"/>
+                            <p:spacer />
                             <p:commandButton value="Agregar" action="#{beanAdministrador.añadirTratamiento()}"/>
-                        </p:tab>
+                        </h:panelGrid>
+                    </p:tab>
                 </p:tabView>
+            </p:tab>
+            <p:tab title="Usuarios Registrados"> 
+                <p:dataTable value="#{beanAdministrador.lstUsuarios}" var="usuario"
+                             emptyMessage="No hay usuarios">
+                    <p:column headerText="Numero de identificación">
+                        <p:outputLabel value="#{usuario.idUsuario}"/>
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <p:outputLabel value="#{usuario.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Apellidos">
+                        <p:outputLabel value="#{usuario.apellidos}"/>
+                    </p:column>
+                    <p:column headerText="Correo">
+                        <p:outputLabel value="#{usuario.correo}"/>
+                    </p:column>>
+                    <p:column style="width: 7%">
+                        <p:commandButton icon="ui-icon-wrench"/>
+                        <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(usuario)}"/>
+                    </p:column>
+                </p:dataTable>
             </p:tab>
         </ui:define>  
     </ui:composition>
