@@ -7,17 +7,15 @@ package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -30,67 +28,37 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Administrador.findAll", query = "SELECT a FROM Administrador a"),
-    @NamedQuery(name = "Administrador.findByIdAdministrador", query = "SELECT a FROM Administrador a WHERE a.idAdministrador = :idAdministrador"),
-    @NamedQuery(name = "Administrador.findByContrasena", query = "SELECT a FROM Administrador a WHERE a.contrasena = :contrasena"),
-    @NamedQuery(name = "Administrador.findByCorreo", query = "SELECT a FROM Administrador a WHERE a.correo = :correo")})
+    @NamedQuery(name = "Administrador.findByIdAdministrador", query = "SELECT a FROM Administrador a WHERE a.administradorPK.idAdministrador = :idAdministrador"),
+    @NamedQuery(name = "Administrador.findByUsuarioidUsuario", query = "SELECT a FROM Administrador a WHERE a.administradorPK.usuarioidUsuario = :usuarioidUsuario")})
 public class Administrador implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "idAdministrador")
-    private String idAdministrador;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "contrasena")
-    private String contrasena;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "correo")
-    private String correo;
+    @EmbeddedId
+    protected AdministradorPK administradorPK;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrador")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrador")
     private Collection<Registro> registroCollection;
+    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Usuario usuario;
 
     public Administrador() {
     }
 
-    public Administrador(String idAdministrador) {
-        this.idAdministrador = idAdministrador;
+    public Administrador(AdministradorPK administradorPK) {
+        this.administradorPK = administradorPK;
     }
 
-    public Administrador(String idAdministrador, String contrasena, String correo) {
-        this.idAdministrador = idAdministrador;
-        this.contrasena = contrasena;
-        this.correo = correo;
+    public Administrador(String idAdministrador, String usuarioidUsuario) {
+        this.administradorPK = new AdministradorPK(idAdministrador, usuarioidUsuario);
     }
 
-    public String getIdAdministrador() {
-        return idAdministrador;
+    public AdministradorPK getAdministradorPK() {
+        return administradorPK;
     }
 
-    public void setIdAdministrador(String idAdministrador) {
-        this.idAdministrador = idAdministrador;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setAdministradorPK(AdministradorPK administradorPK) {
+        this.administradorPK = administradorPK;
     }
 
     @XmlTransient
@@ -111,10 +79,18 @@ public class Administrador implements Serializable {
         this.registroCollection = registroCollection;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idAdministrador != null ? idAdministrador.hashCode() : 0);
+        hash += (administradorPK != null ? administradorPK.hashCode() : 0);
         return hash;
     }
 
@@ -125,7 +101,7 @@ public class Administrador implements Serializable {
             return false;
         }
         Administrador other = (Administrador) object;
-        if ((this.idAdministrador == null && other.idAdministrador != null) || (this.idAdministrador != null && !this.idAdministrador.equals(other.idAdministrador))) {
+        if ((this.administradorPK == null && other.administradorPK != null) || (this.administradorPK != null && !this.administradorPK.equals(other.administradorPK))) {
             return false;
         }
         return true;
@@ -133,7 +109,7 @@ public class Administrador implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Administrador[ idAdministrador=" + idAdministrador + " ]";
+        return "com.utp.receta_medica.entidades.Administrador[ administradorPK=" + administradorPK + " ]";
     }
     
 }

@@ -31,7 +31,8 @@ public class LoginBean implements Serializable {
     private String password;
 
     public String doLogin() {
-        System.out.println("11111");
+        System.out.println("USERNAME "+username);
+        System.out.println("PASSWORD "+password);
         return loginService.doLogin(username, password);
     }
 

@@ -2,6 +2,7 @@
 package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.Administrador;
+import com.utp.receta_medica.entidades.AdministradorPK;
 import com.utp.receta_medica.entidades.Medicamento;
 import com.utp.receta_medica.entidades.MedicoEspecialista;
 import com.utp.receta_medica.entidades.MedicoEspecialistaPK;
@@ -75,21 +76,22 @@ public class BeanAdministrador implements Serializable{
      * @return 
      */
     public String prepararAdministracion() {
-        System.out.println("11111");
+        System.out.println("111112");
         try {
             administrador = new Administrador();
-            administrador.setIdAdministrador("1");
+            administrador.setAdministradorPK(new AdministradorPK());
+            administrador.getAdministradorPK().setIdAdministrador("1");
+            administrador.getAdministradorPK().setUsuarioidUsuario("1088304075");
             administrador.setRegistroCollection(new ArrayList<Registro>());
             administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
             System.out.println("AMIN "+administrador);
             medicamentoActual = new Medicamento();
             tratamientoActual = new Tratamiento();
             administrador = crud.find(administrador);
-            System.out.println("AMIN22 "+administrador.getCorreo());
+            System.out.println("AMIN22 "+administrador.getUsuario().getCorreo());
             for (Registro registro : administrador.getRegistroCollection()) {
                 System.out.println("REGISTRO "+registro.getUsuario().getNombre());
-            }
-            
+            }           
             
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);

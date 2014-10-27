@@ -25,21 +25,27 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
+    @Column(name = "Usuario_idUsuario")
+    private String usuarioidUsuario;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "Administrador_idAdministrador")
     private String administradoridAdministrador;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "Usuario_idUsuario")
-    private String usuarioidUsuario;
+    @Column(name = "Administrador_Usuario_idUsuario")
+    private String administradorUsuarioidUsuario;
 
     public SolicitudQuejasReclamosPK() {
     }
 
-    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String administradoridAdministrador, String usuarioidUsuario) {
+    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String usuarioidUsuario, String administradoridAdministrador, String administradorUsuarioidUsuario) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
-        this.administradoridAdministrador = administradoridAdministrador;
         this.usuarioidUsuario = usuarioidUsuario;
+        this.administradoridAdministrador = administradoridAdministrador;
+        this.administradorUsuarioidUsuario = administradorUsuarioidUsuario;
     }
 
     public int getIdSolicitudquejasreclamos() {
@@ -50,14 +56,6 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
     }
 
-    public String getAdministradoridAdministrador() {
-        return administradoridAdministrador;
-    }
-
-    public void setAdministradoridAdministrador(String administradoridAdministrador) {
-        this.administradoridAdministrador = administradoridAdministrador;
-    }
-
     public String getUsuarioidUsuario() {
         return usuarioidUsuario;
     }
@@ -66,12 +64,29 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         this.usuarioidUsuario = usuarioidUsuario;
     }
 
+    public String getAdministradoridAdministrador() {
+        return administradoridAdministrador;
+    }
+
+    public void setAdministradoridAdministrador(String administradoridAdministrador) {
+        this.administradoridAdministrador = administradoridAdministrador;
+    }
+
+    public String getAdministradorUsuarioidUsuario() {
+        return administradorUsuarioidUsuario;
+    }
+
+    public void setAdministradorUsuarioidUsuario(String administradorUsuarioidUsuario) {
+        this.administradorUsuarioidUsuario = administradorUsuarioidUsuario;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idSolicitudquejasreclamos;
-        hash += (administradoridAdministrador != null ? administradoridAdministrador.hashCode() : 0);
         hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
+        hash += (administradoridAdministrador != null ? administradoridAdministrador.hashCode() : 0);
+        hash += (administradorUsuarioidUsuario != null ? administradorUsuarioidUsuario.hashCode() : 0);
         return hash;
     }
 
@@ -85,10 +100,13 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         if (this.idSolicitudquejasreclamos != other.idSolicitudquejasreclamos) {
             return false;
         }
+        if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
+            return false;
+        }
         if ((this.administradoridAdministrador == null && other.administradoridAdministrador != null) || (this.administradoridAdministrador != null && !this.administradoridAdministrador.equals(other.administradoridAdministrador))) {
             return false;
         }
-        if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
+        if ((this.administradorUsuarioidUsuario == null && other.administradorUsuarioidUsuario != null) || (this.administradorUsuarioidUsuario != null && !this.administradorUsuarioidUsuario.equals(other.administradorUsuarioidUsuario))) {
             return false;
         }
         return true;
@@ -96,7 +114,7 @@ public class SolicitudQuejasReclamosPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", administradoridAdministrador=" + administradoridAdministrador + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", usuarioidUsuario=" + usuarioidUsuario + ", administradoridAdministrador=" + administradoridAdministrador + ", administradorUsuarioidUsuario=" + administradorUsuarioidUsuario + " ]";
     }
     
 }

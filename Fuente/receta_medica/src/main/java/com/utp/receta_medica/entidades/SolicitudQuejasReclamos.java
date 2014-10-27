@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,8 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findBySolicitudquejasreclamoscol", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudquejasreclamoscol = :solicitudquejasreclamoscol"),
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByAdministradoridAdministrador", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.administradoridAdministrador = :administradoridAdministrador"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByAdministradorUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.administradorUsuarioidUsuario = :administradorUsuarioidUsuario")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -45,12 +47,14 @@ public class SolicitudQuejasReclamos implements Serializable {
     @Size(max = 45)
     @Column(name = "Solicitud_quejas_reclamoscol")
     private String solicitudquejasreclamoscol;
+    @JoinColumns({
+        @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador", insertable = false, updatable = false),
+        @JoinColumn(name = "Administrador_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
+    @ManyToOne(optional = false)
+    private Administrador administrador;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Administrador administrador;
 
     public SolicitudQuejasReclamos() {
     }
@@ -59,8 +63,8 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.solicitudQuejasReclamosPK = solicitudQuejasReclamosPK;
     }
 
-    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String administradoridAdministrador, String usuarioidUsuario) {
-        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, administradoridAdministrador, usuarioidUsuario);
+    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String usuarioidUsuario, String administradoridAdministrador, String administradorUsuarioidUsuario) {
+        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, usuarioidUsuario, administradoridAdministrador, administradorUsuarioidUsuario);
     }
 
     public SolicitudQuejasReclamosPK getSolicitudQuejasReclamosPK() {
@@ -95,20 +99,20 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.solicitudquejasreclamoscol = solicitudquejasreclamoscol;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     public Administrador getAdministrador() {
         return administrador;
     }
 
     public void setAdministrador(Administrador administrador) {
         this.administrador = administrador;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

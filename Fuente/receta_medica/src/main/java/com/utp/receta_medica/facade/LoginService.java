@@ -39,8 +39,9 @@ public class LoginService implements Serializable {
 
     public String doLogin(String username, String password) {
 
+        System.out.println("RRRRRRRRRRRRRRRRRRRRRR");
         Usuario usuario = new Usuario();
-//        usuario.setAdministradorCollection(new ArrayList<Administrador>());
+        usuario.setAdministradorCollection(new ArrayList<Administrador>());
         List<Usuario> usuarios;
         try {  
             usuarios = crud.findAll(new Usuario());
@@ -83,11 +84,13 @@ public class LoginService implements Serializable {
 //                }
 //            }
             
-//            if (usuario.getAdministradorCollection().isEmpty()) {
-//                admin = false;
-//            } else {
-//                admin = true;
-//            }
+            System.out.println("ADMININN "+ usuario.getAdministradorCollection().size());
+            
+            if (usuario.getAdministradorCollection().isEmpty()) {
+                admin = false;
+            } else {
+                admin = true;
+            }
             return "/faces/index.xhtml?faces-redirect=true";
         }
 

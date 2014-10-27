@@ -69,6 +69,8 @@ public class Usuario implements Serializable {
     private Collection<MedicoGeneral> medicoGeneralCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<MedicoEspecialista> medicoEspecialistaCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Collection<Administrador> administradorCollection;
 
     public Usuario() {
     }
@@ -168,6 +170,15 @@ public class Usuario implements Serializable {
 
     public void setMedicoEspecialistaCollection(Collection<MedicoEspecialista> medicoEspecialistaCollection) {
         this.medicoEspecialistaCollection = medicoEspecialistaCollection;
+    }
+
+    @XmlTransient
+    public Collection<Administrador> getAdministradorCollection() {
+        return administradorCollection;
+    }
+
+    public void setAdministradorCollection(Collection<Administrador> administradorCollection) {
+        this.administradorCollection = administradorCollection;
     }
 
     @Override

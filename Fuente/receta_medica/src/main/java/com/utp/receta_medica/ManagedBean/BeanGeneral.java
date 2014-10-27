@@ -2,6 +2,7 @@
 package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.Administrador;
+import com.utp.receta_medica.entidades.AdministradorPK;
 import com.utp.receta_medica.entidades.Registro;
 import com.utp.receta_medica.entidades.RegistroPK;
 import com.utp.receta_medica.entidades.Usuario;
@@ -55,7 +56,9 @@ public class BeanGeneral implements Serializable {
         try {
             //Cuando la aplicacion renderize asigna la fila administrador a la variable
             administrador = new Administrador();
-            administrador.setIdAdministrador("1");
+            administrador.setAdministradorPK(new AdministradorPK());
+            administrador.getAdministradorPK().setIdAdministrador("1");
+            administrador.getAdministradorPK().setUsuarioidUsuario("1088304075");
             administrador = crud.find(administrador);
             //Comprueba si es administrador
 //        esAdmin = getLoginService().isAdmin();
@@ -83,13 +86,13 @@ public class BeanGeneral implements Serializable {
     public String registroUsuario() {
         try {
             System.out.println("USUARIO " + usuarioActual);
-            System.out.println("ID ADMIN "+administrador.getIdAdministrador());
-            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getIdAdministrador());
+            System.out.println("ID ADMIN "+administrador.getAdministradorPK().getIdAdministrador());
+            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getAdministradorPK().getIdAdministrador());
             System.out.println("ID USUARIO "+usuarioActual.getIdUsuario());
             registroActual.getRegistroPK().setUsuarioidUsuario(usuarioActual.getIdUsuario());
             System.out.println("REGISTRO "+registroActual);
             
-            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getIdAdministrador());
+            registroActual.getRegistroPK().setAdministradoridAdministrador(administrador.getAdministradorPK().getIdAdministrador());
             registroActual.getRegistroPK().setUsuarioidUsuario(usuarioActual.getIdUsuario());
             
             //NO SIRVE
@@ -149,11 +152,11 @@ public class BeanGeneral implements Serializable {
     }
 
     public Administrador getAdministrador() {
-        try {
-            administrador = crud.find(new Administrador("1"));
-        } catch (Exception ex) {
-            Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            administrador = crud.find(new Administrador());
+//        } catch (Exception ex) {
+//            Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return administrador;
     }
 
