@@ -1,0 +1,67 @@
+/* 
+    Created on : 25/10/2014, 04:12:42 PM
+    Author     : Brahyam
+*/
+
+div {
+    overflow: auto;
+}
+
+#divCabecera, #divContenido, #divFooter, #divEnlaces, #divLogin {
+    padding: 2px;
+    margin: 0 auto;
+    width: 99%;
+}
+
+
+#divCabecera {
+    /*background: black;*/
+}
+
+#divEnlaces {
+    /*background: red;*/
+    width: 83%;
+    float: left;
+}
+
+#divLogin {
+    /*background: yellow;*/
+    width: 15%;
+    float: right;
+}
+
+#divContenido {
+    margin: 5px;
+    clear: both;
+}
+
+#divFooter {
+    background: #045491;
+    color: white;
+    float: bottom;
+    padding: 10px;
+}
+
+#btnInicio {
+    background-image: url("/resources/imagenes/logo.jpg");
+    width: 20%;
+    height: 20px;
+}
+
+.derechaNegrita {
+    text-align: right;
+    font-weight: bold;
+}
+
+.izquierda {
+    text-align: left;
+}
+
+.styleInputText {
+    width: 90%;
+}
+
+.stylePanelGrid {
+    margin: 0 auto;
+    width: 99%;
+}

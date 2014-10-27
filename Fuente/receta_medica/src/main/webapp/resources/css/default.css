@@ -1,5 +1,8 @@
 body {
-    background-color: #ffffff;
+    /*background-color: #c2dfef;*/
+    /*background-image: url(../resources/imagenes/raya.jpg);*/
+    background-image: url(http://pl.dr-vel.com/wp-content/uploads/fon/medicine.jpg);
+    /*background-color: white;*/
     font-size: 12px;
     font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
     color: #000000;  
@@ -9,7 +12,7 @@ body {
 h1 {
     font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
     border-bottom: 1px solid #AFAFAF; 
-    font-size:  16px;
+    font-size:  40px;
     font-weight: bold;
     margin: 0px;
     padding: 0px;

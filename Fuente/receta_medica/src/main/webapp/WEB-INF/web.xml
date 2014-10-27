@@ -4,7 +4,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>    
-    <filter>
+<!--    <filter>
         <filter-name>LoginFilter</filter-name>
         <filter-class>com.utp.receta_medica.facade.LoginFilter</filter-class>
     </filter>
@@ -16,9 +16,9 @@
         <url-pattern>/faces/registro.xhtml</url-pattern>
         <url-pattern>/faces/registro2.xhtml</url-pattern>
         <url-pattern>/faces/solicitudes_quejas_reclamos.xhtml</url-pattern>
-        <!--<url-pattern>/faces/Configuracion/*</url-pattern>-->
-    </filter-mapping>
-    <!--    <context-param>  
+        <url-pattern>/faces/Configuracion/*</url-pattern>
+    </filter-mapping>-->
+<!--        <context-param>  
         <param-name>primefaces.THEME</param-name>  
         <param-value>start</param-value>  
     </context-param> -->
