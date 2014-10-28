@@ -12,11 +12,12 @@
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/faces/index.xhtml</url-pattern>
         <url-pattern>/faces/administrador.xhtml</url-pattern>
+        <url-pattern>/faces/paciente.xhtml</url-pattern>
+        <url-pattern>/faces/medicoGeneral.xhtml</url-pattern>
+        <url-pattern>/faces/medicoEspecialista.xhtml</url-pattern>
         <url-pattern>/faces/agregar_medicamento.xhtml</url-pattern>
         <url-pattern>/faces/registro.xhtml</url-pattern>
-        <url-pattern>/faces/registro2.xhtml</url-pattern>
         <url-pattern>/faces/solicitudes_quejas_reclamos.xhtml</url-pattern>
-        <url-pattern>/faces/Configuracion/*</url-pattern>
     </filter-mapping>-->
 <!--        <context-param>  
         <param-name>primefaces.THEME</param-name>  

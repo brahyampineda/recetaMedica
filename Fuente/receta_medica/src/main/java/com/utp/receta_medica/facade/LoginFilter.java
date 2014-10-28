@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utp.receta_medica.facade;
 
 /**
@@ -30,7 +25,7 @@ public class LoginFilter implements Filter {
          
         if (loginService == null || !loginService.isLoggedIn()) {
             String contextPath = ((HttpServletRequest)request).getContextPath();
-            ((HttpServletResponse)response).sendRedirect(contextPath + "/faces/index2.xhtml");
+            ((HttpServletResponse)response).sendRedirect(contextPath + "/faces/index.xhtml");
         }
          
         chain.doFilter(request, response);

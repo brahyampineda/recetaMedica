@@ -124,13 +124,31 @@
                                 </p:tab>
                                 <p:tab title="Tratamientos" >
                                     <p:dataTable value="#{beanAdministrador.lstTratamientos}" var="item" sortBy="#{item.idTratamiento}">
-                                        <p:column headerText="Código" sortBy="#{item.idTratamiento}" style="width: 10%">
+                                        <p:column headerText="Código" sortBy="#{item.idTratamiento}" 
+                                                  filterBy="#{item.idTratamiento}" style="width: 15%">
                                             <p:outputLabel value="#{item.idTratamiento}"/>
                                         </p:column>
-                                        <p:column headerText="Nombre" sortBy="#{item.nombre}">
+                                        <p:column headerText="Nombre" sortBy="#{item.nombre}"
+                                                  filterBy="#{item.nombre}">
                                             <p:outputLabel value="#{item.nombre}" />
                                         </p:column>
+                                        <p:column headerText="Edición" rendered="false" style="width: 10%">
+                                            <p:commandButton icon="ui-icon-pencil" 
+                                                             onclick="PF('dlgEdicion').show();"/>
+                                            <p:commandButton icon="ui-icon-trash" />
+                                        </p:column>
                                     </p:dataTable>
+                                    
+                                    <p:dialog widgetVar="dlgEdicion"  modal="true" header="Editar tratamiento">
+                                        <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+<!--                                            <p:outputLabel value="Nombre:" />
+                                            <p:inputText 
+                                                validatorMessage="El nombre solo debe contener letras.">
+                                                <f:validateRegex pattern="[a-zA-Z]{1,50}" />
+                                            </p:inputText>
+                                            <p:commandButton value="Guardar" icon="ui-icon-disk" />-->
+                                        </h:panelGrid>
+                                    </p:dialog>
                                 </p:tab>
                                 <p:tab title="Médicos generales" >
 
@@ -145,7 +163,10 @@
 
                                 </p:tab>
                                 <p:tab title="Laboratorios" >
-                                    
+
+                                </p:tab>
+                                <p:tab title="Entidades" >
+
                                 </p:tab>
                             </p:tabView>
                         </p:tab>
@@ -156,17 +177,18 @@
                                 <h:panelGrid id="panelContacto" styleClass="stylePanelGrid" columns="2" columnClasses="derechaNegrita, izquierda" 
                                              title="Contáctenos" >
                                     <p:outputLabel value="Nombre:" />
-                                    <p:inputText styleClass="styleInputText" required="true" requiredMessage="Debe especificar su nombre" 
+<!--                                   <p:inputText styleClass="styleInputText"
                                                  validatorMessage="El nombre solo debe contener letras, y un tamaño máximo de 40 caractéres.">
                                         <f:validateRegex pattern="[a-zA-Z]{1,40}" />
-                                    </p:inputText>
+                                    </p:inputText>-->
                                     <p:outputLabel value="Correo:" />
-                                    <p:inputText styleClass="styleInputText" required="true" requiredMessage="Debe especificar su correo" type="email">
-                                        <!--validatorMessage="El nombre solo debe contener letras, y un tamaño máximo de 40 caractéres.">-->
-                                        <!--<f:validateRegex pattern="[a-zA-Z]{1,40}" />-->
-                                    </p:inputText>
+<!--                                    <p:inputText styleClass="styleInputText"  >required="true" requiredMessage="Debe especificar su correo" 
+                                                 type="email">
+                                        validatorMessage="El formato del correo no es correcto, verifique.">
+                                        <f:validateRegex pattern="[a-zA-Z]{1,40}" />
+                                    </p:inputText>-->
                                     <p:outputLabel value="Mensaje:" />
-                                    <p:inputTextarea styleClass="styleInputText" required="true" requiredMessage="Se debe escribir un mensaje de contacto"
+                                    <p:inputTextarea styleClass="styleInputText" 
                                                      autoResize="false" maxlength="300" rows="7"/>
                                     <p:spacer />
                                     <p:commandButton value="Enviar" accesskey="enter" ajax="false" 

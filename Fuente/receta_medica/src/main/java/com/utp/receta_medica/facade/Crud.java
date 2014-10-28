@@ -15,7 +15,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 import org.reflections.ReflectionUtils;
 import static org.reflections.ReflectionUtils.getAllFields;
@@ -73,7 +72,6 @@ public abstract class Crud {
         
         Object valorPK = null;
         Class<?> claseEnt = entity.getClass();
-        
         
         try {
             Field campoPK = claseEnt.getDeclaredField(uncapitalize(claseEnt.getSimpleName()) + "PK");

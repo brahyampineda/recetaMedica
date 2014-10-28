@@ -69,32 +69,32 @@
                     </p:tab>
                 </p:tabView>
             </p:tab>
-            <p:tab title="Modificar contenido" >
+            <p:tab title="Agregar contenido" >
                 <p:tabView >
                     <p:tab title="Añadir medicamento no POS" >
                         <h:panelGrid columns="4" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda">
-                            <p:outputLabel value="Nombre:"/>
-                            <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText"/>
+<!--                            <p:outputLabel value="Nombre:"/>
+                            <p:inputText value="{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText"/>
                             <p:outputLabel value="Precio:"/>
-                            <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText"/>
+                            <p:inputText value="{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText"/>
                             <p:outputLabel value="Composición:"/>
-                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText"
+                            <p:inputTextarea value="{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText"
                                              autoResize="false"/>
                             <p:outputLabel value="Indicaciones:"/>
-                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText"
+                            <p:inputTextarea value="{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText"
                                              autoResize="false"/>
                             <p:outputLabel value="Precauciones:"/>
-                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText"
+                            <p:inputTextarea value="{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText"
                                              autoResize="false"/>
                             <p:outputLabel value="Contraindicaciones:"/>
-                            <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText"
+                            <p:inputTextarea value="{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText"
                                              autoResize="false"/>
                             <p:outputLabel value="Presentación:"/>
-                            <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText"/>
+                            <p:inputText value="{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText"/>
                             <p:outputLabel value="Dosis usual:"/>
-                            <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText"/>
+                            <p:inputText value="{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText"/>
                             <p:outputLabel value="Cantidad:"/>
-                            <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText"/>
+                            <p:inputText value="{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText"/>-->
                         </h:panelGrid>
                         <br/>
                         <p:commandButton value="Agregar" action="#{beanAdministrador.añadirMedicamento()}"/>
@@ -106,7 +106,8 @@
                             <p:outputLabel value="Duración" />
                             <p:inputText style="width: 50%"/>
                             <p:spacer />
-                            <p:commandButton value="Agregar" action="#{beanAdministrador.añadirTratamiento()}"/>
+                            <p:commandButton value="Agregar" action="#{beanAdministrador.guardarTratamiento()}"
+                                             ajax="false"/>
                         </h:panelGrid>
                     </p:tab>
                 </p:tabView>
@@ -127,7 +128,7 @@
                         <p:outputLabel value="#{usuario.correo}"/>
                     </p:column>>
                     <p:column style="width: 7%">
-                        <p:commandButton icon="ui-icon-wrench"/>
+                        <p:commandButton icon="ui-icon-pencil"/>
                         <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(usuario)}"/>
                     </p:column>
                 </p:dataTable>

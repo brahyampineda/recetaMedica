@@ -207,10 +207,10 @@ public class BeanAdministrador implements Serializable{
         return "index";
     } 
     
-    public String añadirTratamiento() {
+    public String guardarTratamiento() {
         try {
-            crud.generarConsecutivo(tratamientoActual);
-            crud.save(tratamientoActual);
+            System.out.println("nombre: " + tratamientoActual.getNombre());
+            crud.guardar(tratamientoActual);
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }       
@@ -297,6 +297,9 @@ public class BeanAdministrador implements Serializable{
     }   
 
     public Tratamiento getTratamientoActual() {
+        if (tratamientoActual == null) {
+            tratamientoActual = new Tratamiento();
+        }
         return tratamientoActual;
     }
 
