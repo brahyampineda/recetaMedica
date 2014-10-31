@@ -37,7 +37,7 @@ public class LoginService implements Serializable {
         try {  
             usuarios = crud.findAll(new Usuario());
             for (Usuario usuarioi : usuarios) {
-                if (usuarioi.getCorreo().equals(username)) {
+                if (usuarioi.getIdUsuario().equals(username)) {
                     usuario = usuarioi;
                     break;
                 }

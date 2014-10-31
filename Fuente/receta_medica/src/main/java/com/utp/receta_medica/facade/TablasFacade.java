@@ -5,8 +5,7 @@
  */
 package com.utp.receta_medica.facade;
 
-import com.utp.receta_medica.entidades.Tratamiento;
-import com.utp.receta_medica.entidades.Usuario;
+import com.utp.receta_medica.entidades.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,11 +96,11 @@ public class TablasFacade extends Crud {
                 System.out.println("hola");
             } else if (obj.getClass().equals(Tratamiento.class)) {
                 Tratamiento aux = (Tratamiento) obj;
-                if (aux.getIdTratamiento() == null) {
+                if (aux.getTratamientoPK() == null) {
                     generarConsecutivo(aux);
                 }
                 save(aux);
-            }
+            } 
             System.out.println("Guardado objeto de tipo " + obj.getClass().getSimpleName());
         } catch (Exception ex) {
             Logger.getLogger(TablasFacade.class.getName()).log(Level.SEVERE, null, ex);
