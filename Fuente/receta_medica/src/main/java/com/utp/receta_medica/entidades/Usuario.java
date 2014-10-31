@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "usuario")
@@ -33,9 +34,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario"),
     @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre"),
     @NamedQuery(name = "Usuario.findByApellidos", query = "SELECT u FROM Usuario u WHERE u.apellidos = :apellidos"),
-    @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo"),
+    @NamedQuery(name = "Usuario.findByIdentificacion", query = "SELECT u FROM Usuario u WHERE u.identificacion = :identificacion"),
     @NamedQuery(name = "Usuario.findByContrasena", query = "SELECT u FROM Usuario u WHERE u.contrasena = :contrasena"),
-    @NamedQuery(name = "Usuario.findByFoto", query = "SELECT u FROM Usuario u WHERE u.foto = :foto")})
+    @NamedQuery(name = "Usuario.findByFoto", query = "SELECT u FROM Usuario u WHERE u.foto = :foto"),
+    @NamedQuery(name = "Usuario.findByUsuariocol", query = "SELECT u FROM Usuario u WHERE u.usuariocol = :usuariocol"),
+    @NamedQuery(name = "Usuario.findByFechaNacimiento", query = "SELECT u FROM Usuario u WHERE u.fechaNacimiento = :fechaNacimiento"),
+    @NamedQuery(name = "Usuario.findByGenero", query = "SELECT u FROM Usuario u WHERE u.genero = :genero"),
+    @NamedQuery(name = "Usuario.findByTelefonoContacto", query = "SELECT u FROM Usuario u WHERE u.telefonoContacto = :telefonoContacto"),
+    @NamedQuery(name = "Usuario.findByEstrato", query = "SELECT u FROM Usuario u WHERE u.estrato = :estrato"),
+    @NamedQuery(name = "Usuario.findByTieneEps", query = "SELECT u FROM Usuario u WHERE u.tieneEps = :tieneEps"),
+    @NamedQuery(name = "Usuario.findByDireccionDespechaMedicamentos", query = "SELECT u FROM Usuario u WHERE u.direccionDespechaMedicamentos = :direccionDespechaMedicamentos")})
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,24 +59,45 @@ public class Usuario implements Serializable {
     @Column(name = "apellidos")
     private String apellidos;
     @Size(max = 45)
-    @Column(name = "correo")
-    private String correo;
+    @Column(name = "identificacion")
+    private String identificacion;
     @Size(max = 45)
     @Column(name = "contrasena")
     private String contrasena;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "foto")
     private String foto;
+    @Size(max = 45)
+    @Column(name = "Usuariocol")
+    private String usuariocol;
+    @Size(max = 45)
+    @Column(name = "fecha_nacimiento")
+    private String fechaNacimiento;
+    @Size(max = 45)
+    @Column(name = "genero")
+    private String genero;
+    @Size(max = 45)
+    @Column(name = "telefono_contacto")
+    private String telefonoContacto;
+    @Column(name = "estrato")
+    private Integer estrato;
+    @Column(name = "tiene_eps")
+    private Boolean tieneEps;
+    @Size(max = 45)
+    @Column(name = "direccion_despecha_medicamentos")
+    private String direccionDespechaMedicamentos;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private Collection<Paciente> pacienteCollection;
+    private Collection<Compra> compraCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Collection<Administrador> administradorCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Registro> registroCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private Collection<MedicoGeneral> medicoGeneralCollection;
+    private Collection<Paciente> pacienteCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private Collection<MedicoEspecialista> medicoEspecialistaCollection;
+    private Collection<Medico> medicoCollection;
 
     public Usuario() {
     }
@@ -101,12 +130,12 @@ public class Usuario implements Serializable {
         this.apellidos = apellidos;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 
     public String getContrasena() {
@@ -125,13 +154,78 @@ public class Usuario implements Serializable {
         this.foto = foto;
     }
 
-    @XmlTransient
-    public Collection<Paciente> getPacienteCollection() {
-        return pacienteCollection;
+    public String getUsuariocol() {
+        return usuariocol;
     }
 
-    public void setPacienteCollection(Collection<Paciente> pacienteCollection) {
-        this.pacienteCollection = pacienteCollection;
+    public void setUsuariocol(String usuariocol) {
+        this.usuariocol = usuariocol;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getTelefonoContacto() {
+        return telefonoContacto;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public Integer getEstrato() {
+        return estrato;
+    }
+
+    public void setEstrato(Integer estrato) {
+        this.estrato = estrato;
+    }
+
+    public Boolean getTieneEps() {
+        return tieneEps;
+    }
+
+    public void setTieneEps(Boolean tieneEps) {
+        this.tieneEps = tieneEps;
+    }
+
+    public String getDireccionDespechaMedicamentos() {
+        return direccionDespechaMedicamentos;
+    }
+
+    public void setDireccionDespechaMedicamentos(String direccionDespechaMedicamentos) {
+        this.direccionDespechaMedicamentos = direccionDespechaMedicamentos;
+    }
+
+    @XmlTransient
+    public Collection<Compra> getCompraCollection() {
+        return compraCollection;
+    }
+
+    public void setCompraCollection(Collection<Compra> compraCollection) {
+        this.compraCollection = compraCollection;
+    }
+
+    @XmlTransient
+    public Collection<Administrador> getAdministradorCollection() {
+        return administradorCollection;
+    }
+
+    public void setAdministradorCollection(Collection<Administrador> administradorCollection) {
+        this.administradorCollection = administradorCollection;
     }
 
     @XmlTransient
@@ -153,21 +247,21 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public Collection<MedicoGeneral> getMedicoGeneralCollection() {
-        return medicoGeneralCollection;
+    public Collection<Paciente> getPacienteCollection() {
+        return pacienteCollection;
     }
 
-    public void setMedicoGeneralCollection(Collection<MedicoGeneral> medicoGeneralCollection) {
-        this.medicoGeneralCollection = medicoGeneralCollection;
+    public void setPacienteCollection(Collection<Paciente> pacienteCollection) {
+        this.pacienteCollection = pacienteCollection;
     }
 
     @XmlTransient
-    public Collection<MedicoEspecialista> getMedicoEspecialistaCollection() {
-        return medicoEspecialistaCollection;
+    public Collection<Medico> getMedicoCollection() {
+        return medicoCollection;
     }
 
-    public void setMedicoEspecialistaCollection(Collection<MedicoEspecialista> medicoEspecialistaCollection) {
-        this.medicoEspecialistaCollection = medicoEspecialistaCollection;
+    public void setMedicoCollection(Collection<Medico> medicoCollection) {
+        this.medicoCollection = medicoCollection;
     }
 
     @Override

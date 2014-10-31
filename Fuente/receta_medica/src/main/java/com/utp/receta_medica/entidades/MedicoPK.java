@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -14,34 +15,34 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Embeddable
-public class MedicoEspecialistaPK implements Serializable {
+public class MedicoPK implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idMedico_especialista")
-    private int idMedicoespecialista;
+    @Column(name = "idMedico")
+    private int idMedico;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "Usuario_idUsuario")
     private String usuarioidUsuario;
 
-    public MedicoEspecialistaPK() {
+    public MedicoPK() {
     }
 
-    public MedicoEspecialistaPK(int idMedicoespecialista, String usuarioidUsuario) {
-        this.idMedicoespecialista = idMedicoespecialista;
+    public MedicoPK(int idMedico, String usuarioidUsuario) {
+        this.idMedico = idMedico;
         this.usuarioidUsuario = usuarioidUsuario;
     }
 
-    public int getIdMedicoespecialista() {
-        return idMedicoespecialista;
+    public int getIdMedico() {
+        return idMedico;
     }
 
-    public void setIdMedicoespecialista(int idMedicoespecialista) {
-        this.idMedicoespecialista = idMedicoespecialista;
+    public void setIdMedico(int idMedico) {
+        this.idMedico = idMedico;
     }
 
     public String getUsuarioidUsuario() {
@@ -55,7 +56,7 @@ public class MedicoEspecialistaPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idMedicoespecialista;
+        hash += (int) idMedico;
         hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
         return hash;
     }
@@ -63,11 +64,11 @@ public class MedicoEspecialistaPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MedicoEspecialistaPK)) {
+        if (!(object instanceof MedicoPK)) {
             return false;
         }
-        MedicoEspecialistaPK other = (MedicoEspecialistaPK) object;
-        if (this.idMedicoespecialista != other.idMedicoespecialista) {
+        MedicoPK other = (MedicoPK) object;
+        if (this.idMedico != other.idMedico) {
             return false;
         }
         if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
@@ -78,7 +79,7 @@ public class MedicoEspecialistaPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.MedicoEspecialistaPK[ idMedicoespecialista=" + idMedicoespecialista + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.MedicoPK[ idMedico=" + idMedico + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
     }
     
 }

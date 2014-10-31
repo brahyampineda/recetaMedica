@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "solicitud_quejas_reclamos")
@@ -30,7 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findBySolicitudquejasreclamoscol", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudquejasreclamoscol = :solicitudquejasreclamoscol"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findByAdministradoridAdministrador", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.administradoridAdministrador = :administradoridAdministrador"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -48,7 +49,9 @@ public class SolicitudQuejasReclamos implements Serializable {
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador", insertable = false, updatable = false)
+    @JoinColumns({
+        @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador"),
+        @JoinColumn(name = "Administrador_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
     @ManyToOne(optional = false)
     private Administrador administrador;
 
@@ -59,8 +62,8 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.solicitudQuejasReclamosPK = solicitudQuejasReclamosPK;
     }
 
-    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String administradoridAdministrador, String usuarioidUsuario) {
-        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, administradoridAdministrador, usuarioidUsuario);
+    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String usuarioidUsuario) {
+        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, usuarioidUsuario);
     }
 
     public SolicitudQuejasReclamosPK getSolicitudQuejasReclamosPK() {

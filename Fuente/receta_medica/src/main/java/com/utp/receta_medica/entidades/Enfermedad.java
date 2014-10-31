@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "enfermedad")
@@ -51,12 +54,18 @@ public class Enfermedad implements Serializable {
     @Size(max = 45)
     @Column(name = "recomendaciones")
     private String recomendaciones;
-    @JoinTable(name = "paciente_has_enfermedad", joinColumns = {
-        @JoinColumn(name = "Enfermedad_idEnfermedad", referencedColumnName = "idEnfermedad")}, inverseJoinColumns = {
-        @JoinColumn(name = "Paciente_idPaciente", referencedColumnName = "idPaciente"),
-        @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
-    @ManyToMany
-    private Collection<Paciente> pacienteCollection;
+    @JoinColumns({
+        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
+        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
+        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
+        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
+        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")})
+    @ManyToOne(optional = false)
+    private Consulta consulta;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
+    private Collection<Tratamiento> tratamientoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
+    private Collection<GrupoApoyo> grupoApoyoCollection;
 
     public Enfermedad() {
     }
@@ -97,13 +106,30 @@ public class Enfermedad implements Serializable {
         this.recomendaciones = recomendaciones;
     }
 
-    @XmlTransient
-    public Collection<Paciente> getPacienteCollection() {
-        return pacienteCollection;
+    public Consulta getConsulta() {
+        return consulta;
     }
 
-    public void setPacienteCollection(Collection<Paciente> pacienteCollection) {
-        this.pacienteCollection = pacienteCollection;
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
+
+    @XmlTransient
+    public Collection<Tratamiento> getTratamientoCollection() {
+        return tratamientoCollection;
+    }
+
+    public void setTratamientoCollection(Collection<Tratamiento> tratamientoCollection) {
+        this.tratamientoCollection = tratamientoCollection;
+    }
+
+    @XmlTransient
+    public Collection<GrupoApoyo> getGrupoApoyoCollection() {
+        return grupoApoyoCollection;
+    }
+
+    public void setGrupoApoyoCollection(Collection<GrupoApoyo> grupoApoyoCollection) {
+        this.grupoApoyoCollection = grupoApoyoCollection;
     }
 
     @Override

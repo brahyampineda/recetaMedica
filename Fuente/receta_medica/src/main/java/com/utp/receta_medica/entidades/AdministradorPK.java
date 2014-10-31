@@ -18,31 +18,32 @@ import javax.validation.constraints.Size;
  * @author Brahyam
  */
 @Embeddable
-public class PacientePK implements Serializable {
+public class AdministradorPK implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idPaciente")
-    private int idPaciente;
+    @Size(min = 1, max = 45)
+    @Column(name = "idAdministrador")
+    private String idAdministrador;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "Usuario_idUsuario")
     private String usuarioidUsuario;
 
-    public PacientePK() {
+    public AdministradorPK() {
     }
 
-    public PacientePK(int idPaciente, String usuarioidUsuario) {
-        this.idPaciente = idPaciente;
+    public AdministradorPK(String idAdministrador, String usuarioidUsuario) {
+        this.idAdministrador = idAdministrador;
         this.usuarioidUsuario = usuarioidUsuario;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+    public String getIdAdministrador() {
+        return idAdministrador;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setIdAdministrador(String idAdministrador) {
+        this.idAdministrador = idAdministrador;
     }
 
     public String getUsuarioidUsuario() {
@@ -56,7 +57,7 @@ public class PacientePK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idPaciente;
+        hash += (idAdministrador != null ? idAdministrador.hashCode() : 0);
         hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
         return hash;
     }
@@ -64,11 +65,11 @@ public class PacientePK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PacientePK)) {
+        if (!(object instanceof AdministradorPK)) {
             return false;
         }
-        PacientePK other = (PacientePK) object;
-        if (this.idPaciente != other.idPaciente) {
+        AdministradorPK other = (AdministradorPK) object;
+        if ((this.idAdministrador == null && other.idAdministrador != null) || (this.idAdministrador != null && !this.idAdministrador.equals(other.idAdministrador))) {
             return false;
         }
         if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
@@ -79,7 +80,7 @@ public class PacientePK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.PacientePK[ idPaciente=" + idPaciente + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.AdministradorPK[ idAdministrador=" + idAdministrador + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
     }
     
 }

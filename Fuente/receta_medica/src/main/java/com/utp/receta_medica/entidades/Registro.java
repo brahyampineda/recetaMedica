@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "registro")
@@ -29,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Registro.findByIdRegistro", query = "SELECT r FROM Registro r WHERE r.registroPK.idRegistro = :idRegistro"),
     @NamedQuery(name = "Registro.findByEstado", query = "SELECT r FROM Registro r WHERE r.estado = :estado"),
     @NamedQuery(name = "Registro.findByPerfil", query = "SELECT r FROM Registro r WHERE r.perfil = :perfil"),
-    @NamedQuery(name = "Registro.findByAdministradoridAdministrador", query = "SELECT r FROM Registro r WHERE r.registroPK.administradoridAdministrador = :administradoridAdministrador"),
     @NamedQuery(name = "Registro.findByUsuarioidUsuario", query = "SELECT r FROM Registro r WHERE r.registroPK.usuarioidUsuario = :usuarioidUsuario")})
 public class Registro implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -44,7 +45,9 @@ public class Registro implements Serializable {
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador", insertable = false, updatable = false)
+    @JoinColumns({
+        @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador"),
+        @JoinColumn(name = "Administrador_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
     @ManyToOne(optional = false)
     private Administrador administrador;
 
@@ -55,8 +58,8 @@ public class Registro implements Serializable {
         this.registroPK = registroPK;
     }
 
-    public Registro(int idRegistro, String administradoridAdministrador, String usuarioidUsuario) {
-        this.registroPK = new RegistroPK(idRegistro, administradoridAdministrador, usuarioidUsuario);
+    public Registro(int idRegistro, String usuarioidUsuario) {
+        this.registroPK = new RegistroPK(idRegistro, usuarioidUsuario);
     }
 
     public RegistroPK getRegistroPK() {

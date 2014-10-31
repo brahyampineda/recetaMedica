@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Embeddable
 public class SolicitudQuejasReclamosPK implements Serializable {
@@ -25,20 +26,14 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "Administrador_idAdministrador")
-    private String administradoridAdministrador;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "Usuario_idUsuario")
     private String usuarioidUsuario;
 
     public SolicitudQuejasReclamosPK() {
     }
 
-    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String administradoridAdministrador, String usuarioidUsuario) {
+    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String usuarioidUsuario) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
-        this.administradoridAdministrador = administradoridAdministrador;
         this.usuarioidUsuario = usuarioidUsuario;
     }
 
@@ -48,14 +43,6 @@ public class SolicitudQuejasReclamosPK implements Serializable {
 
     public void setIdSolicitudquejasreclamos(int idSolicitudquejasreclamos) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
-    }
-
-    public String getAdministradoridAdministrador() {
-        return administradoridAdministrador;
-    }
-
-    public void setAdministradoridAdministrador(String administradoridAdministrador) {
-        this.administradoridAdministrador = administradoridAdministrador;
     }
 
     public String getUsuarioidUsuario() {
@@ -70,7 +57,6 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     public int hashCode() {
         int hash = 0;
         hash += (int) idSolicitudquejasreclamos;
-        hash += (administradoridAdministrador != null ? administradoridAdministrador.hashCode() : 0);
         hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
         return hash;
     }
@@ -85,9 +71,6 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         if (this.idSolicitudquejasreclamos != other.idSolicitudquejasreclamos) {
             return false;
         }
-        if ((this.administradoridAdministrador == null && other.administradoridAdministrador != null) || (this.administradoridAdministrador != null && !this.administradoridAdministrador.equals(other.administradoridAdministrador))) {
-            return false;
-        }
         if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
             return false;
         }
@@ -96,7 +79,7 @@ public class SolicitudQuejasReclamosPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", administradoridAdministrador=" + administradoridAdministrador + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
     }
     
 }
