@@ -1,17 +1,7 @@
 
 package com.utp.receta_medica.ManagedBean;
 
-import com.utp.receta_medica.entidades.Administrador;
-import com.utp.receta_medica.entidades.Medicamento;
-import com.utp.receta_medica.entidades.MedicoEspecialista;
-import com.utp.receta_medica.entidades.MedicoEspecialistaPK;
-import com.utp.receta_medica.entidades.MedicoGeneral;
-import com.utp.receta_medica.entidades.Paciente;
-import com.utp.receta_medica.entidades.PacientePK;
-import com.utp.receta_medica.entidades.Registro;
-import com.utp.receta_medica.entidades.SolicitudQuejasReclamos;
-import com.utp.receta_medica.entidades.Tratamiento;
-import com.utp.receta_medica.entidades.Usuario;
+import com.utp.receta_medica.entidades.*;
 import com.utp.receta_medica.facade.LoginService;
 import com.utp.receta_medica.facade.TablasFacade;
 import java.io.Serializable;
@@ -95,14 +85,14 @@ public class BeanAdministrador implements Serializable{
         System.out.println("11111");
         try {
             administrador = new Administrador();
-            administrador.setIdAdministrador("1");
+            administrador.setAdministradorPK(new AdministradorPK("1", "1"));
             administrador.setRegistroCollection(new ArrayList<Registro>());
-            administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
+//            administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
             System.out.println("AMIN "+administrador);
             medicamentoActual = new Medicamento();
             tratamientoActual = new Tratamiento();
             administrador = crud.find(administrador);
-            System.out.println("AMIN22 "+administrador.getCorreo());
+            System.out.println("AMIN22 "+administrador.getUsuario().getIdUsuario());
             for (Registro registro : administrador.getRegistroCollection()) {
                 System.out.println("REGISTRO "+registro.getUsuario().getNombre());
             }
@@ -132,18 +122,18 @@ public class BeanAdministrador implements Serializable{
                 }
             }
             if (registro.getPerfil().equals("Medico general")) {
-                MedicoGeneral medicoGeneral;
-                medicoGeneral = new MedicoGeneral();
+                Medico medicoGeneral;
+                medicoGeneral = new Medico();
                 medicoGeneral.setUsuario(registro.getUsuario());
-                registro.getUsuario().getMedicoGeneralCollection().add(medicoGeneral);
+                registro.getUsuario().getMedicoCollection().add(medicoGeneral);
                 crud.save(medicoGeneral);
             }
             if (registro.getPerfil().equals("Medico especialista")) {
                 try {
-                    MedicoEspecialista medicoEspecialista;
-                    medicoEspecialista = new MedicoEspecialista();
-                    medicoEspecialista.setMedicoEspecialistaPK(new MedicoEspecialistaPK());
-                    medicoEspecialista.getMedicoEspecialistaPK().setUsuarioidUsuario(registro.getRegistroPK().getUsuarioidUsuario());
+                    Medico medicoEspecialista;
+                    medicoEspecialista = new Medico();
+                    medicoEspecialista.setMedicoPK(new MedicoPK());
+                    medicoEspecialista.getMedicoPK().setUsuarioidUsuario(registro.getRegistroPK().getUsuarioidUsuario());
                     medicoEspecialista.setUsuario(registro.getUsuario());
                     crud.generarConsecutivo(medicoEspecialista);
 //                    registro.getUsuario().getMedicoEspecialistaCollection().add(medicoEspecialista);
