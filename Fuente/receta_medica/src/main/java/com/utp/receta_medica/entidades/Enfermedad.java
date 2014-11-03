@@ -37,13 +37,13 @@ public class Enfermedad implements Serializable {
     @NotNull
     @Column(name = "idEnfermedad")
     private Integer idEnfermedad;
-    @Size(max = 45)
+    @Size(max = 150)
     @Column(name = "posologia")
     private String posologia;
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 45)
+    @Size(max = 300)
     @Column(name = "recomendaciones")
     private String recomendaciones;
     @ManyToMany(mappedBy = "enfermedadCollection")

@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByIdSolicitudquejasreclamos", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.idSolicitudquejasreclamos = :idSolicitudquejasreclamos"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findBySolicitudquejasreclamoscol", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudquejasreclamoscol = :solicitudquejasreclamoscol"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -37,9 +36,6 @@ public class SolicitudQuejasReclamos implements Serializable {
     @Size(max = 300)
     @Column(name = "descripcion")
     private String descripcion;
-    @Size(max = 45)
-    @Column(name = "Solicitud_quejas_reclamoscol")
-    private String solicitudquejasreclamoscol;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -82,14 +78,6 @@ public class SolicitudQuejasReclamos implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getSolicitudquejasreclamoscol() {
-        return solicitudquejasreclamoscol;
-    }
-
-    public void setSolicitudquejasreclamoscol(String solicitudquejasreclamoscol) {
-        this.solicitudquejasreclamoscol = solicitudquejasreclamoscol;
     }
 
     public Usuario getUsuario() {

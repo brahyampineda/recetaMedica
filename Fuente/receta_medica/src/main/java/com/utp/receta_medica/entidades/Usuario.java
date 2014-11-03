@@ -2,6 +2,7 @@ package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -51,34 +54,34 @@ public class Usuario implements Serializable {
     @Size(max = 45)
     @Column(name = "apellidos")
     private String apellidos;
-    @Size(max = 45)
+    @Size(max = 20)
     @Column(name = "identificacion")
     private String identificacion;
-    @Size(max = 45)
+    @Size(max = 20)
     @Column(name = "contrasena")
     private String contrasena;
     @Size(max = 255)
     @Column(name = "foto")
     private String foto;
-    @Size(max = 45)
     @Column(name = "fecha_nacimiento")
-    private String fechaNacimiento;
-    @Size(max = 45)
+    @Temporal(TemporalType.DATE)
+    private Date fechaNacimiento;
+    @Size(max = 9)
     @Column(name = "genero")
     private String genero;
-    @Size(max = 45)
+    @Size(max = 20)
     @Column(name = "telefono_contacto")
     private String telefonoContacto;
     @Column(name = "estrato")
     private Integer estrato;
     @Column(name = "tiene_eps")
     private Boolean tieneEps;
-    @Size(max = 45)
+    @Size(max = 100)
     @Column(name = "direccion_despecha_medicamentos")
     private String direccionDespechaMedicamentos;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Compra> compraCollection;
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Administrador> administradorCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
@@ -144,11 +147,11 @@ public class Usuario implements Serializable {
         this.foto = foto;
     }
 
-    public String getFechaNacimiento() {
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

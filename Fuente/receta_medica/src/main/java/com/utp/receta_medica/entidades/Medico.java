@@ -2,7 +2,6 @@ package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -14,6 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -38,14 +38,14 @@ public class Medico implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected MedicoPK medicoPK;
-    @Size(max = 45)
+    @Size(max = 100)
     @Column(name = "universidad")
     private String universidad;
-    @Size(max = 2)
     @Column(name = "anos_experiencia")
-    private String anosExperiencia;
+    private Integer anosExperiencia;
+    @Min(value=0)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "tarifa")
-    private Integer tarifa;
+    private Float tarifa;
     @Size(max = 45)
     @Column(name = "especialidad")
     private String especialidad;
@@ -95,19 +95,19 @@ public class Medico implements Serializable {
         this.universidad = universidad;
     }
 
-    public String getAnosExperiencia() {
+    public Integer getAnosExperiencia() {
         return anosExperiencia;
     }
 
-    public void setAnosExperiencia(String anosExperiencia) {
+    public void setAnosExperiencia(Integer anosExperiencia) {
         this.anosExperiencia = anosExperiencia;
     }
 
-    public Integer getTarifa() {
+    public Float getTarifa() {
         return tarifa;
     }
 
-    public void setTarifa(Integer tarifa) {
+    public void setTarifa(Float tarifa) {
         this.tarifa = tarifa;
     }
 

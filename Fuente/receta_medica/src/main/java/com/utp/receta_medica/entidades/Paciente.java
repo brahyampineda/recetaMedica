@@ -35,10 +35,9 @@ public class Paciente implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PacientePK pacientePK;
-    @Size(max = 1)
     @Column(name = "tiene_sisben")
-    private String tieneSisben;
-    @Size(max = 45)
+    private Boolean tieneSisben;
+    @Size(max = 100)
     @Column(name = "direccion")
     private String direccion;
     @JoinTable(name = "paciente_has_tratamiento", joinColumns = {
@@ -73,11 +72,11 @@ public class Paciente implements Serializable {
         this.pacientePK = pacientePK;
     }
 
-    public String getTieneSisben() {
+    public Boolean getTieneSisben() {
         return tieneSisben;
     }
 
-    public void setTieneSisben(String tieneSisben) {
+    public void setTieneSisben(Boolean tieneSisben) {
         this.tieneSisben = tieneSisben;
     }
 

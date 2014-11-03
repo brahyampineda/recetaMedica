@@ -35,7 +35,7 @@ public class Tratamiento implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 255)
+    @Size(max = 300)
     @Column(name = "descripcion")
     private String descripcion;
     @ManyToMany(mappedBy = "tratamientoCollection")

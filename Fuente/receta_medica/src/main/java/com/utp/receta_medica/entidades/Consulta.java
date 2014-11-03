@@ -57,6 +57,17 @@ public class Consulta implements Serializable {
         @JoinColumn(name = "Enfermedad_idEnfermedad", referencedColumnName = "idEnfermedad")})
     @ManyToMany
     private Collection<Enfermedad> enfermedadCollection;
+    @JoinTable(name = "consulta_has_grupo_apoyo", joinColumns = {
+        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
+        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
+        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
+        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
+        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")}, inverseJoinColumns = {
+        @JoinColumn(name = "Grupo_apoyo_idGrupo_apoyo", referencedColumnName = "idGrupo_apoyo"),
+        @JoinColumn(name = "Grupo_apoyo_Entidad_nit", referencedColumnName = "Entidad_nit"),
+        @JoinColumn(name = "Grupo_apoyo_Enfermedad_idEnfermedad", referencedColumnName = "Enfermedad_idEnfermedad")})
+    @ManyToMany
+    private Collection<GrupoApoyo> grupoApoyoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulta")
     private Collection<RecetaMedica> recetaMedicaCollection;
     @JoinColumns({
@@ -70,7 +81,7 @@ public class Consulta implements Serializable {
     @ManyToOne(optional = false)
     private Paciente paciente;
     @OneToMany(mappedBy = "consulta")
-    private Collection<GrupoApoyo> grupoApoyoCollection;
+    private Collection<GrupoApoyo> grupoApoyoCollection1;
 
     public Consulta() {
     }
@@ -125,6 +136,15 @@ public class Consulta implements Serializable {
     }
 
     @XmlTransient
+    public Collection<GrupoApoyo> getGrupoApoyoCollection() {
+        return grupoApoyoCollection;
+    }
+
+    public void setGrupoApoyoCollection(Collection<GrupoApoyo> grupoApoyoCollection) {
+        this.grupoApoyoCollection = grupoApoyoCollection;
+    }
+
+    @XmlTransient
     public Collection<RecetaMedica> getRecetaMedicaCollection() {
         return recetaMedicaCollection;
     }
@@ -150,12 +170,12 @@ public class Consulta implements Serializable {
     }
 
     @XmlTransient
-    public Collection<GrupoApoyo> getGrupoApoyoCollection() {
-        return grupoApoyoCollection;
+    public Collection<GrupoApoyo> getGrupoApoyoCollection1() {
+        return grupoApoyoCollection1;
     }
 
-    public void setGrupoApoyoCollection(Collection<GrupoApoyo> grupoApoyoCollection) {
-        this.grupoApoyoCollection = grupoApoyoCollection;
+    public void setGrupoApoyoCollection1(Collection<GrupoApoyo> grupoApoyoCollection1) {
+        this.grupoApoyoCollection1 = grupoApoyoCollection1;
     }
 
     @Override

@@ -30,10 +30,10 @@ public class Registro implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected RegistroPK registroPK;
-    @Size(max = 45)
+    @Size(max = 15)
     @Column(name = "estado")
     private String estado;
-    @Size(max = 45)
+    @Size(max = 15)
     @Column(name = "perfil")
     private String perfil;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)

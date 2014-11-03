@@ -3,7 +3,6 @@ package com.utp.receta_medica.entidades;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -49,18 +49,19 @@ public class Medicamento implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
+    @Min(value=0)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
-    private Integer precio;
-    @Size(max = 45)
+    private Float precio;
+    @Size(max = 300)
     @Column(name = "composicion")
     private String composicion;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "indicaciones")
     private String indicaciones;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "precauciones")
     private String precauciones;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "contraindicaciones")
     private String contraindicaciones;
     @Column(name = "presentacion")
@@ -107,11 +108,11 @@ public class Medicamento implements Serializable {
         this.nombre = nombre;
     }
 
-    public Integer getPrecio() {
+    public Float getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Float precio) {
         this.precio = precio;
     }
 

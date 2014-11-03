@@ -1,17 +1,20 @@
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -37,6 +40,8 @@ public class GrupoApoyo implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre_profesional")
     private String nombreProfesional;
+    @ManyToMany(mappedBy = "grupoApoyoCollection")
+    private Collection<Consulta> consultaCollection;
     @JoinColumns({
         @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
         @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
@@ -85,6 +90,15 @@ public class GrupoApoyo implements Serializable {
 
     public void setNombreProfesional(String nombreProfesional) {
         this.nombreProfesional = nombreProfesional;
+    }
+
+    @XmlTransient
+    public Collection<Consulta> getConsultaCollection() {
+        return consultaCollection;
+    }
+
+    public void setConsultaCollection(Collection<Consulta> consultaCollection) {
+        this.consultaCollection = consultaCollection;
     }
 
     public Consulta getConsulta() {

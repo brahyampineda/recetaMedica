@@ -35,10 +35,10 @@ public class Pago implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PagoPK pagoPK;
-    @Size(max = 45)
+    @Size(max = 100)
     @Column(name = "direccion")
     private String direccion;
-    @Size(max = 45)
+    @Size(max = 20)
     @Column(name = "telefono")
     private String telefono;
     @Column(name = "horario_recibir")
