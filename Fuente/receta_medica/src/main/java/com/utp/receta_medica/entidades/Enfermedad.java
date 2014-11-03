@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -13,9 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -54,14 +46,8 @@ public class Enfermedad implements Serializable {
     @Size(max = 45)
     @Column(name = "recomendaciones")
     private String recomendaciones;
-    @JoinColumns({
-        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
-        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
-        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
-        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
-        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")})
-    @ManyToOne(optional = false)
-    private Consulta consulta;
+    @ManyToMany(mappedBy = "enfermedadCollection")
+    private Collection<Consulta> consultaCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
     private Collection<Tratamiento> tratamientoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
@@ -106,12 +92,13 @@ public class Enfermedad implements Serializable {
         this.recomendaciones = recomendaciones;
     }
 
-    public Consulta getConsulta() {
-        return consulta;
+    @XmlTransient
+    public Collection<Consulta> getConsultaCollection() {
+        return consultaCollection;
     }
 
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
+    public void setConsultaCollection(Collection<Consulta> consultaCollection) {
+        this.consultaCollection = consultaCollection;
     }
 
     @XmlTransient

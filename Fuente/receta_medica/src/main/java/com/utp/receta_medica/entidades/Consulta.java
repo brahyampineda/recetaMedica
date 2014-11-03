@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -14,6 +8,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -52,7 +48,14 @@ public class Consulta implements Serializable {
     @Size(max = 200)
     @Column(name = "deportes")
     private String deportes;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulta")
+    @JoinTable(name = "enfermedad_has_consulta", joinColumns = {
+        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
+        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
+        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
+        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
+        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")}, inverseJoinColumns = {
+        @JoinColumn(name = "Enfermedad_idEnfermedad", referencedColumnName = "idEnfermedad")})
+    @ManyToMany
     private Collection<Enfermedad> enfermedadCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulta")
     private Collection<RecetaMedica> recetaMedicaCollection;
@@ -66,7 +69,7 @@ public class Consulta implements Serializable {
         @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Paciente paciente;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulta")
+    @OneToMany(mappedBy = "consulta")
     private Collection<GrupoApoyo> grupoApoyoCollection;
 
     public Consulta() {

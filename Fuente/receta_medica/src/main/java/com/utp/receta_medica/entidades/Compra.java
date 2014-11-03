@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -43,7 +37,7 @@ public class Compra implements Serializable {
     private Boolean esContraentrega;
     @Size(max = 45)
     @Column(name = "total_compra")
-    private String totalCompra;
+    private Float totalCompra;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -79,11 +73,11 @@ public class Compra implements Serializable {
         this.esContraentrega = esContraentrega;
     }
 
-    public String getTotalCompra() {
+    public Float getTotalCompra() {
         return totalCompra;
     }
 
-    public void setTotalCompra(String totalCompra) {
+    public void setTotalCompra(Float totalCompra) {
         this.totalCompra = totalCompra;
     }
 

@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -38,9 +31,9 @@ public class Administrador implements Serializable {
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrador")
+    @OneToMany(mappedBy = "administrador")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrador")
+    @OneToMany(mappedBy = "administrador")
     private Collection<Registro> registroCollection;
 
     public Administrador() {

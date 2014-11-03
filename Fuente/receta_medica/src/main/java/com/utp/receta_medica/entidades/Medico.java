@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -71,7 +65,7 @@ public class Medico implements Serializable {
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "medico")
+    @OneToMany(mappedBy = "medico")
     private Collection<Consulta> consultaCollection;
 
     public Medico() {

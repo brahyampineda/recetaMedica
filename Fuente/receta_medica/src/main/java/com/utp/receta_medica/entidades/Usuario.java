@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -37,7 +31,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByIdentificacion", query = "SELECT u FROM Usuario u WHERE u.identificacion = :identificacion"),
     @NamedQuery(name = "Usuario.findByContrasena", query = "SELECT u FROM Usuario u WHERE u.contrasena = :contrasena"),
     @NamedQuery(name = "Usuario.findByFoto", query = "SELECT u FROM Usuario u WHERE u.foto = :foto"),
-    @NamedQuery(name = "Usuario.findByUsuariocol", query = "SELECT u FROM Usuario u WHERE u.usuariocol = :usuariocol"),
     @NamedQuery(name = "Usuario.findByFechaNacimiento", query = "SELECT u FROM Usuario u WHERE u.fechaNacimiento = :fechaNacimiento"),
     @NamedQuery(name = "Usuario.findByGenero", query = "SELECT u FROM Usuario u WHERE u.genero = :genero"),
     @NamedQuery(name = "Usuario.findByTelefonoContacto", query = "SELECT u FROM Usuario u WHERE u.telefonoContacto = :telefonoContacto"),
@@ -68,9 +61,6 @@ public class Usuario implements Serializable {
     @Column(name = "foto")
     private String foto;
     @Size(max = 45)
-    @Column(name = "Usuariocol")
-    private String usuariocol;
-    @Size(max = 45)
     @Column(name = "fecha_nacimiento")
     private String fechaNacimiento;
     @Size(max = 45)
@@ -88,7 +78,7 @@ public class Usuario implements Serializable {
     private String direccionDespechaMedicamentos;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Compra> compraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario")
     private Collection<Administrador> administradorCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
@@ -152,14 +142,6 @@ public class Usuario implements Serializable {
 
     public void setFoto(String foto) {
         this.foto = foto;
-    }
-
-    public String getUsuariocol() {
-        return usuariocol;
-    }
-
-    public void setUsuariocol(String usuariocol) {
-        this.usuariocol = usuariocol;
     }
 
     public String getFechaNacimiento() {
