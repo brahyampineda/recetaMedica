@@ -1,3 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -6,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -42,14 +47,6 @@ public class GrupoApoyo implements Serializable {
     private String nombreProfesional;
     @ManyToMany(mappedBy = "grupoApoyoCollection")
     private Collection<Consulta> consultaCollection;
-    @JoinColumns({
-        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
-        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
-        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
-        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
-        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")})
-    @ManyToOne(optional = false)
-    private Consulta consulta;
     @JoinColumn(name = "Entidad_nit", referencedColumnName = "nit", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Entidad entidad;
@@ -99,14 +96,6 @@ public class GrupoApoyo implements Serializable {
 
     public void setConsultaCollection(Collection<Consulta> consultaCollection) {
         this.consultaCollection = consultaCollection;
-    }
-
-    public Consulta getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
     }
 
     public Entidad getEntidad() {

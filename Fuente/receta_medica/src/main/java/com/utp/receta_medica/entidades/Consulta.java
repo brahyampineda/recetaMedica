@@ -1,3 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -80,8 +86,6 @@ public class Consulta implements Serializable {
         @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Paciente paciente;
-    @OneToMany(mappedBy = "consulta")
-    private Collection<GrupoApoyo> grupoApoyoCollection1;
 
     public Consulta() {
     }
@@ -167,15 +171,6 @@ public class Consulta implements Serializable {
 
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
-    }
-
-    @XmlTransient
-    public Collection<GrupoApoyo> getGrupoApoyoCollection1() {
-        return grupoApoyoCollection1;
-    }
-
-    public void setGrupoApoyoCollection1(Collection<GrupoApoyo> grupoApoyoCollection1) {
-        this.grupoApoyoCollection1 = grupoApoyoCollection1;
     }
 
     @Override
