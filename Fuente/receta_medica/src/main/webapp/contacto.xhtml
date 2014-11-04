@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./index.xhtml">
+
+        <ui:define name="titulo">Contacto</ui:define>
+
+        <ui:define name="contenido" >
+            <h:form>
+                <h:panelGrid id="panelContacto" styleClass="stylePanelGrid" columns="2" columnClasses="derechaNegrita, izquierda" 
+                             title="Contáctenos" style="width: 100%" >
+                    <f:facet name="header"><h2>Póngase en contacto con nosotros</h2></f:facet>
+                    
+                    <p:outputLabel for="nombre" value="Nombre:" />
+                    <p:inputText id="nombre" value="#{beanGeneral.nombreContacto}" styleClass="styleInputText1" 
+                                 required="true" requiredMessage="Debe especificar su nombre" placeholder="Nombre..."
+                                 validatorMessage="El nombre solo debe contener letras, y un tamaño máximo de 40 caractéres.">
+                        <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                    </p:inputText>
+                    <p:outputLabel for="correo" value="Correo:" />
+                    <p:inputText id="correo" value="#{beanGeneral.correoContacto}" styleClass="styleInputText1" 
+                                 required="true" requiredMessage="Debe especificar su correo" placeholder="correo@ejemplo.com"
+                                 validatorMessage="No es un correo válido.">
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                    </p:inputText>
+                    <p:outputLabel for="mensaje" value="Mensaje:" />
+                    <p:inputTextarea id="mensaje" value="#{beanGeneral.mensajeContacto}" styleClass="styleInputText1" 
+                                     required="true" requiredMessage="Debe escribir un mensaje." placeholder="Escriba acá su mensaje..."
+                                     autoResize="false" maxlength="500" rows="7"/>
+                    <p:spacer />
+                    <p:spacer />
+                    <p:spacer />
+                    <p:commandButton value="Enviar" actionListener="#{beanGeneral.enviarCorreoDeContacto()}" 
+                                     ajax="false" style="margin: 0 auto"/>
+                </h:panelGrid>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
+</html>
