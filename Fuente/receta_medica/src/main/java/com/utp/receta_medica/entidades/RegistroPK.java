@@ -22,7 +22,7 @@ public class RegistroPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idRegistro")
-    private int idRegistro;
+    private Integer idRegistro;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -32,16 +32,16 @@ public class RegistroPK implements Serializable {
     public RegistroPK() {
     }
 
-    public RegistroPK(int idRegistro, String usuarioidUsuario) {
+    public RegistroPK(Integer idRegistro, String usuarioidUsuario) {
         this.idRegistro = idRegistro;
         this.usuarioidUsuario = usuarioidUsuario;
     }
 
-    public int getIdRegistro() {
+    public Integer getIdRegistro() {
         return idRegistro;
     }
 
-    public void setIdRegistro(int idRegistro) {
+    public void setIdRegistro(Integer idRegistro) {
         this.idRegistro = idRegistro;
     }
 
