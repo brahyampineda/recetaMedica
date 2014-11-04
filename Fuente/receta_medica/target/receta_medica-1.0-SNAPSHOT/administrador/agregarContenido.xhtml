@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+        <ui:composition template="./../index.xhtml">
+
+            <ui:define name="titulo">
+                Agregar Contenido
+            </ui:define>
+
+            <ui:define name="login">
+                login
+            </ui:define>
+
+            <ui:define name="pestañas">
+                pestañas
+            </ui:define>
+
+            <ui:define name="contenido">
+                <p:tabView >
+                    <p:tab title="Añadir medicamento no POS" >
+                        <h:form>
+                            <h:panelGrid columns="4" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda">
+                                <p:outputLabel value="Nombre:"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText"/>
+                                <p:outputLabel value="Precio:"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText"/>
+                                <p:outputLabel value="Composición:"/>
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText"
+                                                 autoResize="false"/>
+                                <p:outputLabel value="Indicaciones:"/>
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText"
+                                                 autoResize="false"/>
+                                <p:outputLabel value="Precauciones:"/>
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText"
+                                                 autoResize="false"/>
+                                <p:outputLabel value="Contraindicaciones:"/>
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText"
+                                                 autoResize="false"/>
+                                <p:outputLabel value="Presentación:"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText"/>
+                                <p:outputLabel value="Dosis usual:"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText"/>
+                                <p:outputLabel value="Cantidad:"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText"/>
+                            </h:panelGrid>
+                            <br/>
+                            <p:commandButton value="Agregar" actionListener="#{beanAdministrador.guardarMedicamento()}" icon="ui-icon-plusthick"/>
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="Añadir tratamiento" >
+                        <h:form>
+                            <h:panelGrid columns="2" styleClass="stylePanelGrid" columnClasses="derechaNegrita, izquierda">
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}" style="width: 50%"/>
+                                <p:outputLabel value="Duración" />
+                                <p:inputText style="width: 50%"/>
+                                <p:spacer />
+                                <p:commandButton value="Agregar" actionListener="#{beanAdministrador.guardarTratamiento()}"
+                                                 />
+                            </h:panelGrid>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+
+        </ui:composition>
+</html>
