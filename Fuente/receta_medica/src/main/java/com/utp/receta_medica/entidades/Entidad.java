@@ -61,8 +61,7 @@ public class Entidad implements Serializable {
     private String url;
     @JoinTable(name = "entidad_has_medico", joinColumns = {
         @JoinColumn(name = "Entidad_nit", referencedColumnName = "nit")}, inverseJoinColumns = {
-        @JoinColumn(name = "Medico_idMedico", referencedColumnName = "idMedico"),
-        @JoinColumn(name = "Medico_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
+        @JoinColumn(name = "Medico_identificacion", referencedColumnName = "identificacion")})
     @ManyToMany
     private Collection<Medico> medicoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entidad")

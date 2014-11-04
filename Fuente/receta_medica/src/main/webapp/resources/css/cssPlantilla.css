@@ -15,7 +15,9 @@ div {
 
 
 #divCabecera {
-    background: #c2dfef;
+/*    background: #c2dfef;
+    background-image: url(http://imagenesfotos.com/wp-content/2009/11/azules-14.jpg);*/
+
 }
 
 #divEnlaces {
@@ -36,8 +38,9 @@ div {
 }
 
 #divFooter {
-    background: #045491;
-    color: white;
+    /*background: #045491;*/
+    background: white;
+    color: blue;
     float: bottom;
     padding: 10px;
 }
@@ -57,11 +60,17 @@ div {
     text-align: left;
 }
 
-.styleInputText {
+.styleInputText1 {
+    width: 50%;
+}
+
+.styleInputText2 {
     width: 95%;
 }
 
 .stylePanelGrid {
+    background-color: white;
     margin: 0 auto;
-    width: 99%;
+    width: 99.5%;
+    padding: 1%;
 }

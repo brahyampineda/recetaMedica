@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Pago.findByTelefono", query = "SELECT p FROM Pago p WHERE p.telefono = :telefono"),
     @NamedQuery(name = "Pago.findByHorarioRecibir", query = "SELECT p FROM Pago p WHERE p.horarioRecibir = :horarioRecibir"),
     @NamedQuery(name = "Pago.findByCompraidCompra", query = "SELECT p FROM Pago p WHERE p.pagoPK.compraidCompra = :compraidCompra"),
-    @NamedQuery(name = "Pago.findByCompraUsuarioidUsuario", query = "SELECT p FROM Pago p WHERE p.pagoPK.compraUsuarioidUsuario = :compraUsuarioidUsuario")})
+    @NamedQuery(name = "Pago.findByCompraUsuarioemail", query = "SELECT p FROM Pago p WHERE p.pagoPK.compraUsuarioemail = :compraUsuarioemail")})
 public class Pago implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -52,7 +52,7 @@ public class Pago implements Serializable {
     private Date horarioRecibir;
     @JoinColumns({
         @JoinColumn(name = "Compra_idCompra", referencedColumnName = "idCompra", insertable = false, updatable = false),
-        @JoinColumn(name = "Compra_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
+        @JoinColumn(name = "Compra_Usuario_email", referencedColumnName = "Usuario_email", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Compra compra;
 
@@ -63,8 +63,8 @@ public class Pago implements Serializable {
         this.pagoPK = pagoPK;
     }
 
-    public Pago(int idPago, int compraidCompra, String compraUsuarioidUsuario) {
-        this.pagoPK = new PagoPK(idPago, compraidCompra, compraUsuarioidUsuario);
+    public Pago(int idPago, int compraidCompra, String compraUsuarioemail) {
+        this.pagoPK = new PagoPK(idPago, compraidCompra, compraUsuarioemail);
     }
 
     public PagoPK getPagoPK() {

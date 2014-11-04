@@ -26,15 +26,15 @@ public class CompraPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "Usuario_idUsuario")
-    private String usuarioidUsuario;
+    @Column(name = "Usuario_email")
+    private String usuarioemail;
 
     public CompraPK() {
     }
 
-    public CompraPK(int idCompra, String usuarioidUsuario) {
+    public CompraPK(int idCompra, String usuarioemail) {
         this.idCompra = idCompra;
-        this.usuarioidUsuario = usuarioidUsuario;
+        this.usuarioemail = usuarioemail;
     }
 
     public int getIdCompra() {
@@ -45,19 +45,19 @@ public class CompraPK implements Serializable {
         this.idCompra = idCompra;
     }
 
-    public String getUsuarioidUsuario() {
-        return usuarioidUsuario;
+    public String getUsuarioemail() {
+        return usuarioemail;
     }
 
-    public void setUsuarioidUsuario(String usuarioidUsuario) {
-        this.usuarioidUsuario = usuarioidUsuario;
+    public void setUsuarioemail(String usuarioemail) {
+        this.usuarioemail = usuarioemail;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idCompra;
-        hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
+        hash += (usuarioemail != null ? usuarioemail.hashCode() : 0);
         return hash;
     }
 
@@ -71,7 +71,7 @@ public class CompraPK implements Serializable {
         if (this.idCompra != other.idCompra) {
             return false;
         }
-        if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
+        if ((this.usuarioemail == null && other.usuarioemail != null) || (this.usuarioemail != null && !this.usuarioemail.equals(other.usuarioemail))) {
             return false;
         }
         return true;
@@ -79,7 +79,7 @@ public class CompraPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.CompraPK[ idCompra=" + idCompra + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.CompraPK[ idCompra=" + idCompra + ", usuarioemail=" + usuarioemail + " ]";
     }
     
 }

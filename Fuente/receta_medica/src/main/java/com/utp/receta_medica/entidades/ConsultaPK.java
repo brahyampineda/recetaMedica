@@ -25,32 +25,22 @@ public class ConsultaPK implements Serializable {
     private int idConsulta;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "Medico_idMedico")
-    private int medicoidMedico;
+    @Size(min = 1, max = 20)
+    @Column(name = "Medico_identificacion")
+    private String medicoidentificacion;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "Medico_Usuario_idUsuario")
-    private String medicoUsuarioidUsuario;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Paciente_idPaciente")
-    private int pacienteidPaciente;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "Paciente_Usuario_idUsuario")
-    private String pacienteUsuarioidUsuario;
+    @Size(min = 1, max = 20)
+    @Column(name = "Paciente_identificacion")
+    private String pacienteidentificacion;
 
     public ConsultaPK() {
     }
 
-    public ConsultaPK(int idConsulta, int medicoidMedico, String medicoUsuarioidUsuario, int pacienteidPaciente, String pacienteUsuarioidUsuario) {
+    public ConsultaPK(int idConsulta, String medicoidentificacion, String pacienteidentificacion) {
         this.idConsulta = idConsulta;
-        this.medicoidMedico = medicoidMedico;
-        this.medicoUsuarioidUsuario = medicoUsuarioidUsuario;
-        this.pacienteidPaciente = pacienteidPaciente;
-        this.pacienteUsuarioidUsuario = pacienteUsuarioidUsuario;
+        this.medicoidentificacion = medicoidentificacion;
+        this.pacienteidentificacion = pacienteidentificacion;
     }
 
     public int getIdConsulta() {
@@ -61,46 +51,28 @@ public class ConsultaPK implements Serializable {
         this.idConsulta = idConsulta;
     }
 
-    public int getMedicoidMedico() {
-        return medicoidMedico;
+    public String getMedicoidentificacion() {
+        return medicoidentificacion;
     }
 
-    public void setMedicoidMedico(int medicoidMedico) {
-        this.medicoidMedico = medicoidMedico;
+    public void setMedicoidentificacion(String medicoidentificacion) {
+        this.medicoidentificacion = medicoidentificacion;
     }
 
-    public String getMedicoUsuarioidUsuario() {
-        return medicoUsuarioidUsuario;
+    public String getPacienteidentificacion() {
+        return pacienteidentificacion;
     }
 
-    public void setMedicoUsuarioidUsuario(String medicoUsuarioidUsuario) {
-        this.medicoUsuarioidUsuario = medicoUsuarioidUsuario;
-    }
-
-    public int getPacienteidPaciente() {
-        return pacienteidPaciente;
-    }
-
-    public void setPacienteidPaciente(int pacienteidPaciente) {
-        this.pacienteidPaciente = pacienteidPaciente;
-    }
-
-    public String getPacienteUsuarioidUsuario() {
-        return pacienteUsuarioidUsuario;
-    }
-
-    public void setPacienteUsuarioidUsuario(String pacienteUsuarioidUsuario) {
-        this.pacienteUsuarioidUsuario = pacienteUsuarioidUsuario;
+    public void setPacienteidentificacion(String pacienteidentificacion) {
+        this.pacienteidentificacion = pacienteidentificacion;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idConsulta;
-        hash += (int) medicoidMedico;
-        hash += (medicoUsuarioidUsuario != null ? medicoUsuarioidUsuario.hashCode() : 0);
-        hash += (int) pacienteidPaciente;
-        hash += (pacienteUsuarioidUsuario != null ? pacienteUsuarioidUsuario.hashCode() : 0);
+        hash += (medicoidentificacion != null ? medicoidentificacion.hashCode() : 0);
+        hash += (pacienteidentificacion != null ? pacienteidentificacion.hashCode() : 0);
         return hash;
     }
 
@@ -114,16 +86,10 @@ public class ConsultaPK implements Serializable {
         if (this.idConsulta != other.idConsulta) {
             return false;
         }
-        if (this.medicoidMedico != other.medicoidMedico) {
+        if ((this.medicoidentificacion == null && other.medicoidentificacion != null) || (this.medicoidentificacion != null && !this.medicoidentificacion.equals(other.medicoidentificacion))) {
             return false;
         }
-        if ((this.medicoUsuarioidUsuario == null && other.medicoUsuarioidUsuario != null) || (this.medicoUsuarioidUsuario != null && !this.medicoUsuarioidUsuario.equals(other.medicoUsuarioidUsuario))) {
-            return false;
-        }
-        if (this.pacienteidPaciente != other.pacienteidPaciente) {
-            return false;
-        }
-        if ((this.pacienteUsuarioidUsuario == null && other.pacienteUsuarioidUsuario != null) || (this.pacienteUsuarioidUsuario != null && !this.pacienteUsuarioidUsuario.equals(other.pacienteUsuarioidUsuario))) {
+        if ((this.pacienteidentificacion == null && other.pacienteidentificacion != null) || (this.pacienteidentificacion != null && !this.pacienteidentificacion.equals(other.pacienteidentificacion))) {
             return false;
         }
         return true;
@@ -131,7 +97,7 @@ public class ConsultaPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.ConsultaPK[ idConsulta=" + idConsulta + ", medicoidMedico=" + medicoidMedico + ", medicoUsuarioidUsuario=" + medicoUsuarioidUsuario + ", pacienteidPaciente=" + pacienteidPaciente + ", pacienteUsuarioidUsuario=" + pacienteUsuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.ConsultaPK[ idConsulta=" + idConsulta + ", medicoidentificacion=" + medicoidentificacion + ", pacienteidentificacion=" + pacienteidentificacion + " ]";
     }
     
 }

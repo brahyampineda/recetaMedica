@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Compra.findByIdCompra", query = "SELECT c FROM Compra c WHERE c.compraPK.idCompra = :idCompra"),
     @NamedQuery(name = "Compra.findByEsContraentrega", query = "SELECT c FROM Compra c WHERE c.esContraentrega = :esContraentrega"),
     @NamedQuery(name = "Compra.findByTotalCompra", query = "SELECT c FROM Compra c WHERE c.totalCompra = :totalCompra"),
-    @NamedQuery(name = "Compra.findByUsuarioidUsuario", query = "SELECT c FROM Compra c WHERE c.compraPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "Compra.findByUsuarioemail", query = "SELECT c FROM Compra c WHERE c.compraPK.usuarioemail = :usuarioemail")})
 public class Compra implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -43,7 +43,7 @@ public class Compra implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "total_compra")
     private Float totalCompra;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
@@ -58,8 +58,8 @@ public class Compra implements Serializable {
         this.compraPK = compraPK;
     }
 
-    public Compra(int idCompra, String usuarioidUsuario) {
-        this.compraPK = new CompraPK(idCompra, usuarioidUsuario);
+    public Compra(int idCompra, String usuarioemail) {
+        this.compraPK = new CompraPK(idCompra, usuarioemail);
     }
 
     public CompraPK getCompraPK() {

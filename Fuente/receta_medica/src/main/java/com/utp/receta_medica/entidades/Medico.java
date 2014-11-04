@@ -8,9 +8,10 @@ package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -20,6 +21,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -33,17 +35,20 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Medico.findAll", query = "SELECT m FROM Medico m"),
-    @NamedQuery(name = "Medico.findByIdMedico", query = "SELECT m FROM Medico m WHERE m.medicoPK.idMedico = :idMedico"),
+    @NamedQuery(name = "Medico.findByIdentificacion", query = "SELECT m FROM Medico m WHERE m.identificacion = :identificacion"),
     @NamedQuery(name = "Medico.findByUniversidad", query = "SELECT m FROM Medico m WHERE m.universidad = :universidad"),
     @NamedQuery(name = "Medico.findByAnosExperiencia", query = "SELECT m FROM Medico m WHERE m.anosExperiencia = :anosExperiencia"),
     @NamedQuery(name = "Medico.findByTarifa", query = "SELECT m FROM Medico m WHERE m.tarifa = :tarifa"),
     @NamedQuery(name = "Medico.findByEspecialidad", query = "SELECT m FROM Medico m WHERE m.especialidad = :especialidad"),
-    @NamedQuery(name = "Medico.findByEsEspecialista", query = "SELECT m FROM Medico m WHERE m.esEspecialista = :esEspecialista"),
-    @NamedQuery(name = "Medico.findByUsuarioidUsuario", query = "SELECT m FROM Medico m WHERE m.medicoPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "Medico.findByEsEspecialista", query = "SELECT m FROM Medico m WHERE m.esEspecialista = :esEspecialista")})
 public class Medico implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected MedicoPK medicoPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "identificacion")
+    private String identificacion;
     @Size(max = 100)
     @Column(name = "universidad")
     private String universidad;
@@ -61,14 +66,13 @@ public class Medico implements Serializable {
     private Collection<Medicamento> medicamentoCollection;
     @ManyToMany(mappedBy = "medicoCollection")
     private Collection<Entidad> entidadCollection;
-    @JoinTable(name = "tratamiento_has_medico", joinColumns = {
-        @JoinColumn(name = "Medico_idMedico", referencedColumnName = "idMedico"),
-        @JoinColumn(name = "Medico_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")}, inverseJoinColumns = {
+    @JoinTable(name = "medico_has_tratamiento", joinColumns = {
+        @JoinColumn(name = "Medico_identificacion", referencedColumnName = "identificacion")}, inverseJoinColumns = {
         @JoinColumn(name = "Tratamiento_idTratamiento", referencedColumnName = "idTratamiento"),
         @JoinColumn(name = "Tratamiento_Enfermedad_idEnfermedad1", referencedColumnName = "Enfermedad_idEnfermedad1")})
     @ManyToMany
     private Collection<Tratamiento> tratamientoCollection;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email")
     @ManyToOne(optional = false)
     private Usuario usuario;
     @OneToMany(mappedBy = "medico")
@@ -77,20 +81,16 @@ public class Medico implements Serializable {
     public Medico() {
     }
 
-    public Medico(MedicoPK medicoPK) {
-        this.medicoPK = medicoPK;
+    public Medico(String identificacion) {
+        this.identificacion = identificacion;
     }
 
-    public Medico(int idMedico, String usuarioidUsuario) {
-        this.medicoPK = new MedicoPK(idMedico, usuarioidUsuario);
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public MedicoPK getMedicoPK() {
-        return medicoPK;
-    }
-
-    public void setMedicoPK(MedicoPK medicoPK) {
-        this.medicoPK = medicoPK;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 
     public String getUniversidad() {
@@ -180,7 +180,7 @@ public class Medico implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (medicoPK != null ? medicoPK.hashCode() : 0);
+        hash += (identificacion != null ? identificacion.hashCode() : 0);
         return hash;
     }
 
@@ -191,7 +191,7 @@ public class Medico implements Serializable {
             return false;
         }
         Medico other = (Medico) object;
-        if ((this.medicoPK == null && other.medicoPK != null) || (this.medicoPK != null && !this.medicoPK.equals(other.medicoPK))) {
+        if ((this.identificacion == null && other.identificacion != null) || (this.identificacion != null && !this.identificacion.equals(other.identificacion))) {
             return false;
         }
         return true;
@@ -199,7 +199,7 @@ public class Medico implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Medico[ medicoPK=" + medicoPK + " ]";
+        return "com.utp.receta_medica.entidades.Medico[ identificacion=" + identificacion + " ]";
     }
     
 }

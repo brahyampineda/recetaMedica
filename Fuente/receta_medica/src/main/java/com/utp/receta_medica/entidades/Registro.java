@@ -7,15 +7,16 @@
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,46 +29,42 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Registro.findAll", query = "SELECT r FROM Registro r"),
-    @NamedQuery(name = "Registro.findByIdRegistro", query = "SELECT r FROM Registro r WHERE r.registroPK.idRegistro = :idRegistro"),
+    @NamedQuery(name = "Registro.findByIdRegistro", query = "SELECT r FROM Registro r WHERE r.idRegistro = :idRegistro"),
     @NamedQuery(name = "Registro.findByEstado", query = "SELECT r FROM Registro r WHERE r.estado = :estado"),
-    @NamedQuery(name = "Registro.findByPerfil", query = "SELECT r FROM Registro r WHERE r.perfil = :perfil"),
-    @NamedQuery(name = "Registro.findByUsuarioidUsuario", query = "SELECT r FROM Registro r WHERE r.registroPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "Registro.findByPerfil", query = "SELECT r FROM Registro r WHERE r.perfil = :perfil")})
 public class Registro implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected RegistroPK registroPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "idRegistro")
+    private Integer idRegistro;
     @Size(max = 15)
     @Column(name = "estado")
     private String estado;
-    @Size(max = 15)
+    @Size(max = 60)
     @Column(name = "perfil")
     private String perfil;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email")
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @JoinColumns({
-        @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador"),
-        @JoinColumn(name = "Administrador_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
+    @JoinColumn(name = "Administrador_identificacion", referencedColumnName = "identificacion")
     @ManyToOne(optional = false)
     private Administrador administrador;
 
     public Registro() {
     }
 
-    public Registro(RegistroPK registroPK) {
-        this.registroPK = registroPK;
+    public Registro(Integer idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
-    public Registro(int idRegistro, String usuarioidUsuario) {
-        this.registroPK = new RegistroPK(idRegistro, usuarioidUsuario);
+    public Integer getIdRegistro() {
+        return idRegistro;
     }
 
-    public RegistroPK getRegistroPK() {
-        return registroPK;
-    }
-
-    public void setRegistroPK(RegistroPK registroPK) {
-        this.registroPK = registroPK;
+    public void setIdRegistro(Integer idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
     public String getEstado() {
@@ -90,8 +87,8 @@ public class Registro implements Serializable {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUsuario(Usuario usuarioemail) {
+        this.usuario = usuarioemail;
     }
 
     public Administrador getAdministrador() {
@@ -105,7 +102,7 @@ public class Registro implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (registroPK != null ? registroPK.hashCode() : 0);
+        hash += (idRegistro != null ? idRegistro.hashCode() : 0);
         return hash;
     }
 
@@ -116,7 +113,7 @@ public class Registro implements Serializable {
             return false;
         }
         Registro other = (Registro) object;
-        if ((this.registroPK == null && other.registroPK != null) || (this.registroPK != null && !this.registroPK.equals(other.registroPK))) {
+        if ((this.idRegistro == null && other.idRegistro != null) || (this.idRegistro != null && !this.idRegistro.equals(other.idRegistro))) {
             return false;
         }
         return true;
@@ -124,7 +121,7 @@ public class Registro implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Registro[ registroPK=" + registroPK + " ]";
+        return "com.utp.receta_medica.entidades.Registro[ idRegistro=" + idRegistro + " ]";
     }
     
 }

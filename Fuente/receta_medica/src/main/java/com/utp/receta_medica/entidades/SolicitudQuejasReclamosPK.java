@@ -26,15 +26,15 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "Usuario_idUsuario")
-    private String usuarioidUsuario;
+    @Column(name = "Usuario_email")
+    private String usuarioemail;
 
     public SolicitudQuejasReclamosPK() {
     }
 
-    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String usuarioidUsuario) {
+    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String usuarioemail) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
-        this.usuarioidUsuario = usuarioidUsuario;
+        this.usuarioemail = usuarioemail;
     }
 
     public int getIdSolicitudquejasreclamos() {
@@ -45,19 +45,19 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
     }
 
-    public String getUsuarioidUsuario() {
-        return usuarioidUsuario;
+    public String getUsuarioemail() {
+        return usuarioemail;
     }
 
-    public void setUsuarioidUsuario(String usuarioidUsuario) {
-        this.usuarioidUsuario = usuarioidUsuario;
+    public void setUsuarioemail(String usuarioemail) {
+        this.usuarioemail = usuarioemail;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idSolicitudquejasreclamos;
-        hash += (usuarioidUsuario != null ? usuarioidUsuario.hashCode() : 0);
+        hash += (usuarioemail != null ? usuarioemail.hashCode() : 0);
         return hash;
     }
 
@@ -71,7 +71,7 @@ public class SolicitudQuejasReclamosPK implements Serializable {
         if (this.idSolicitudquejasreclamos != other.idSolicitudquejasreclamos) {
             return false;
         }
-        if ((this.usuarioidUsuario == null && other.usuarioidUsuario != null) || (this.usuarioidUsuario != null && !this.usuarioidUsuario.equals(other.usuarioidUsuario))) {
+        if ((this.usuarioemail == null && other.usuarioemail != null) || (this.usuarioemail != null && !this.usuarioemail.equals(other.usuarioemail))) {
             return false;
         }
         return true;
@@ -79,7 +79,7 @@ public class SolicitudQuejasReclamosPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", usuarioidUsuario=" + usuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.SolicitudQuejasReclamosPK[ idSolicitudquejasreclamos=" + idSolicitudquejasreclamos + ", usuarioemail=" + usuarioemail + " ]";
     }
     
 }

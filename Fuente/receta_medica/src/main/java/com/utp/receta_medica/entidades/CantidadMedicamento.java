@@ -29,23 +29,23 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CantidadMedicamento.findAll", query = "SELECT c FROM CantidadMedicamento c"),
     @NamedQuery(name = "CantidadMedicamento.findByIdcantidadMedicamento", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.idcantidadMedicamento = :idcantidadMedicamento"),
     @NamedQuery(name = "CantidadMedicamento.findByCantidad", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidad = :cantidad"),
+    @NamedQuery(name = "CantidadMedicamento.findByMedicamentoidMedicamento", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.medicamentoidMedicamento = :medicamentoidMedicamento"),
     @NamedQuery(name = "CantidadMedicamento.findByCompraidCompra", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.compraidCompra = :compraidCompra"),
-    @NamedQuery(name = "CantidadMedicamento.findByCompraUsuarioidUsuario", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.compraUsuarioidUsuario = :compraUsuarioidUsuario"),
-    @NamedQuery(name = "CantidadMedicamento.findByMedicamentoidMedicamento", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.medicamentoidMedicamento = :medicamentoidMedicamento")})
+    @NamedQuery(name = "CantidadMedicamento.findByCompraUsuarioemail", query = "SELECT c FROM CantidadMedicamento c WHERE c.cantidadMedicamentoPK.compraUsuario = :compraUsuarioemail")})
 public class CantidadMedicamento implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected CantidadMedicamentoPK cantidadMedicamentoPK;
     @Column(name = "cantidad")
     private Integer cantidad;
-    @JoinColumns({
-        @JoinColumn(name = "Compra_idCompra", referencedColumnName = "idCompra", insertable = false, updatable = false),
-        @JoinColumn(name = "Compra_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Compra compra;
     @JoinColumn(name = "Medicamento_idMedicamento", referencedColumnName = "idMedicamento", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Medicamento medicamento;
+    @JoinColumns({
+        @JoinColumn(name = "Compra_idCompra", referencedColumnName = "idCompra", insertable = false, updatable = false),
+        @JoinColumn(name = "Compra_Usuario_email", referencedColumnName = "Usuario_email", insertable = false, updatable = false)})
+    @ManyToOne(optional = false)
+    private Compra compra;
 
     public CantidadMedicamento() {
     }
@@ -54,8 +54,8 @@ public class CantidadMedicamento implements Serializable {
         this.cantidadMedicamentoPK = cantidadMedicamentoPK;
     }
 
-    public CantidadMedicamento(int idcantidadMedicamento, int compraidCompra, String compraUsuarioidUsuario, int medicamentoidMedicamento) {
-        this.cantidadMedicamentoPK = new CantidadMedicamentoPK(idcantidadMedicamento, compraidCompra, compraUsuarioidUsuario, medicamentoidMedicamento);
+    public CantidadMedicamento(int idcantidadMedicamento, int medicamentoidMedicamento, int compraidCompra, String compraUsuarioemail) {
+        this.cantidadMedicamentoPK = new CantidadMedicamentoPK(idcantidadMedicamento, medicamentoidMedicamento, compraidCompra, compraUsuarioemail);
     }
 
     public CantidadMedicamentoPK getCantidadMedicamentoPK() {
@@ -74,20 +74,20 @@ public class CantidadMedicamento implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Compra getCompra() {
-        return compra;
-    }
-
-    public void setCompra(Compra compra) {
-        this.compra = compra;
-    }
-
     public Medicamento getMedicamento() {
         return medicamento;
     }
 
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = medicamento;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
     }
 
     @Override

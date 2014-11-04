@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.utp.receta_medica.facade;
 
 import com.utp.receta_medica.entidades.*;
@@ -92,15 +87,29 @@ public class TablasFacade extends Crud {
      */
     public <T> void guardar(T obj) {
         try {
-            if (obj.getClass().equals(Usuario.class)) {
-                System.out.println("hola");
+            if (obj.getClass().equals(Administrador.class)) {
+                Administrador aux = (Administrador) obj;
+                save(aux);
+            }else if (obj.getClass().equals(Usuario.class)) {
+                save(obj);
             } else if (obj.getClass().equals(Tratamiento.class)) {
                 Tratamiento aux = (Tratamiento) obj;
-                if (aux.getTratamientoPK() == null) {
+//                if (aux.getTratamientoPK().getIdTratamiento() == null) {
+//                    aux.getTratamientoPK().setEnfermedadidEnfermedad1(1);
+//                    generarConsecutivo(aux);
+//                }
+//                save(aux);
+            } else if (obj.getClass().equals(Medicamento.class)) {
+                Medicamento aux = (Medicamento) obj;
+                if (aux.getIdMedicamento() == null) {
                     generarConsecutivo(aux);
                 }
                 save(aux);
-            } 
+            } else if (obj.getClass().equals(Registro.class)) {
+                Registro aux = (Registro) obj;
+                generarConsecutivo(aux);
+                save(aux);
+            }
             System.out.println("Guardado objeto de tipo " + obj.getClass().getSimpleName());
         } catch (Exception ex) {
             Logger.getLogger(TablasFacade.class.getName()).log(Level.SEVERE, null, ex);

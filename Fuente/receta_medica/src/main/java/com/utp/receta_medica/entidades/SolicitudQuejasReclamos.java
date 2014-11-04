@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByIdSolicitudquejasreclamos", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.idSolicitudquejasreclamos = :idSolicitudquejasreclamos"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioemail", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioemail = :usuarioemail")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -42,12 +41,10 @@ public class SolicitudQuejasReclamos implements Serializable {
     @Size(max = 300)
     @Column(name = "descripcion")
     private String descripcion;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
-    @JoinColumns({
-        @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador"),
-        @JoinColumn(name = "Administrador_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
+    @JoinColumn(name = "Administrador_identificacion", referencedColumnName = "identificacion")
     @ManyToOne(optional = false)
     private Administrador administrador;
 
@@ -58,8 +55,8 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.solicitudQuejasReclamosPK = solicitudQuejasReclamosPK;
     }
 
-    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String usuarioidUsuario) {
-        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, usuarioidUsuario);
+    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String usuarioemail) {
+        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, usuarioemail);
     }
 
     public SolicitudQuejasReclamosPK getSolicitudQuejasReclamosPK() {

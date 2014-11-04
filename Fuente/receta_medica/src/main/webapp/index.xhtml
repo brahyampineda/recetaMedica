@@ -16,194 +16,160 @@
     </h:head>
 
     <h:body>
-        <h:form>
-            <div id="divCabecera">
-                <div id="divEnlaces">
-                    <div id="divImagenes" style="float: left ; width: 90%">
-                        <a href="../faces/index.xhtml" title="Ir a inicio">
-                            <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                            value="/resources/imagenes/logo.jpg"/>
-                        </a>
-                        <p:spacer width="2%"/>
-                        <a href="http://www.google.com" title="Ir a algún lado">
-                            <p:graphicImage id="imgColombia" height="80px" style="margin: 5px 2px"
-                                            value="/resources/imagenes/escudo_colombia.jpeg" />
-                        </a>
-                        <p:spacer width="2%"/>
-                        <a href="http://www.utp.edu.co" title="Ir al portal de la Universidad Tecnológica de Pereira">
-                            <p:graphicImage id="imgUTP" height="80px" style="margin: 5px 2px"
-                                            value="/resources/imagenes/utp.jpg"/>
-                        </a>
-                        <h1 style="margin-top: 30px ; float: right">TU RECETA MÉDICA</h1>
-                    </div>
-                    <div id="divIdioma" style="float: right ; width: 5%">
-                        <p:outputLabel value="Idioma" style="float: right; color: black"/>
-                        <p:graphicImage title="Español" id="imgEspañol" width="30px" height="15px" style="float: right ; margin: 5px 2px"
-                                        value="http://www.keltibur.com/rdn/images/products/mini/sinescudogigante.jpg"/>
-                        <p:graphicImage title="Inglés" id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
-                                        value="http://img4.wikia.nocookie.net/__cb20100107225030/doblaje/es/images/archive/1/12/20130806060226!Bandera_Estados_Unidos.png"/>
-                    </div>
+        <div id="divCabecera">
+            <div id="divEnlaces">
+                <div id="divImagenes" style="float: left ; width: 90%">
+                    <a href="../faces/index.xhtml" title="Ir a inicio">
+                        <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                        value="/resources/imagenes/logo.jpg"/>
+                    </a>
+                    <p:spacer width="2%"/>
+                    <a href="http://www.google.com" title="Ir a algún lado">
+                        <p:graphicImage id="imgColombia" height="80px" style="margin: 5px 2px"
+                                        value="/resources/imagenes/escudo_colombia.jpeg" />
+                    </a>
+                    <p:spacer width="2%"/>
+                    <a href="http://www.utp.edu.co" title="Ir al portal de la Universidad Tecnológica de Pereira">
+                        <p:graphicImage id="imgUTP" height="80px" style="margin: 5px 2px"
+                                        value="/resources/imagenes/utp.jpg"/>
+                    </a>
+                    <h1 style="margin-top: 30px ; float: right ; color: white">TU RECETA MÉDICA</h1>
                 </div>
-
-                <div id="divLogin" align="right">
+                <div id="divIdioma" style="float: right ; width: 5%">
+                    <p:outputLabel value="Idioma" style="float: right; color: white"/>
+                    <p:graphicImage title="Español" id="imgEspañol" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                    value="http://www.keltibur.com/rdn/images/products/mini/sinescudogigante.jpg"/>
+                    <p:graphicImage title="Inglés" id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                    value="http://img4.wikia.nocookie.net/__cb20100107225030/doblaje/es/images/archive/1/12/20130806060226!Bandera_Estados_Unidos.png"/>
+                </div>
+            </div>
+            <div id="divLogin" align="right">
+                <h:form id="formBtnLogin">
                     <p:panel >
                         <h:panelGrid columns="1" style="margin: 0 auto; width: 100%">
                             <ui:insert name="login" >
                                 <p:commandButton value="Iniciar sesión" style="width: 90% ; margin: 0 auto ; float: right"
-                                                 action="/Login" onclick="PF('dlgLogin').show();"/>
+                                                 onclick="PF('dlgLogin').show();"/>
                                 <p:commandButton value="Registrarse" style="width: 90% ; margin: 0 auto ; float: right"
-                                                 action="/registro" onclick="PF('dlgRegistro').show();"/>
+                                                 action="#{beanGeneral.prepararRegistroUsuario()}"
+                                                 onclick="PF('dlgRegistro').show();"
+                                                 update=":formRegistroUsuario:panelRegistroUsuario"/>
                             </ui:insert>
                         </h:panelGrid>
                     </p:panel>
-                    <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" modal="true" width="45%" >
-                        <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                </h:form>
+                <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" 
+                          modal="true" width="40%" resizable="false">
+                    <h:form id="formInicioSesion">
+                        <h:panelGrid id="panelInicioSesion" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Correo:"/>
-                            <p:inputText value="#{loginBean.username}" style="width: 80%"/>
+                            <p:inputText  style="width: 80%"
+                                          validatorMessage="No es un correo válido.">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </p:inputText>
                             <p:outputLabel value="Contraseña:"/>
-                            <p:password value="#{loginBean.password}" style="width: 80%"/>
+                            <p:password style="width: 80%"/>
                             <p:spacer />
                             <p:commandLink value="Olvidó su contraseña" />
                             <p:spacer />
                             <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}"/>
                         </h:panelGrid>
-                    </p:dialog>
-                    <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" modal="true" width="45%" >
-                        <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" 
+                          modal="true" width="40%" resizable="false">
+                    <h:form id="formRegistroUsuario">
+                        <h:panelGrid id="panelRegistroUsuario" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Nombre:"/>
-                            <p:inputText styleClass="styleInputText"/>
+                            <p:inputText value="#{beanGeneral.usuarioActual.nombre}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba su nombre"
+                                         validatorMessage="El nombre sólo debe tener letras">
+                                <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                            </p:inputText>
+
                             <p:outputLabel value="Apellidos:"/>
-                            <p:inputText styleClass="styleInputText"/>
-                            <p:outputLabel value="Número de identificacion:"/>
-                            <p:inputText styleClass="styleInputText"/>
+                            <p:inputText value="#{beanGeneral.usuarioActual.apellidos}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba sus apellidos"
+                                         validatorMessage="El apellido sólo debe tener letras">
+                                <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Número de identificacion:"></p:outputLabel>
+                            <p:inputText value="#{beanGeneral.usuarioActual.identificacion}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba su identificación"
+                                         validatorMessage="La identificación sólo debe tener números">
+                                <f:validateRegex pattern="\d{1,20}" />
+                            </p:inputText>
+
                             <p:outputLabel value="Correo electrónico:"/>
-                            <p:inputText styleClass="styleInputText"/>
-                            <p:outputLabel value="Perfil:"/>
-                            <p:selectOneMenu styleClass="styleInputText">
-                                <f:selectItem noSelectionOption="true" />
-                                <f:selectItem itemLabel="Medico general" itemValue="Medico general" />
-                                <f:selectItem itemLabel="Medico especialista" itemValue="Medico especialista" />
-                                <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
-                            </p:selectOneMenu>
+                            <p:inputText value="#{beanGeneral.usuarioActual.email}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Debe especificar su correo" placeholder="correo@ejemplo.com"
+                                         validatorMessage="No es un correo válido.">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Perfiles:"/>
+                            <h:panelGrid columns="2">
+                                <p:selectManyCheckbox value="#{beanGeneral.perfiles}" styleClass="styleInputText2">
+                                    <f:selectItem itemLabel="Médico general" itemValue="Medico general" />
+                                    <f:selectItem itemLabel="Médico especialista" itemValue="Medico especialista" />
+                                    <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
+                                </p:selectManyCheckbox>
+                            </h:panelGrid>
                             <p:spacer />
-                            <p:commandButton value="Registrar" action="#{beanGeneral.registroUsuario()}"/>
+                            <p:commandButton value="Solicitar registro" actionListener="#{beanGeneral.solicitarRegistroUsuario()}"
+                                             update="panelRegistroUsuario"/>
                         </h:panelGrid>
-                    </p:dialog>
-                </div>
+                    </h:form>
+                </p:dialog>
             </div>
-            <div id="divContenido" >
-                <p:growl autoUpdate="true" />
-                <ui:insert name="contenido" >
-                    <p:tabView >
-                        <p:tab title="Inicio">
-                            <p:panel styleClass="stylePanelGrid">
-                                <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; float: right ; padding: 2em"
-                                                value="/resources/imagenes/logo.jpg"/> 
-                                <p>
-                                    Esta página web te ayuda a estar al tanto de lo que pasa con tus recetas médicas, además de poder ver las listas de 
-                                    médicos que hay disponibles, incluso listas de medicamentos POS, tratamientos y leyes que rigen la salud en Colombia.
-                                </p>
-                                <p>
-                                    Puede generar recordatorios para estar al tanto de los horarios para tomar tus medicamentos y también para saber en que
-                                    momento se te están acabando las dosis y así poder comprar tus medicamentos en linea desde está página.
-                                </p>
-                            </p:panel>
-                            <p:commandButton value="Administrador" action="administrador" 
-                                             ajax="false" immediate="true"/>
-                            <p:commandButton value="Paciente" action="paciente" 
-                                             ajax="false" immediate="true"/>
-                            <p:commandButton value="Médico general" action="medicoGeneral" 
-                                             ajax="false" immediate="true"/>
-                            <p:commandButton value="Médico especialista" action="medicoEspecialista" 
-                                             ajax="false" immediate="true"/>
-                        </p:tab>
-                        <p:tab title="Listas" >
-                            <p:tabView >
-                                <p:tab title="Medicamentos" >
-
-                                </p:tab>
-                                <p:tab title="Tratamientos" >
-                                    <p:dataTable value="#{beanAdministrador.lstTratamientos}" var="item" sortBy="#{item.idTratamiento}">
-                                        <p:column headerText="Código" sortBy="#{item.idTratamiento}" 
-                                                  filterBy="#{item.idTratamiento}" style="width: 15%">
-                                            <p:outputLabel value="#{item.idTratamiento}"/>
-                                        </p:column>
-                                        <p:column headerText="Nombre" sortBy="#{item.nombre}"
-                                                  filterBy="#{item.nombre}">
-                                            <p:outputLabel value="#{item.nombre}" />
-                                        </p:column>
-                                        <p:column headerText="Edición" rendered="false" style="width: 10%">
-                                            <p:commandButton icon="ui-icon-pencil" 
-                                                             onclick="PF('dlgEdicion').show();"/>
-                                            <p:commandButton icon="ui-icon-trash" />
-                                        </p:column>
-                                    </p:dataTable>
-                                    
-                                    <p:dialog widgetVar="dlgEdicion"  modal="true" header="Editar tratamiento">
-                                        <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
-<!--                                            <p:outputLabel value="Nombre:" />
-                                            <p:inputText 
-                                                validatorMessage="El nombre solo debe contener letras.">
-                                                <f:validateRegex pattern="[a-zA-Z]{1,50}" />
-                                            </p:inputText>
-                                            <p:commandButton value="Guardar" icon="ui-icon-disk" />-->
-                                        </h:panelGrid>
-                                    </p:dialog>
-                                </p:tab>
-                                <p:tab title="Médicos generales" >
-
-                                </p:tab>
-                                <p:tab title="Médicos especialistas" >
-
-                                </p:tab>
-                                <p:tab title="Leyes" >
-
-                                </p:tab>
-                                <p:tab title="Grupos de apoyo" >
-
-                                </p:tab>
-                                <p:tab title="Laboratorios" >
-
-                                </p:tab>
-                                <p:tab title="Entidades" >
-
-                                </p:tab>
-                            </p:tabView>
-                        </p:tab>
-                        <ui:insert name="pestañas">
-                        </ui:insert>
-                        <p:tab title="Contacto" >
-                            <p:panel style="width: 50% ; margin: 0 auto" header="Póngase en contacto con nosotros">
-                                <h:panelGrid id="panelContacto" styleClass="stylePanelGrid" columns="2" columnClasses="derechaNegrita, izquierda" 
-                                             title="Contáctenos" >
-                                    <p:outputLabel value="Nombre:" />
-<!--                                   <p:inputText styleClass="styleInputText"
-                                                 validatorMessage="El nombre solo debe contener letras, y un tamaño máximo de 40 caractéres.">
-                                        <f:validateRegex pattern="[a-zA-Z]{1,40}" />
-                                    </p:inputText>-->
-                                    <p:outputLabel value="Correo:" />
-<!--                                    <p:inputText styleClass="styleInputText"  >required="true" requiredMessage="Debe especificar su correo" 
-                                                 type="email">
-                                        validatorMessage="El formato del correo no es correcto, verifique.">
-                                        <f:validateRegex pattern="[a-zA-Z]{1,40}" />
-                                    </p:inputText>-->
-                                    <p:outputLabel value="Mensaje:" />
-                                    <p:inputTextarea styleClass="styleInputText" 
-                                                     autoResize="false" maxlength="300" rows="7"/>
-                                    <p:spacer />
-                                    <p:commandButton value="Enviar" accesskey="enter" ajax="false" 
-                                                     style="margin: 0 auto"/>
-                                </h:panelGrid>
-                            </p:panel>
-                        </p:tab>
-                    </p:tabView>
+        </div>
+        <div id="divContenido" >
+            <p:growl showDetail="true"/>
+            <h:form>
+                <ui:insert name="menu" >
+                    <p:tabMenu activeIndex="#{param.i}" >
+                        <p:menuitem value="Inicio" outcome="/index">
+                            <f:param name="i" value="0" />
+                        </p:menuitem>
+                        <p:menuitem value="Contacto" outcome="/contacto">
+                            <f:param name="i" value="1" />
+                        </p:menuitem>
+                        <p:menuitem value="Listas" outcome="/listas">
+                            <f:param name="i" value="2" />
+                        </p:menuitem>
+                    </p:tabMenu>
                 </ui:insert>
+            </h:form>
 
-            </div>
-            <div id="divFooter" >
-                <p:outputLabel value="by BPC, ESR, JHRM, SBO" style="float: right"/>
-            </div>
-        </h:form>
+            <ui:insert name="contenido" >
+                <p:panel  style="width: 99.5%">
+                    <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; float: right ; padding: 2em"
+                                    value="/resources/imagenes/logo.jpg"/> 
+                    <p>
+                        Esta página web te ayuda a estar al tanto de lo que pasa con tus recetas médicas, además de poder ver las listas de 
+                        médicos que hay disponibles, incluso listas de medicamentos POS, tratamientos y leyes que rigen la salud en Colombia.
+                    </p>
+                    <p>
+                        Puede generar recordatorios para estar al tanto de los horarios para tomar tus medicamentos y también para saber en que
+                        momento se te están acabando las dosis y así poder comprar tus medicamentos en linea desde está página.
+                    </p>
+                </p:panel>
+                <h:form>
+                    <p:commandButton value="Administrador" action="administrador/perfil" 
+                                     ajax="false" immediate="true"/>
+                    <p:commandButton value="Paciente" action="paciente/perfil" 
+                                     ajax="false" immediate="true"/>
+                    <p:commandButton value="Médico general" action="medicoGeneral/perfil" 
+                                     ajax="false" immediate="true"/>
+                    <p:commandButton value="Médico especialista" action="medicoEspecialista/perfil" 
+                                     ajax="false" immediate="true"/>
+                </h:form>
+            </ui:insert>
+        </div>
+        <div id="divFooter" >
+            <p:outputLabel value="by BPC, ESR, JHRM, SBO" style="float: right"/>
+        </div>
     </h:body>
 
 </html>

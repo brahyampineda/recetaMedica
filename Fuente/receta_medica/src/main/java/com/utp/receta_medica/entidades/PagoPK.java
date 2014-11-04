@@ -30,16 +30,16 @@ public class PagoPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "Compra_Usuario_idUsuario")
-    private String compraUsuarioidUsuario;
+    @Column(name = "Compra_Usuario_email")
+    private String compraUsuarioemail;
 
     public PagoPK() {
     }
 
-    public PagoPK(int idPago, int compraidCompra, String compraUsuarioidUsuario) {
+    public PagoPK(int idPago, int compraidCompra, String compraUsuarioemail) {
         this.idPago = idPago;
         this.compraidCompra = compraidCompra;
-        this.compraUsuarioidUsuario = compraUsuarioidUsuario;
+        this.compraUsuarioemail = compraUsuarioemail;
     }
 
     public int getIdPago() {
@@ -58,12 +58,12 @@ public class PagoPK implements Serializable {
         this.compraidCompra = compraidCompra;
     }
 
-    public String getCompraUsuarioidUsuario() {
-        return compraUsuarioidUsuario;
+    public String getCompraUsuarioemail() {
+        return compraUsuarioemail;
     }
 
-    public void setCompraUsuarioidUsuario(String compraUsuarioidUsuario) {
-        this.compraUsuarioidUsuario = compraUsuarioidUsuario;
+    public void setCompraUsuarioemail(String compraUsuarioemail) {
+        this.compraUsuarioemail = compraUsuarioemail;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PagoPK implements Serializable {
         int hash = 0;
         hash += (int) idPago;
         hash += (int) compraidCompra;
-        hash += (compraUsuarioidUsuario != null ? compraUsuarioidUsuario.hashCode() : 0);
+        hash += (compraUsuarioemail != null ? compraUsuarioemail.hashCode() : 0);
         return hash;
     }
 
@@ -88,7 +88,7 @@ public class PagoPK implements Serializable {
         if (this.compraidCompra != other.compraidCompra) {
             return false;
         }
-        if ((this.compraUsuarioidUsuario == null && other.compraUsuarioidUsuario != null) || (this.compraUsuarioidUsuario != null && !this.compraUsuarioidUsuario.equals(other.compraUsuarioidUsuario))) {
+        if ((this.compraUsuarioemail == null && other.compraUsuarioemail != null) || (this.compraUsuarioemail != null && !this.compraUsuarioemail.equals(other.compraUsuarioemail))) {
             return false;
         }
         return true;
@@ -96,7 +96,7 @@ public class PagoPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.PagoPK[ idPago=" + idPago + ", compraidCompra=" + compraidCompra + ", compraUsuarioidUsuario=" + compraUsuarioidUsuario + " ]";
+        return "com.utp.receta_medica.entidades.PagoPK[ idPago=" + idPago + ", compraidCompra=" + compraidCompra + ", compraUsuarioemail=" + compraUsuarioemail + " ]";
     }
     
 }

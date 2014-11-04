@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
-    @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario"),
+    @NamedQuery(name = "Usuario.findByEmail", query = "SELECT u FROM Usuario u WHERE u.email = :email"),
     @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre"),
     @NamedQuery(name = "Usuario.findByApellidos", query = "SELECT u FROM Usuario u WHERE u.apellidos = :apellidos"),
     @NamedQuery(name = "Usuario.findByIdentificacion", query = "SELECT u FROM Usuario u WHERE u.identificacion = :identificacion"),
@@ -48,12 +48,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDireccionDespechaMedicamentos", query = "SELECT u FROM Usuario u WHERE u.direccionDespechaMedicamentos = :direccionDespechaMedicamentos")})
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "idUsuario")
-    private String idUsuario;
+    @Column(name = "email")
+    private String email;
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
@@ -101,16 +102,16 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public Usuario(String email) {
+        this.email = email;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
+    public String getEmail() {
+        return email;
     }
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNombre() {
@@ -258,7 +259,7 @@ public class Usuario implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idUsuario != null ? idUsuario.hashCode() : 0);
+        hash += (email != null ? email.hashCode() : 0);
         return hash;
     }
 
@@ -269,7 +270,7 @@ public class Usuario implements Serializable {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.idUsuario == null && other.idUsuario != null) || (this.idUsuario != null && !this.idUsuario.equals(other.idUsuario))) {
+        if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
             return false;
         }
         return true;
@@ -277,7 +278,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Usuario[ idUsuario=" + idUsuario + " ]";
+        return "com.utp.receta_medica.entidades.Usuario[ email=" + email + " ]";
     }
     
 }

@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -38,10 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Consulta.findByPeso", query = "SELECT c FROM Consulta c WHERE c.peso = :peso"),
     @NamedQuery(name = "Consulta.findByAltura", query = "SELECT c FROM Consulta c WHERE c.altura = :altura"),
     @NamedQuery(name = "Consulta.findByDeportes", query = "SELECT c FROM Consulta c WHERE c.deportes = :deportes"),
-    @NamedQuery(name = "Consulta.findByMedicoidMedico", query = "SELECT c FROM Consulta c WHERE c.consultaPK.medicoidMedico = :medicoidMedico"),
-    @NamedQuery(name = "Consulta.findByMedicoUsuarioidUsuario", query = "SELECT c FROM Consulta c WHERE c.consultaPK.medicoUsuarioidUsuario = :medicoUsuarioidUsuario"),
-    @NamedQuery(name = "Consulta.findByPacienteidPaciente", query = "SELECT c FROM Consulta c WHERE c.consultaPK.pacienteidPaciente = :pacienteidPaciente"),
-    @NamedQuery(name = "Consulta.findByPacienteUsuarioidUsuario", query = "SELECT c FROM Consulta c WHERE c.consultaPK.pacienteUsuarioidUsuario = :pacienteUsuarioidUsuario")})
+    @NamedQuery(name = "Consulta.findByMedicoidentificacion", query = "SELECT c FROM Consulta c WHERE c.consultaPK.medicoidentificacion = :medicoidentificacion"),
+    @NamedQuery(name = "Consulta.findByPacienteidentificacion", query = "SELECT c FROM Consulta c WHERE c.consultaPK.pacienteidentificacion = :pacienteidentificacion")})
 public class Consulta implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -54,21 +51,17 @@ public class Consulta implements Serializable {
     @Size(max = 200)
     @Column(name = "deportes")
     private String deportes;
-    @JoinTable(name = "enfermedad_has_consulta", joinColumns = {
+    @JoinTable(name = "consulta_has_enfermedad", joinColumns = {
         @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
-        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
-        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
-        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
-        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")}, inverseJoinColumns = {
+        @JoinColumn(name = "Consulta_Medico_identificacion", referencedColumnName = "Medico_identificacion"),
+        @JoinColumn(name = "Consulta_Paciente_identificacion", referencedColumnName = "Paciente_identificacion")}, inverseJoinColumns = {
         @JoinColumn(name = "Enfermedad_idEnfermedad", referencedColumnName = "idEnfermedad")})
     @ManyToMany
     private Collection<Enfermedad> enfermedadCollection;
     @JoinTable(name = "consulta_has_grupo_apoyo", joinColumns = {
         @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta"),
-        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico"),
-        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario"),
-        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente"),
-        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario")}, inverseJoinColumns = {
+        @JoinColumn(name = "Consulta_Medico_identificacion", referencedColumnName = "Medico_identificacion"),
+        @JoinColumn(name = "Consulta_Paciente_identificacion", referencedColumnName = "Paciente_identificacion")}, inverseJoinColumns = {
         @JoinColumn(name = "Grupo_apoyo_idGrupo_apoyo", referencedColumnName = "idGrupo_apoyo"),
         @JoinColumn(name = "Grupo_apoyo_Entidad_nit", referencedColumnName = "Entidad_nit"),
         @JoinColumn(name = "Grupo_apoyo_Enfermedad_idEnfermedad", referencedColumnName = "Enfermedad_idEnfermedad")})
@@ -76,14 +69,10 @@ public class Consulta implements Serializable {
     private Collection<GrupoApoyo> grupoApoyoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulta")
     private Collection<RecetaMedica> recetaMedicaCollection;
-    @JoinColumns({
-        @JoinColumn(name = "Medico_idMedico", referencedColumnName = "idMedico", insertable = false, updatable = false),
-        @JoinColumn(name = "Medico_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
+    @JoinColumn(name = "Medico_identificacion", referencedColumnName = "identificacion", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Medico medico;
-    @JoinColumns({
-        @JoinColumn(name = "Paciente_idPaciente", referencedColumnName = "idPaciente", insertable = false, updatable = false),
-        @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario", insertable = false, updatable = false)})
+    @JoinColumn(name = "Paciente_identificacion", referencedColumnName = "identificacion", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Paciente paciente;
 
@@ -94,8 +83,8 @@ public class Consulta implements Serializable {
         this.consultaPK = consultaPK;
     }
 
-    public Consulta(int idConsulta, int medicoidMedico, String medicoUsuarioidUsuario, int pacienteidPaciente, String pacienteUsuarioidUsuario) {
-        this.consultaPK = new ConsultaPK(idConsulta, medicoidMedico, medicoUsuarioidUsuario, pacienteidPaciente, pacienteUsuarioidUsuario);
+    public Consulta(int idConsulta, String medicoidentificacion, String pacienteidentificacion) {
+        this.consultaPK = new ConsultaPK(idConsulta, medicoidentificacion, pacienteidentificacion);
     }
 
     public ConsultaPK getConsultaPK() {

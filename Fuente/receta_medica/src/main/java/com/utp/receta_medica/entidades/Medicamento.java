@@ -80,8 +80,7 @@ public class Medicamento implements Serializable {
     private Boolean esPos;
     @JoinTable(name = "medico_has_medicamento", joinColumns = {
         @JoinColumn(name = "Medicamento_idMedicamento", referencedColumnName = "idMedicamento")}, inverseJoinColumns = {
-        @JoinColumn(name = "Medico_idMedico", referencedColumnName = "idMedico"),
-        @JoinColumn(name = "Medico_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
+        @JoinColumn(name = "Medico_identificacion", referencedColumnName = "identificacion")})
     @ManyToMany
     private Collection<Medico> medicoCollection;
     @ManyToMany(mappedBy = "medicamentoCollection")

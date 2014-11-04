@@ -35,12 +35,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "RecetaMedica.findByPeriodicidad", query = "SELECT r FROM RecetaMedica r WHERE r.periodicidad = :periodicidad"),
     @NamedQuery(name = "RecetaMedica.findByDosisDisponible", query = "SELECT r FROM RecetaMedica r WHERE r.dosisDisponible = :dosisDisponible"),
     @NamedQuery(name = "RecetaMedica.findByFechaInicio", query = "SELECT r FROM RecetaMedica r WHERE r.fechaInicio = :fechaInicio"),
+    @NamedQuery(name = "RecetaMedica.findByMedicamentoidMedicamento", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.medicamentoidMedicamento = :medicamentoidMedicamento"),
     @NamedQuery(name = "RecetaMedica.findByConsultaidConsulta", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaidConsulta = :consultaidConsulta"),
-    @NamedQuery(name = "RecetaMedica.findByConsultaMedicoidMedico", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaMedicoidMedico = :consultaMedicoidMedico"),
-    @NamedQuery(name = "RecetaMedica.findByConsultaMedicoUsuarioidUsuario", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaMedicoUsuarioidUsuario = :consultaMedicoUsuarioidUsuario"),
-    @NamedQuery(name = "RecetaMedica.findByConsultaPacienteidPaciente", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaPacienteidPaciente = :consultaPacienteidPaciente"),
-    @NamedQuery(name = "RecetaMedica.findByConsultaPacienteUsuarioidUsuario", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaPacienteUsuarioidUsuario = :consultaPacienteUsuarioidUsuario"),
-    @NamedQuery(name = "RecetaMedica.findByMedicamentoidMedicamento", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.medicamentoidMedicamento = :medicamentoidMedicamento")})
+    @NamedQuery(name = "RecetaMedica.findByConsultaMedicoidentificacion", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaMedicoidentificacion = :consultaMedicoidentificacion"),
+    @NamedQuery(name = "RecetaMedica.findByConsultaPacienteidentificacion", query = "SELECT r FROM RecetaMedica r WHERE r.recetaMedicaPK.consultaPacienteidentificacion = :consultaPacienteidentificacion")})
 public class RecetaMedica implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -54,17 +52,15 @@ public class RecetaMedica implements Serializable {
     @Column(name = "fecha_inicio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaInicio;
-    @JoinColumns({
-        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta", insertable = false, updatable = false),
-        @JoinColumn(name = "Consulta_Medico_idMedico", referencedColumnName = "Medico_idMedico", insertable = false, updatable = false),
-        @JoinColumn(name = "Consulta_Medico_Usuario_idUsuario", referencedColumnName = "Medico_Usuario_idUsuario", insertable = false, updatable = false),
-        @JoinColumn(name = "Consulta_Paciente_idPaciente", referencedColumnName = "Paciente_idPaciente", insertable = false, updatable = false),
-        @JoinColumn(name = "Consulta_Paciente_Usuario_idUsuario", referencedColumnName = "Paciente_Usuario_idUsuario", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Consulta consulta;
     @JoinColumn(name = "Medicamento_idMedicamento", referencedColumnName = "idMedicamento", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Medicamento medicamento;
+    @JoinColumns({
+        @JoinColumn(name = "Consulta_idConsulta", referencedColumnName = "idConsulta", insertable = false, updatable = false),
+        @JoinColumn(name = "Consulta_Medico_identificacion", referencedColumnName = "Medico_identificacion", insertable = false, updatable = false),
+        @JoinColumn(name = "Consulta_Paciente_identificacion", referencedColumnName = "Paciente_identificacion", insertable = false, updatable = false)})
+    @ManyToOne(optional = false)
+    private Consulta consulta;
 
     public RecetaMedica() {
     }
@@ -73,8 +69,8 @@ public class RecetaMedica implements Serializable {
         this.recetaMedicaPK = recetaMedicaPK;
     }
 
-    public RecetaMedica(int idRecetamedica, int consultaidConsulta, int consultaMedicoidMedico, String consultaMedicoUsuarioidUsuario, int consultaPacienteidPaciente, String consultaPacienteUsuarioidUsuario, int medicamentoidMedicamento) {
-        this.recetaMedicaPK = new RecetaMedicaPK(idRecetamedica, consultaidConsulta, consultaMedicoidMedico, consultaMedicoUsuarioidUsuario, consultaPacienteidPaciente, consultaPacienteUsuarioidUsuario, medicamentoidMedicamento);
+    public RecetaMedica(int idRecetamedica, int medicamentoidMedicamento, int consultaidConsulta, String consultaMedicoidentificacion, String consultaPacienteidentificacion) {
+        this.recetaMedicaPK = new RecetaMedicaPK(idRecetamedica, medicamentoidMedicamento, consultaidConsulta, consultaMedicoidentificacion, consultaPacienteidentificacion);
     }
 
     public RecetaMedicaPK getRecetaMedicaPK() {
@@ -117,20 +113,20 @@ public class RecetaMedica implements Serializable {
         this.fechaInicio = fechaInicio;
     }
 
-    public Consulta getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }
-
     public Medicamento getMedicamento() {
         return medicamento;
     }
 
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = medicamento;
+    }
+
+    public Consulta getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
     }
 
     @Override

@@ -25,42 +25,32 @@ public class RecetaMedicaPK implements Serializable {
     private int idRecetamedica;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "Medicamento_idMedicamento")
+    private int medicamentoidMedicamento;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "Consulta_idConsulta")
     private int consultaidConsulta;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "Consulta_Medico_idMedico")
-    private int consultaMedicoidMedico;
+    @Size(min = 1, max = 20)
+    @Column(name = "Consulta_Medico_identificacion")
+    private String consultaMedicoidentificacion;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "Consulta_Medico_Usuario_idUsuario")
-    private String consultaMedicoUsuarioidUsuario;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Consulta_Paciente_idPaciente")
-    private int consultaPacienteidPaciente;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "Consulta_Paciente_Usuario_idUsuario")
-    private String consultaPacienteUsuarioidUsuario;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Medicamento_idMedicamento")
-    private int medicamentoidMedicamento;
+    @Size(min = 1, max = 20)
+    @Column(name = "Consulta_Paciente_identificacion")
+    private String consultaPacienteidentificacion;
 
     public RecetaMedicaPK() {
     }
 
-    public RecetaMedicaPK(int idRecetamedica, int consultaidConsulta, int consultaMedicoidMedico, String consultaMedicoUsuarioidUsuario, int consultaPacienteidPaciente, String consultaPacienteUsuarioidUsuario, int medicamentoidMedicamento) {
+    public RecetaMedicaPK(int idRecetamedica, int medicamentoidMedicamento, int consultaidConsulta, String consultaMedicoidentificacion, String consultaPacienteidentificacion) {
         this.idRecetamedica = idRecetamedica;
-        this.consultaidConsulta = consultaidConsulta;
-        this.consultaMedicoidMedico = consultaMedicoidMedico;
-        this.consultaMedicoUsuarioidUsuario = consultaMedicoUsuarioidUsuario;
-        this.consultaPacienteidPaciente = consultaPacienteidPaciente;
-        this.consultaPacienteUsuarioidUsuario = consultaPacienteUsuarioidUsuario;
         this.medicamentoidMedicamento = medicamentoidMedicamento;
+        this.consultaidConsulta = consultaidConsulta;
+        this.consultaMedicoidentificacion = consultaMedicoidentificacion;
+        this.consultaPacienteidentificacion = consultaPacienteidentificacion;
     }
 
     public int getIdRecetamedica() {
@@ -71,46 +61,6 @@ public class RecetaMedicaPK implements Serializable {
         this.idRecetamedica = idRecetamedica;
     }
 
-    public int getConsultaidConsulta() {
-        return consultaidConsulta;
-    }
-
-    public void setConsultaidConsulta(int consultaidConsulta) {
-        this.consultaidConsulta = consultaidConsulta;
-    }
-
-    public int getConsultaMedicoidMedico() {
-        return consultaMedicoidMedico;
-    }
-
-    public void setConsultaMedicoidMedico(int consultaMedicoidMedico) {
-        this.consultaMedicoidMedico = consultaMedicoidMedico;
-    }
-
-    public String getConsultaMedicoUsuarioidUsuario() {
-        return consultaMedicoUsuarioidUsuario;
-    }
-
-    public void setConsultaMedicoUsuarioidUsuario(String consultaMedicoUsuarioidUsuario) {
-        this.consultaMedicoUsuarioidUsuario = consultaMedicoUsuarioidUsuario;
-    }
-
-    public int getConsultaPacienteidPaciente() {
-        return consultaPacienteidPaciente;
-    }
-
-    public void setConsultaPacienteidPaciente(int consultaPacienteidPaciente) {
-        this.consultaPacienteidPaciente = consultaPacienteidPaciente;
-    }
-
-    public String getConsultaPacienteUsuarioidUsuario() {
-        return consultaPacienteUsuarioidUsuario;
-    }
-
-    public void setConsultaPacienteUsuarioidUsuario(String consultaPacienteUsuarioidUsuario) {
-        this.consultaPacienteUsuarioidUsuario = consultaPacienteUsuarioidUsuario;
-    }
-
     public int getMedicamentoidMedicamento() {
         return medicamentoidMedicamento;
     }
@@ -119,16 +69,38 @@ public class RecetaMedicaPK implements Serializable {
         this.medicamentoidMedicamento = medicamentoidMedicamento;
     }
 
+    public int getConsultaidConsulta() {
+        return consultaidConsulta;
+    }
+
+    public void setConsultaidConsulta(int consultaidConsulta) {
+        this.consultaidConsulta = consultaidConsulta;
+    }
+
+    public String getConsultaMedicoidentificacion() {
+        return consultaMedicoidentificacion;
+    }
+
+    public void setConsultaMedicoidentificacion(String consultaMedicoidentificacion) {
+        this.consultaMedicoidentificacion = consultaMedicoidentificacion;
+    }
+
+    public String getConsultaPacienteidentificacion() {
+        return consultaPacienteidentificacion;
+    }
+
+    public void setConsultaPacienteidentificacion(String consultaPacienteidentificacion) {
+        this.consultaPacienteidentificacion = consultaPacienteidentificacion;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) idRecetamedica;
-        hash += (int) consultaidConsulta;
-        hash += (int) consultaMedicoidMedico;
-        hash += (consultaMedicoUsuarioidUsuario != null ? consultaMedicoUsuarioidUsuario.hashCode() : 0);
-        hash += (int) consultaPacienteidPaciente;
-        hash += (consultaPacienteUsuarioidUsuario != null ? consultaPacienteUsuarioidUsuario.hashCode() : 0);
         hash += (int) medicamentoidMedicamento;
+        hash += (int) consultaidConsulta;
+        hash += (consultaMedicoidentificacion != null ? consultaMedicoidentificacion.hashCode() : 0);
+        hash += (consultaPacienteidentificacion != null ? consultaPacienteidentificacion.hashCode() : 0);
         return hash;
     }
 
@@ -142,22 +114,16 @@ public class RecetaMedicaPK implements Serializable {
         if (this.idRecetamedica != other.idRecetamedica) {
             return false;
         }
+        if (this.medicamentoidMedicamento != other.medicamentoidMedicamento) {
+            return false;
+        }
         if (this.consultaidConsulta != other.consultaidConsulta) {
             return false;
         }
-        if (this.consultaMedicoidMedico != other.consultaMedicoidMedico) {
+        if ((this.consultaMedicoidentificacion == null && other.consultaMedicoidentificacion != null) || (this.consultaMedicoidentificacion != null && !this.consultaMedicoidentificacion.equals(other.consultaMedicoidentificacion))) {
             return false;
         }
-        if ((this.consultaMedicoUsuarioidUsuario == null && other.consultaMedicoUsuarioidUsuario != null) || (this.consultaMedicoUsuarioidUsuario != null && !this.consultaMedicoUsuarioidUsuario.equals(other.consultaMedicoUsuarioidUsuario))) {
-            return false;
-        }
-        if (this.consultaPacienteidPaciente != other.consultaPacienteidPaciente) {
-            return false;
-        }
-        if ((this.consultaPacienteUsuarioidUsuario == null && other.consultaPacienteUsuarioidUsuario != null) || (this.consultaPacienteUsuarioidUsuario != null && !this.consultaPacienteUsuarioidUsuario.equals(other.consultaPacienteUsuarioidUsuario))) {
-            return false;
-        }
-        if (this.medicamentoidMedicamento != other.medicamentoidMedicamento) {
+        if ((this.consultaPacienteidentificacion == null && other.consultaPacienteidentificacion != null) || (this.consultaPacienteidentificacion != null && !this.consultaPacienteidentificacion.equals(other.consultaPacienteidentificacion))) {
             return false;
         }
         return true;
@@ -165,7 +131,7 @@ public class RecetaMedicaPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.RecetaMedicaPK[ idRecetamedica=" + idRecetamedica + ", consultaidConsulta=" + consultaidConsulta + ", consultaMedicoidMedico=" + consultaMedicoidMedico + ", consultaMedicoUsuarioidUsuario=" + consultaMedicoUsuarioidUsuario + ", consultaPacienteidPaciente=" + consultaPacienteidPaciente + ", consultaPacienteUsuarioidUsuario=" + consultaPacienteUsuarioidUsuario + ", medicamentoidMedicamento=" + medicamentoidMedicamento + " ]";
+        return "com.utp.receta_medica.entidades.RecetaMedicaPK[ idRecetamedica=" + idRecetamedica + ", medicamentoidMedicamento=" + medicamentoidMedicamento + ", consultaidConsulta=" + consultaidConsulta + ", consultaMedicoidentificacion=" + consultaMedicoidentificacion + ", consultaPacienteidentificacion=" + consultaPacienteidentificacion + " ]";
     }
     
 }
