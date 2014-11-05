@@ -21,7 +21,7 @@ public class TratamientoPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idTratamiento")
-    private int idTratamiento;
+    private Integer idTratamiento;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Enfermedad_idEnfermedad1")
@@ -30,16 +30,16 @@ public class TratamientoPK implements Serializable {
     public TratamientoPK() {
     }
 
-    public TratamientoPK(int idTratamiento, int enfermedadidEnfermedad1) {
+    public TratamientoPK(Integer idTratamiento, int enfermedadidEnfermedad1) {
         this.idTratamiento = idTratamiento;
         this.enfermedadidEnfermedad1 = enfermedadidEnfermedad1;
     }
 
-    public int getIdTratamiento() {
+    public Integer getIdTratamiento() {
         return idTratamiento;
     }
 
-    public void setIdTratamiento(int idTratamiento) {
+    public void setIdTratamiento(Integer idTratamiento) {
         this.idTratamiento = idTratamiento;
     }
 

@@ -90,15 +90,15 @@ public class TablasFacade extends Crud {
             if (obj.getClass().equals(Administrador.class)) {
                 Administrador aux = (Administrador) obj;
                 save(aux);
-            }else if (obj.getClass().equals(Usuario.class)) {
+            } else if (obj.getClass().equals(Usuario.class)) {
                 save(obj);
             } else if (obj.getClass().equals(Tratamiento.class)) {
                 Tratamiento aux = (Tratamiento) obj;
-//                if (aux.getTratamientoPK().getIdTratamiento() == null) {
-//                    aux.getTratamientoPK().setEnfermedadidEnfermedad1(1);
-//                    generarConsecutivo(aux);
-//                }
-//                save(aux);
+                aux.getTratamientoPK().setEnfermedadidEnfermedad1(aux.getEnfermedad().getIdEnfermedad());
+                if (aux.getTratamientoPK().getIdTratamiento() == null) {
+                    generarConsecutivo(aux);
+                }
+                save(aux);
             } else if (obj.getClass().equals(Medicamento.class)) {
                 Medicamento aux = (Medicamento) obj;
                 if (aux.getIdMedicamento() == null) {
@@ -109,6 +109,9 @@ public class TablasFacade extends Crud {
                 Registro aux = (Registro) obj;
                 generarConsecutivo(aux);
                 save(aux);
+            } else if (obj.getClass().equals(Medico.class)) {
+                // Analizar
+                save(obj);
             }
             System.out.println("Guardado objeto de tipo " + obj.getClass().getSimpleName());
         } catch (Exception ex) {

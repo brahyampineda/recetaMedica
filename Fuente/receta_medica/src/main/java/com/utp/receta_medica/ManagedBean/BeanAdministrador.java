@@ -14,7 +14,10 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 
 /**
  *
@@ -81,20 +84,20 @@ public class BeanAdministrador implements Serializable {
     public void guardarMedicamento() {
         try {
             crud.guardar(medicamentoActual);
-            notificaciones(1, "El Medicamento");
+            notificaciones(1, "El medicamento " + medicamentoActual.getNombre());
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El Medicamento");
+            notificaciones(0, "El medicamento " + medicamentoActual.getNombre());
         }
     }
 
     public void eliminarMedicamento(Medicamento obj) {
         try {
             crud.eliminar(obj);
-            notificaciones(3, "El medicamento");
+            notificaciones(3, "El medicamento " + medicamentoActual.getNombre());
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El medicamento");
+            notificaciones(0, "El medicamento " + medicamentoActual.getNombre());
         }
     }
 
@@ -111,17 +114,43 @@ public class BeanAdministrador implements Serializable {
 
     public void guardarTratamiento() {
         try {
-            System.out.println("nombre: " + tratamientoActual.getNombre());
             crud.guardar(tratamientoActual);
-            preparaCrearTratamiento();
+            notificaciones(1, "El tratamiento " + tratamientoActual.getNombre());
+//            preparaCrearTratamiento();
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+            notificaciones(0, "El tratamiento " + tratamientoActual.getNombre());
+        }
+    }
+    
+    public void eliminarTratamiento(Tratamiento obj){
+        try {
+            crud.eliminar(obj);
+            notificaciones(3, "El tratamiento " + tratamientoActual.getNombre());
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            notificaciones(0, "El tratamiento " + tratamientoActual.getNombre());
         }
     }
     ////////////////////////////////////////////////////////////////////////////
     //////////  Médico general
     ////////////////////////////////////////////////////////////////////////////
 
+    public void preparaCrearMedicoGeneral(){
+        
+    }
+    
+    public void preparaEditarMedicoGeneral(Medico obj){
+        
+    }
+    
+    public void guardarMedicoGeneral(){
+        
+    }
+    
+    public void eliminarMedicoGeneral(Medico obj){
+        
+    }
     ////////////////////////////////////////////////////////////////////////////
     //////////  Médico especialista
     ////////////////////////////////////////////////////////////////////////////
@@ -240,6 +269,14 @@ public class BeanAdministrador implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
+    public TablasFacade getCrud() {
+        return crud;
+    }
+
+    public void setCrud(TablasFacade crud) {
+        this.crud = crud;
+    }
+        
     public static BeanGeneral getBeanGeneral() {
         if (beanGeneral == null) {
             beanGeneral = new BeanGeneral();
@@ -299,13 +336,6 @@ public class BeanAdministrador implements Serializable {
         this.entidadActual = entidadActual;
     }
 
-//    public LoginService getLoginService() {
-//        return loginService;
-//    }
-//
-//    public void setLoginService(LoginService loginService) {
-//        this.loginService = loginService;
-//    }
     public Boolean getEsAdmin() {
         return esAdmin;
     }
@@ -363,6 +393,59 @@ public class BeanAdministrador implements Serializable {
 
     public void setTratamientoActual(Tratamiento tratamientoActual) {
         this.tratamientoActual = tratamientoActual;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////// Converters
+    ////////////////////////////////////////////////////////////////////////////
+    public Enfermedad getEnfermedad(Enfermedad id) {
+        try {
+            return getCrud().find(id);
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }    
+    
+    @FacesConverter(value = "EnfermedadConverter")
+    public static class EnfermedadConverter implements Converter {
+
+        @Override
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            BeanAdministrador controller = (BeanAdministrador) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "beanAdministrador");
+            return controller.getEnfermedad(new Enfermedad(getKey(value)));
+        }
+
+        Integer getKey(String value) {
+            java.lang.Integer key;
+            key = Integer.valueOf(value);
+            return key;
+        }
+
+        String getStringKey(java.lang.Integer value) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(value);
+            return sb.toString();
+        }
+
+        @Override
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof Enfermedad) {
+                Enfermedad o = (Enfermedad) object;
+                return getStringKey(o.getIdEnfermedad());
+            } else {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Enfermedad.class.getName()});
+                return null;
+            }
+        }
+
     }
 
 }
