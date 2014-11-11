@@ -34,12 +34,12 @@
                                 </p:inputText>
                                 <p:outputLabel value="Recomendaciones:" />
                                 <p:inputTextarea value="#{beanAdministrador.enfermedadActual.recomendaciones}" styleClass="styleInputText2"
-                                                 required="true" requiredMessage="Debe especificar las recomendaciones."
+                                                 required="true" requiredMessage="Debe especificar las recomendaciones." rows="4"
                                                  validatorMessage="Las recomendaciones no deben ser mayor a 300 caracteres">
                                     <f:validateRegex pattern="\w{1,300}" />
                                 </p:inputTextarea>
                                 <p:outputLabel value="Posología:" />
-                                <p:inputTextarea value="#{beanAdministrador.enfermedadActual.posologia}" rows="5" autoResize="false"
+                                <p:inputTextarea value="#{beanAdministrador.enfermedadActual.posologia}" rows="4" autoResize="false"
                                                  required="true" requiredMessage="Debe especificar la posología." styleClass="styleInputText2"
                                                  validatorMessage="La posología no debe ser mayor a 150 caracteres">
                                     <f:validateRegex pattern="\w{1,150}" />
@@ -69,19 +69,19 @@
 
                                 <p:outputLabel value="Composición:" />
                                 <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="stylInputText2"
-                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
                                     <f:validateRegex pattern="\w{0,300}" />
                                 </p:inputTextarea>
 
                                 <p:outputLabel value="Indicaciones:" />
                                 <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="stylInputText2"
-                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
                                     <f:validateRegex pattern="\w{0,300}" />
                                 </p:inputTextarea>
 
                                 <p:outputLabel value="Contraindicaciones:" />
                                 <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="stylInputText2"
-                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
                                     <f:validateRegex pattern="\w{0,300}" />
                                 </p:inputTextarea>
 
@@ -126,7 +126,7 @@
 
                                 <p:outputLabel value="Descripción:" />
                                 <p:inputTextarea value="#{beanAdministrador.tratamientoActual.descripcion}" styleClass="stylInputText2"
-                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
                                     <f:validateRegex pattern="\w{0,300}" />
                                 </p:inputTextarea>
 

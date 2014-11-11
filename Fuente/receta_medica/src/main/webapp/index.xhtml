@@ -78,6 +78,7 @@
                                     <p:selectOneMenu value="#{loginBean.perfilActual}" rendered="#{!loginBean.admin}">
                                         <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
                                                        value="#{loginBean.lstPerfiles}" var="perfil" />
+                                        <p:ajax event="change" listener="#{loginBean.cambioPerfil}" />
                                     </p:selectOneMenu>
                                     <p:commandButton value="Ir a" action="#{loginBean.accederAperfil()}" styleClass="styleInputText2"
                                                      rendered="#{!loginBean.admin}" ajax="false" immediate="true"/>
@@ -99,10 +100,27 @@
                             <p:outputLabel value="Contraseña:"/>
                             <p:password value="#{loginBean.password}" style="width: 80%"/>
                             <p:spacer />
-                            <p:commandLink value="Olvidó su contraseña" />
+                            <p:commandLink value="Olvidó su contraseña" immediate="true"
+                                           onclick="PF('dlgPassword').show();"/>
                             <p:spacer />
                             <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}" ajax="false"/>
                         </h:panelGrid>
+                    </h:form>
+                    <h:form>
+                        <p:dialog header="Restablecer contraseña" widgetVar="dlgPassword" 
+                                  width="40%" resizable="false">
+                            <h:panelGrid id="panelRestablecerPass" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid" >
+                                <p:outputLabel value="Escriba su email:" />
+                                <p:inputText id="email" value="#{beanGeneral.emailRestablecerContraseña}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar el email"
+                                             validatorMessage="El formato del email no es correcto.">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                </p:inputText>
+                            </h:panelGrid>
+                            <p:spacer />
+                            <p:commandButton value="Restablecer" action="#{beanGeneral.enviarCorreoRestablecerContraseña()}"
+                                             update="panelRestablecerPass"/>
+                        </p:dialog>
                     </h:form>
                 </p:dialog>
                 <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" 
@@ -176,7 +194,8 @@
                     <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{loginBean.admin}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{loginBean.admin}">
+                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{loginBean.admin}" 
+                                action="#{beanAdministrador.preparaAgregarContenido()}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
                     <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{loginBean.admin}">
@@ -210,8 +229,10 @@
                 </p:panel>
             </ui:insert>
         </div>
-        <div id="divFooter" >
-            <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right"/>
+        <div >
+            <p:panel id="divFooter" >
+                <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right"/>
+            </p:panel>
         </div>
     </h:body>
 

@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="./index.xhtml">
 
@@ -18,7 +20,42 @@
         </ui:define>
 
         <ui:define name="contenido">
-            contenido
+            <p:panel >
+                <h:form id="formConsulta">
+                    <h:panelGrid id="panelConsulta" columns="3" columnClasses="derechaNegrita, izquierda, izquierda" styleClass="stylePanelGrid">
+                        <p:outputLabel value="Identificación:" />
+                        <p:inputText value="#{beanAdministrador.usuarioFiltro.identificacion}" styleClass="styleInputText2"
+                                     required="true" requiredMessage="Es necesaria la identificación para realizar una búsqueda."
+                                     validatorMessage="La identificación sólo tiene dígitos.">
+                            <f:validateRegex pattern="[0-9]{0,20}" />
+                        </p:inputText>
+
+                        <p:commandButton value="Buscar usuario" action="#{beanAdministrador.buscarUsuario()}"
+                                         icon="ui-icon-search" update="tablaConsulta panelConsulta" />
+                    </h:panelGrid>
+                    <p:dataTable id="tablaConsulta" value="#{beanAdministrador.lstUsuarios}" var="usuario"
+                                 rendered="true" emptyMessage="No hay coincidencias.">
+                        <p:column headerText="Identificación" >
+                            <p:outputLabel value="#{usuario.identificacion}" />
+                        </p:column>
+                        <p:column headerText="Nombre" >
+                            <p:outputLabel value="#{usuario.nombre}" />
+                        </p:column>
+                        <p:column headerText="Apellidos" >
+                            <p:outputLabel value="#{usuario.apellidos}" />
+                        </p:column>
+                        <p:column headerText="Email" >
+                            <p:outputLabel value="#{usuario.email}" />
+                        </p:column>
+<!--                        <p:column headerText="Perfil" >
+                            <p:outputLabel value="{}" />
+                        </p:column> -->
+                    </p:dataTable>
+
+
+
+                </h:form>
+            </p:panel>
         </ui:define>
 
     </ui:composition>

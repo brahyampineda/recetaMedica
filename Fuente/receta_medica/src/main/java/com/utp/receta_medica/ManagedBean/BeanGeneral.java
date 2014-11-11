@@ -74,8 +74,7 @@ public class BeanGeneral implements Serializable {
     private List<String> lstLeyes;
     private List<Enfermedad> lstEnfermedades;
 
-    private int tabIndex;
-
+    private String emailRestablecerContraseña;
 
     public BeanGeneral() {
     }
@@ -149,6 +148,24 @@ public class BeanGeneral implements Serializable {
             t.sendMessage(mensaje, mensaje.getAllRecipients());         // Enviamos el mensaje
         } catch (MessagingException ex) {
             Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void enviarCorreoRestablecerContraseña() {
+        Usuario aux = crud.buscar(new Usuario(emailRestablecerContraseña));
+        
+        if (aux == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "El email no se encuentra registrado"));
+            emailRestablecerContraseña = "";
+        } else {
+            String pass = "password";
+            aux.setContrasena(pass);
+            crud.guardar(aux);
+            enviarCorreo(getAdmin().getUsuario().getEmail(), aux.getEmail(), "Restablecer contraseña", "Buenas " + aux.getNombre() +
+                    ",\n\nUsted acaba de solicitar el cambio de contraseña de su usuario. La nueva contraseña de acceso es " + pass +
+                    ".\n\nRecuerde que la puede volver a cambiar en cualquier momento.");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Solicitud realizada", "Se envió a su email la nueva contraseña"));
+            emailRestablecerContraseña = "";
         }
     }
 
@@ -302,27 +319,6 @@ public class BeanGeneral implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     ////////// Otros Métodos
     ////////////////////////////////////////////////////////////////////////////
-    public int cambioTab() {
-        System.out.println(FacesContext.getCurrentInstance().getAttributes());
-
-//        System.out.println("tab id = " + event.getTab().getId());
-//        switch (event.getTab().getId()) {
-//            case "tabMedicamentos":
-//                tabIndex =0;
-//                break;
-//            case "tabTratamientos":
-//                tabIndex =1;
-//                break;
-//            case "tabMedicosGenerales":
-//                tabIndex =2;
-//                break;
-//            default:
-//                tabIndex =0;
-//                break;
-//        }
-        System.out.println("tabIndex = " + tabIndex);
-        return tabIndex;
-    }
 //
 //    public String leerExcel(String excel_file, String sheet_name, String cell_num) {
 //        String datoCelda = "";
@@ -364,7 +360,6 @@ public class BeanGeneral implements Serializable {
 //            System.out.println("writeExcel ->" + e);
 //        }
 //    }
-
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
@@ -457,12 +452,12 @@ public class BeanGeneral implements Serializable {
         this.mensajeContacto = mensajeContacto;
     }
 
-    public int getTabIndex() {
-        return tabIndex;
+    public String getEmailRestablecerContraseña() {
+        return emailRestablecerContraseña;
     }
 
-    public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
+    public void setEmailRestablecerContraseña(String emailRestablecerContraseña) {
+        this.emailRestablecerContraseña = emailRestablecerContraseña;
     }
 
     //------------------------------ Listas ------------------------------------
@@ -538,13 +533,13 @@ public class BeanGeneral implements Serializable {
         this.lstEnfermedades = lstEnfermedades;
     }
 
-//    public List<String> getLstLeyes() {
-//        //buscarTodosLeyes();
-//        return lstLeyes;
-//    }
-//
-//    public void setLstLeyes(List<String> lstLeyes) {
-//        this.lstLeyes = lstLeyes;
-//    }
+    public List<String> getLstLeyes() {
+        buscarTodosLeyes();
+        return lstLeyes;
+    }
+
+    public void setLstLeyes(List<String> lstLeyes) {
+        this.lstLeyes = lstLeyes;
+    }
 
 }

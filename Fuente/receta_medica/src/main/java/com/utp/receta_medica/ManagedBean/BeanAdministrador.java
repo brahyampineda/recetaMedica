@@ -95,6 +95,17 @@ public class BeanAdministrador implements Serializable {
         }
     }
 
+    public void preparaAgregarContenido(){
+        System.out.println("Preparando entidades.......");
+        preparaCrearEnfermedad();
+        preparaCrearEntidad();
+        preparaCrearGrupoApoyo();
+        preparaCrearLaboratorio();
+        preparaCrearLey();
+        preparaCrearMedicamento();
+        preparaCrearTratamiento();
+    }
+    
     ////////////////////////////////////////////////////////////////////////////
     //////////  Medicamento
     ////////////////////////////////////////////////////////////////////////////
@@ -356,7 +367,11 @@ public class BeanAdministrador implements Serializable {
 
     public void buscarUsuario() {
         try {
+            if ("".equals(usuarioFiltro.getIdentificacion())) {
+                usuarioFiltro.setIdentificacion(null);
+            }
             lstUsuarios = crud.buscarTodos(usuarioFiltro);
+            preparaConsultaUsuario();
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
         }

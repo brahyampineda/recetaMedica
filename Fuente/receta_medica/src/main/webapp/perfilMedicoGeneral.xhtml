@@ -2,24 +2,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-        <ui:composition template="./index.xhtml">
+    <ui:composition template="./index.xhtml">
 
-            <ui:define name="titulo">
-                Perfil de #{loginBean.loggedUser.nombre}
-            </ui:define>
+        <ui:define name="titulo">
+            Perfil de #{loginBean.loggedUser.nombre}
+        </ui:define>
 
-            <ui:define name="imgindex">
-                <a href="../faces/perfilMedicoGeneral.xhtml" title="Ir a perfil">
-                    <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                    value="/resources/imagenes/iconos/logo.png"/>
-                </a>
-            </ui:define>
+        <ui:define name="imgindex">
+            <a href="../faces/perfilMedicoGeneral.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo.png"/>
+            </a>
+        </ui:define>
 
-            <ui:define name="contenido">
-                contenido general
-            </ui:define>
+        <ui:define name="contenido">
+            <h:form id="formPerfil">
+                <p:panel id="panelPerfil">
+                    <p:panel >
+                        <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                     styleClass="stylePanelGrid">
+                            <p:outputLabel value="Identificación:" />
+                            <p:outputLabel value="#{loginBean.loggedUser.identificacion}" />
 
-        </ui:composition>
+                            <p:outputLabel value="Nombre:" />
+                            <p:outputLabel id="nombre" value="#{loginBean.loggedUser.nombre}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.nombre}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
+
+                            <p:outputLabel value="Apellidos:" />
+                            <p:outputLabel value="#{loginBean.loggedUser.apellidos}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.apellidos}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
+
+                            <p:outputLabel value="Email:" />
+                            <p:outputLabel value="#{loginBean.loggedUser.email}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.email}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
+
+                            <p:outputLabel value="Género:" />
+                            <p:outputLabel value="#{loginBean.loggedUser.genero}" rendered="#{!loginBean.esEdicion}" />
+                            <p:selectOneMenu value="#{loginBean.loggedUser.genero}" rendered="#{loginBean.esEdicion}"
+                                             styleClass="styleInputText2">
+                                <f:selectItem itemLabel="Masculino" itemValue="masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="femenino" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha de nacimiento:" />
+                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" />
+                            <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{loginBean.esEdicion}" 
+                                        styleClass="styleInputText2"/>
+
+                            <p:outputLabel value="Contraseña actual:" rendered="#{loginBean.esEdicion}" />
+                            <p:password value="#{loginBean.contraseñaActual}" rendered="#{loginBean.esEdicion}" 
+                                        styleClass="styleInputText2"/>
+
+                            <p:outputLabel value="Nueva contraseña:" rendered="#{loginBean.esEdicion}"/>
+                            <p:inputText value="#{loginBean.nuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                         styleClass="styleInputText2"/>
+
+                            <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{loginBean.esEdicion}"/>
+                            <p:inputText value="#{loginBean.verificacionNuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                         styleClass="styleInputText2"/>
+
+
+                        </h:panelGrid>
+                        <div align="center">
+                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{loginBean.preparaEditarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{!loginBean.esEdicion}"
+                                             update=":formPerfil:panelPerfil"/>
+                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{loginBean.guardarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{loginBean.esEdicion}"
+                                             update="panelPerfil"/>
+                        </div>
+                    </p:panel>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
 </html>

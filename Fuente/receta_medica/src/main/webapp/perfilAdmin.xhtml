@@ -19,23 +19,6 @@
             </a>
         </ui:define>
 
-        <ui:define name="menu">
-            <p:tabMenu activeIndex="#{param.i}" >
-                <p:menuitem value="Perfil" outcome="/perfilAdmin" rendered="#{loginBean.admin}">
-                    <f:param name="i" value="0" />
-                </p:menuitem>
-                <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.admin}">
-                    <f:param name="i" value="1" />
-                </p:menuitem>
-                <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{loginBean.admin}">
-                    <f:param name="i" value="2" />
-                </p:menuitem>
-                <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{loginBean.admin}">
-                    <f:param name="i" value="3" />
-                </p:menuitem>
-            </p:tabMenu>
-        </ui:define>
-
         <ui:define name="contenido">
             <h:form >
                 <p:panel id="panelPerfil">
@@ -43,49 +26,60 @@
                         <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
                                      styleClass="stylePanelGrid">
                             <p:outputLabel value="Identificación:" />
-                            <p:outputLabel value="#{beanAdministrador.administrador.identificacion}" />
+                            <p:outputLabel value="#{loginBean.loggedUser.identificacion}" />
 
                             <p:outputLabel value="Nombre:" />
-                            <p:outputLabel id="nombre" value="#{beanAdministrador.administrador.usuario.nombre}" rendered="#{!beanAdministrador.esEdicion}" />
-                            <p:inputText value="#{beanAdministrador.administrador.usuario.nombre}" styleClass="styleInputText2"
-                                         rendered="#{beanAdministrador.esEdicion}" />
+                            <p:outputLabel id="nombre" value="#{loginBean.loggedUser.nombre}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.nombre}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
 
                             <p:outputLabel value="Apellidos:" />
-                            <p:outputLabel value="#{beanAdministrador.administrador.usuario.apellidos}" rendered="#{!beanAdministrador.esEdicion}" />
-                            <p:inputText value="#{beanAdministrador.administrador.usuario.apellidos}" styleClass="styleInputText2"
-                                         rendered="#{beanAdministrador.esEdicion}" />
+                            <p:outputLabel value="#{loginBean.loggedUser.apellidos}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.apellidos}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
 
                             <p:outputLabel value="Email:" />
-                            <p:outputLabel value="#{beanAdministrador.administrador.usuario.email}" rendered="#{!beanAdministrador.esEdicion}" />
-                            <p:inputText value="#{beanAdministrador.administrador.usuario.email}" styleClass="styleInputText2"
-                                         rendered="#{beanAdministrador.esEdicion}" />
+                            <p:outputLabel value="#{loginBean.loggedUser.email}" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="#{loginBean.loggedUser.email}" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
 
                             <p:outputLabel value="Género:" />
-                            <p:outputLabel value="#{beanAdministrador.administrador.usuario.genero}" rendered="#{!beanAdministrador.esEdicion}" />
-                            <p:selectOneMenu value="#{beanAdministrador.administrador.usuario.genero}" rendered="#{beanAdministrador.esEdicion}"
+                            <p:outputLabel value="#{loginBean.loggedUser.genero}" rendered="#{!loginBean.esEdicion}" />
+                            <p:selectOneMenu value="#{loginBean.loggedUser.genero}" rendered="#{loginBean.esEdicion}"
                                              styleClass="styleInputText2">
                                 <f:selectItem itemLabel="Masculino" itemValue="masculino" />
                                 <f:selectItem itemLabel="Femenino" itemValue="femenino" />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha de nacimiento:" />
-                            <p:outputLabel value="#{beanAdministrador.administrador.usuario.fechaNacimiento}" rendered="#{!beanAdministrador.esEdicion}" />
-                            <p:calendar value="#{beanAdministrador.administrador.usuario.fechaNacimiento}" rendered="#{beanAdministrador.esEdicion}" 
+                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" />
+                            <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{loginBean.esEdicion}" 
                                         style="width: 100%"/>
+
+                            <p:outputLabel value="Contraseña actual:" rendered="#{loginBean.esEdicion}" />
+                            <p:password value="#{loginBean.contraseñaActual}" rendered="#{loginBean.esEdicion}" 
+                                        styleClass="styleInputText2"/>
+
+                            <p:outputLabel value="Nueva contraseña:" rendered="#{loginBean.esEdicion}"/>
+                            <p:inputText value="#{loginBean.nuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                         styleClass="styleInputText2"/>
+
+                            <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{loginBean.esEdicion}"/>
+                            <p:inputText value="#{loginBean.verificacionNuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                         styleClass="styleInputText2"/>
 
                         </h:panelGrid>
                         <div align="center">
-                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{!beanAdministrador.esEdicion}"
+                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{loginBean.preparaEditarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{!loginBean.esEdicion}"
                                              update="panelPerfil"/>
-                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{beanAdministrador.guardarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{beanAdministrador.esEdicion}"
+                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{loginBean.guardarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{loginBean.esEdicion}"
                                              update="panelPerfil"/>
                         </div>
                     </p:panel>
                 </p:panel>
             </h:form>
         </ui:define>
-
     </ui:composition>
 </html>
