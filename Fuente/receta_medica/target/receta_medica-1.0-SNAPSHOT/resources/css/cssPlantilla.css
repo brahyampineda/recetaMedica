@@ -3,14 +3,11 @@
     Author     : Brahyam
 */
 
-div {
-    overflow: auto;
-}
-
 #divCabecera, #divContenido, #divFooter, #divEnlaces, #divLogin {
     padding: 2px;
     margin: 0 auto;
     width: 99%;
+    overflow: auto;
 }
 
 
@@ -22,13 +19,13 @@ div {
 
 #divEnlaces {
     /*background: red;*/
-    width: 83%;
+    width: 77%;
     float: left;
 }
 
 #divLogin {
     /*background: yellow;*/
-    width: 15%;
+    width: 22%;
     float: right;
 }
 
@@ -39,8 +36,8 @@ div {
 
 #divFooter {
     /*background: #045491;*/
-    background: white;
-    color: blue;
+    background: yellowgreen;
+    color: white;
     float: bottom;
     padding: 10px;
 }

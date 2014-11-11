@@ -4,9 +4,8 @@ package com.utp.receta_medica.facade;
  *
  * @author JorgeRivera
  */
-//import com.utp.receta_medica.facade.LoginService;
+import com.utp.receta_medica.ManagedBean.LoginBean;
 import java.io.IOException;
- 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,9 +20,9 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         
-        LoginService loginService = (LoginService)((HttpServletRequest)request).getSession().getAttribute("loginService");
+        LoginBean loginBean = (LoginBean)((HttpServletRequest)request).getSession().getAttribute("loginBean");
          
-        if (loginService == null || !loginService.isLoggedIn()) {
+        if (loginBean == null || !loginBean.isLoggedIn()) {
             String contextPath = ((HttpServletRequest)request).getContextPath();
             ((HttpServletResponse)response).sendRedirect(contextPath + "/faces/index.xhtml");
         }

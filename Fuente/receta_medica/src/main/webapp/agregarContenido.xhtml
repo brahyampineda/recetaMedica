@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+
+        <ui:define name="titulo">
+            Agregar contenido
+        </ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo.png"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <p:tabView id="tabsAddContenido" >
+                <p:tab title="Enfermedad" >
+                    <h:form id="formAddEnfermedad">
+                        <p:panel id="panel1" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid">
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.enfermedadActual.nombre}" styleClass="styleInputText2"
+                                             required="true" requiredMessage="Debe especificar un nombre."
+                                             validatorMessage="El nombre no debe ser mayor a 45 caracteres">
+                                    <f:validateRegex pattern="\w{1,45}" />
+                                </p:inputText>
+                                <p:outputLabel value="Recomendaciones:" />
+                                <p:inputTextarea value="#{beanAdministrador.enfermedadActual.recomendaciones}" styleClass="styleInputText2"
+                                                 required="true" requiredMessage="Debe especificar las recomendaciones."
+                                                 validatorMessage="Las recomendaciones no deben ser mayor a 300 caracteres">
+                                    <f:validateRegex pattern="\w{1,300}" />
+                                </p:inputTextarea>
+                                <p:outputLabel value="Posología:" />
+                                <p:inputTextarea value="#{beanAdministrador.enfermedadActual.posologia}" rows="5" autoResize="false"
+                                                 required="true" requiredMessage="Debe especificar la posología." styleClass="styleInputText2"
+                                                 validatorMessage="La posología no debe ser mayor a 150 caracteres">
+                                    <f:validateRegex pattern="\w{1,150}" />
+                                </p:inputTextarea>
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarEnfermedad()}"  
+                                                 update=":tabsAddContenido:formAddEnfermedad:panel1" tabindex="0" />
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Medicamento" >
+                    <h:form id="formAddMedicamento" >
+                        <p:panel id="panel2" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid">
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText2"
+                                             required="true" requiredMessage="Debe especificar un nombre." maxlength="45"
+                                             validatorMessage="El nombre no debe ser mayor a 45 caracteres." />
+
+                                <p:outputLabel value="Precio:" />
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2"
+                                             required="true" requiredMessage="Debe especificar un precio."
+                                             validatorMessage="El formato del precio no es correcto." />
+
+                                <p:outputLabel value="Composición:" />
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="stylInputText2"
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                    <f:validateRegex pattern="\w{0,300}" />
+                                </p:inputTextarea>
+
+                                <p:outputLabel value="Indicaciones:" />
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="stylInputText2"
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                    <f:validateRegex pattern="\w{0,300}" />
+                                </p:inputTextarea>
+
+                                <p:outputLabel value="Contraindicaciones:" />
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="stylInputText2"
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                    <f:validateRegex pattern="\w{0,300}" />
+                                </p:inputTextarea>
+
+                                <p:outputLabel value="Presentación:" />
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2"/>
+
+                                <p:outputLabel value="Dosis usual:" />
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText2"/>
+
+                                <p:outputLabel value="Cantidad:" />
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText2"/>
+
+                                <p:outputLabel value="Tipo:" />
+                                <p:selectOneMenu value="#{beanAdministrador.medicamentoActual.esPos}" styleClass="styleInputText2">
+                                    <f:selectItem itemLabel="POS" itemValue="true" />
+                                    <f:selectItem itemLabel="NO POS" itemValue="false" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Laboratorios que lo distribuyen:" />
+                                <p:selectCheckboxMenu value="#{beanAdministrador.medicamentoActual.laboratorioCollection}" label="Laboratorios"
+                                                      filter="true" filterMatchMode="contains" converter="LaboratorioConverter">
+                                    <f:selectItems itemLabel="#{lab.nit}, #{lab.nombre}" itemValue="#{lab}"
+                                                   value="#{beanGeneral.lstLaboratorios}" var="lab"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarMedicamento()}"  
+                                                 update=":tabsAddContenido:formAddMedicamento:panel2" tabindex="1" />
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Tratamiento" >
+                    <h:form id="formAddTratamiento" >
+                        <p:panel id="panel3" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid" >
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar un nombre"/>
+
+                                <p:outputLabel value="Descripción:" />
+                                <p:inputTextarea value="#{beanAdministrador.tratamientoActual.descripcion}" styleClass="stylInputText2"
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres.">
+                                    <f:validateRegex pattern="\w{0,300}" />
+                                </p:inputTextarea>
+
+                                <p:outputLabel value="Enfermedad que trata:" />
+                                <p:selectOneMenu value="#{beanAdministrador.tratamientoActual.enfermedad}" styleClass="styleInputText2"
+                                                 filter="true" filterMatchMode="contains" converter="EnfermedadConverter"
+                                                 required="true" requiredMessage="Debe especificar la enfermedad que trata.">
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems itemLabel="#{enf.nombre}" itemValue="#{enf}"
+                                                   value="#{beanGeneral.lstEnfermedades}" var="enf"/>
+                                </p:selectOneMenu>
+
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarTratamiento()}"  
+                                                 update=":tabsAddContenido:formAddTratamiento" tabindex="2"/>
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Grupo de apoyo" >
+                    <h:form id="formAddGrupoApoyo" >
+                        <p:panel id="panelGrupoApoyo" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid" >
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.grupoApoyoActual.nombre}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar un nombre."/>
+
+                                <p:outputLabel value="Nombre del encargado:" />
+                                <p:inputText value="#{beanAdministrador.grupoApoyoActual.nombreProfesional}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar el encargado">
+                                    <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                                </p:inputText>
+
+                                <p:outputLabel value="Enfermedad que ayuda:" />
+                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.enfermedad}" styleClass="styleInputText2"
+                                                 filter="true" filterMatchMode="contains" converter="EnfermedadConverter"
+                                                 required="true" requiredMessage="Debe especificar la enfermedad que ayuda.">
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems itemLabel="#{enf.nombre}" itemValue="#{enf}"
+                                                   value="#{beanGeneral.lstEnfermedades}" var="enf"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Entidad a la que pertenece:" />
+                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.entidad}" styleClass="styleInputText2"
+                                                 filter="true" filterMatchMode="contains" converter="EntidadConverter"
+                                                 required="true" requiredMessage="Debe especificar la entidad a la que pertenece.">
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems itemLabel="#{ent.nit}, #{ent.nombre}" itemValue="#{ent}"
+                                                   value="#{beanGeneral.lstEntidades}" var="ent"/>
+                                </p:selectOneMenu>
+
+
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarGrupoApoyo()}"  
+                                                 update=":tabsAddContenido:formAddGrupoApoyo" tabindex="3"/>
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Entidad" >
+                    <h:form id="formAddEntidad" >
+                        <p:panel id="panelEntidad" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid" >
+                                <p:outputLabel value="NIT:" />
+                                <p:inputText value="#{beanAdministrador.entidadActual.nit}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar el NIT."
+                                             maxlength="20" validatorMessage="El nit no debe exceder los 20 caracteres."/>
+
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.entidadActual.nombre}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar un nombre."/>
+
+                                <p:outputLabel value="Email:" />
+                                <p:inputText value="#{beanAdministrador.entidadActual.email}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar el email"
+                                             validatorMessage="El formato del email no es correcto.">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                </p:inputText>
+
+                                <p:outputLabel value="Página web:" />
+                                <p:inputText value="#{beanAdministrador.entidadActual.url}" styleClass="styleInputText2" 
+                                             validatorMessage="No es una página web válida.">
+                                    <!--<f:validateRegex pattern="/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/ " />-->
+                                </p:inputText>
+
+                                <p:outputLabel value="Tipo:" />
+                                <p:selectOneMenu value="#{beanAdministrador.entidadActual.esEps}" styleClass="styleInputText2">
+                                    <f:selectItem itemLabel="EPS" itemValue="true" />
+                                    <f:selectItem itemLabel="IPS" itemValue="false" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Grupos de apoyo de la entidad:" />
+                                <p:selectCheckboxMenu value="#{beanAdministrador.entidadActual.grupoApoyoCollection}" label="Grupos de apoyo"
+                                                      filter="true" filterMatchMode="contains" converter="GrupoApoyoConverter">
+                                    <f:selectItems itemLabel="#{grupAp.nombre}" itemValue="#{grupAp}"
+                                                   value="#{beanGeneral.lstGruposApoyo}" var="grupAp"/>
+                                </p:selectCheckboxMenu>
+
+                                <p:outputLabel value="Médicos especialistas de la entidad:" />
+                                <p:selectCheckboxMenu value="#{beanAdministrador.entidadActual.medicoCollection}" label="Médicos especialistas"
+                                                      filter="true" filterMatchMode="contains" converter="MedicoConverter">
+                                    <f:selectItems itemLabel="#{medE.usuario.nombre} #{medE.usuario.apellidos}" itemValue="#{medE}"
+                                                   value="#{beanGeneral.lstMedicosEspecialistas}" var="medE"/>
+                                </p:selectCheckboxMenu>
+                                <p:outputLabel value="Médicos generales de la entidad:" />
+                                <p:selectCheckboxMenu value="#{beanAdministrador.entidadActual.medicoCollection}" label="Médicos generales"
+                                                      filter="true" filterMatchMode="contains" converter="MedicoConverter">
+                                    <f:selectItems itemLabel="#{medG.usuario.nombre} #{medG.usuario.apellidos}" itemValue="#{medG}"
+                                                   value="#{beanGeneral.lstMedicosGenerales}" var="medG"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarEntidad()}"  
+                                                 update=":tabsAddContenido:formAddEntidad" />
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Laboratorio" >
+                    <h:form id="formAddLaboratorio" >
+                        <p:panel id="panelLaboratorio" >
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                         styleClass="stylePanelGrid" >
+                                <p:outputLabel value="NIT:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.nit}" styleClass="styleInputText2"
+                                             required="true" requiredMessage="Debe especificar el NIT."
+                                             maxlength="20" validatorMessage="El nit no debe exceder los 20 caracteres."/>
+
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.nombre}" styleClass="styleInputText2" />
+
+                                <p:outputLabel value="Email:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.email}" styleClass="styleInputText2" 
+                                             required="true" requiredMessage="Debe especificar el email"
+                                             validatorMessage="El formato del email no es correcto.">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                </p:inputText>
+
+                                <p:outputLabel value="Banco:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.banco}" styleClass="styleInputText2" />
+
+                                <p:outputLabel value="Número de cuenta:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.numeroCuenta}" styleClass="styleInputText2" 
+                                             validatorMessage="El formato del número de cuenta no es correcto.">
+                                    <f:validateRegex pattern="[0-9\-]{0,20}" />
+                                </p:inputText>
+
+                                <p:outputLabel value="Tipo de cuenta:" />
+                                <p:inputText value="#{beanAdministrador.laboratorioActual.tipoCuenta}" styleClass="styleInputText2" 
+                                             autocomplete="true"/>
+
+                                <p:outputLabel value="Médicamentos que distribuye:" />
+                                <p:selectCheckboxMenu value="#{beanAdministrador.laboratorioActual.medicamentoCollection}" label="Médicamentos"
+                                                      filter="true" filterMatchMode="contains" converter="MedicamentoConverter">
+                                    <f:selectItems itemLabel="#{medicamento.nombre}" itemValue="#{medicamento}"
+                                                   value="#{beanGeneral.lstMedicamentos}" var="medicamento"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGrid>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarLaboratorio()}"  
+                                                 update=":tabsAddContenido:formAddLaboratorio" />
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Ley" >
+                    <h:form id="formAddLey" >
+                        <p:panel id="panelLey" >
+                            <!--                                <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                                                         styleClass="stylePanelGrid" >
+                                                                <p:outputLabel value="" />
+                                                                <p:inputText value="" styleClass="styleInputText2" >
+                                                                    <f:validateRegex pattern="" />
+                                                                </p:inputText>
+                            
+                                                            </h:panelGrid>
+                                                            <div align="center" >
+                                                            <p:commandButton value="Guardar" icon="ui-icon-disk" action="{beanAdministrador.guardar...}"  
+                                                                             update=":tabsAddContenido:formAdd..." tabindex=""/>
+                                                            </div>-->
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+
+            </p:tabView>
+        </ui:define>
+
+    </ui:composition>
+</html>

@@ -19,33 +19,40 @@
         <div id="divCabecera">
             <div id="divEnlaces">
                 <div id="divImagenes" style="float: left ; width: 95%">
-                    <a href="../faces/index.xhtml" title="Ir a inicio">
-                        <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                        value="/resources/imagenes/iconos/logo.jpg"/>
-                    </a>
+                    <ui:insert name="imgindex">
+                        <a href="../faces/index.xhtml" title="Ir a inicio">
+                            <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                            value="/resources/imagenes/iconos/logo.png"/>
+                        </a>
+                    </ui:insert>
                     <p:spacer width="1%"/>
-                    <a href="http://www.mineducacion.gov.co/" title="Ir al portal del Ministerio de educación">
-                        <p:graphicImage id="imgColombia" height="80px" style="margin: 5px 2px"
-                                        value="/resources/imagenes/iconos/ministerioeducacion.png" />
+                    <!--                    <a href="http://www.mineducacion.gov.co/" title="Ir al portal del Ministerio de educación">
+                                            <p:graphicImage id="imgMinEducacion" height="80px" style="margin: 5px 2px"
+                                                            value="/resources/imagenes/iconos/ministerioeducacion.png" />
+                                        </a>
+                                        <p:spacer width="1%"/>-->
+                    <a href="http://www.minsalud.gov.co/" title="Ir al portal del Ministerio de salud">
+                        <p:graphicImage id="imgMinSalud" height="80px" style="margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/logo-minSalud.png" />
                     </a>
                     <p:spacer width="1%"/>
                     <a href="http://www.utp.edu.co" title="Ir al portal de la Universidad Tecnológica de Pereira">
                         <p:graphicImage id="imgUTP" height="80px" style="margin: 5px 2px"
                                         value="/resources/imagenes/iconos/utplogo.jpg"/>
                     </a>
-                    <h1 style="margin-top: 30px ; float: right ; color: white; padding-right: 5%">TU RECETA MÉDICA</h1>
+                    <h1 style="margin-top: 30px ; float: right ; color: white; padding-right: 2%">TU RECETA MÉDICA</h1>
                 </div>
                 <div id="divIdioma" style="float: right ; width: 5%">
                     <p:outputLabel value="Idioma" style="float: right; color: white"/>
                     <a href=""
                        title="Inglés">
-                    <p:graphicImage id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
-                                    value="/resources/imagenes/iconos/usa.jpg"/>
+                        <p:graphicImage id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/usa.jpg"/>
                     </a>
                     <a href=""
                        title="Alemán">
-                    <p:graphicImage id="imgAleman" width="30px" height="15px" style="float: right ; margin: 5px 2px"
-                                    value="/resources/imagenes/iconos/alemania.gif"/>
+                        <p:graphicImage id="imgAleman" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/alemania.gif"/>
                     </a>
                 </div>
             </div>
@@ -53,14 +60,30 @@
                 <h:form id="formBtnLogin">
                     <p:panel >
                         <h:panelGrid columns="1" style="margin: 0 auto; width: 100%">
-                            <ui:insert name="login" >
-                                <p:commandButton value="Iniciar sesión" style="width: 90% ; margin: 0 auto ; float: right"
-                                                 onclick="PF('dlgLogin').show();"/>
-                                <p:commandButton value="Registrarse" style="width: 90% ; margin: 0 auto ; float: right"
-                                                 action="#{beanGeneral.prepararRegistroUsuario()}"
-                                                 onclick="PF('dlgRegistro').show();"
-                                                 update=":formRegistroUsuario:panelRegistroUsuario"/>
-                            </ui:insert>
+                            <p:commandButton action="#{loginBean.preparaInicioDeSesion()}" value="Iniciar sesión" rendered="#{loginBean.visitante}"
+                                             style="width: 90% ; margin: 0 auto ; float: right"
+                                             onclick="PF('dlgLogin').show();" update=":formInicioSesion:panelInicioSesion" />
+                            <p:commandButton value="Registrarse" style="width: 90% ; margin: 0 auto ; float: right" rendered="#{loginBean.visitante}"
+                                             action="#{beanGeneral.prepararRegistroUsuario()}"
+                                             onclick="PF('dlgRegistro').show();"
+                                             update=":formRegistroUsuario:panelRegistroUsuario"/>
+                            <h:panelGrid rendered="#{!loginBean.visitante}" >
+                                <h3>Perfil: #{loginBean.perfilActual} </h3>
+                                <h:panelGrid columns="2" styleClass="stylePanelGrid" >
+
+                                    <p:outputLabel value="Bienvenido, #{loginBean.loggedUser.nombre}" style="font-weight: bold"/>
+                                    <p:commandButton value="Salir" action="#{loginBean.doLogout()}" immediate="true"
+                                                     ajax="false" styleClass="styleInputText2"/>
+
+                                    <p:selectOneMenu value="#{loginBean.perfilActual}" rendered="#{!loginBean.admin}">
+                                        <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
+                                                       value="#{loginBean.lstPerfiles}" var="perfil" />
+                                    </p:selectOneMenu>
+                                    <p:commandButton value="Ir a" action="#{loginBean.accederAperfil()}" styleClass="styleInputText2"
+                                                     rendered="#{!loginBean.admin}" ajax="false" immediate="true"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+
                         </h:panelGrid>
                     </p:panel>
                 </h:form>
@@ -68,17 +91,17 @@
                           modal="true" width="40%" resizable="false">
                     <h:form id="formInicioSesion">
                         <h:panelGrid id="panelInicioSesion" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
-                            <p:outputLabel value="Correo:"/>
-                            <p:inputText  style="width: 80%"
-                                          validatorMessage="No es un correo válido.">
-                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            <p:outputLabel value="Identificación:"/>
+                            <p:inputText  value="#{loginBean.username}" style="width: 80%"
+                                          validatorMessage="No es una identificación válida.">
+                                <f:validateRegex pattern="[0-9]{1,20}" />
                             </p:inputText>
                             <p:outputLabel value="Contraseña:"/>
-                            <p:password style="width: 80%"/>
+                            <p:password value="#{loginBean.password}" style="width: 80%"/>
                             <p:spacer />
                             <p:commandLink value="Olvidó su contraseña" />
                             <p:spacer />
-                            <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}"/>
+                            <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}" ajax="false"/>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
@@ -131,27 +154,47 @@
             </div>
         </div>
         <div id="divContenido" >
-            <p:growl showDetail="true"/>
+            <p:growl autoUpdate="true" showDetail="true"/>
             <h:form>
-                <ui:insert name="menu" >
-                    <p:tabMenu activeIndex="#{param.i}" >
-                        <p:menuitem value="Inicio" outcome="/index">
-                            <f:param name="i" value="0" />
-                        </p:menuitem>
-                        <p:menuitem value="Contacto" outcome="/contacto">
-                            <f:param name="i" value="1" />
-                        </p:menuitem>
-                        <p:menuitem value="Listas" outcome="/listas">
-                            <f:param name="i" value="2" />
-                        </p:menuitem>
-                    </p:tabMenu>
-                </ui:insert>
+                <p:tabMenu activeIndex="#{param.i}" >
+                    <p:menuitem value="Inicio" outcome="/index" rendered="#{loginBean.visitante}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.visitante}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Contacto" outcome="/contacto" rendered="#{loginBean.visitante}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+
+                    <p:menuitem value="Perfil" outcome="/perfilAdmin" rendered="#{loginBean.admin}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.admin}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{loginBean.admin}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{loginBean.admin}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{loginBean.admin}">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.medicoEspecialista}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+
+                </p:tabMenu>
             </h:form>
 
             <ui:insert name="contenido" >
                 <p:panel  style="width: 99.5%">
-                    <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; float: right ; padding: 2em"
-                                    value="/resources/imagenes/logo.jpg"/> 
                     <p>
                         Esta página web te ayuda a estar al tanto de lo que pasa con tus recetas médicas, además de poder ver las listas de 
                         médicos que hay disponibles, incluso listas de medicamentos POS, tratamientos y leyes que rigen la salud en Colombia.
@@ -160,21 +203,15 @@
                         Puede generar recordatorios para estar al tanto de los horarios para tomar tus medicamentos y también para saber en que
                         momento se te están acabando las dosis y así poder comprar tus medicamentos en linea desde está página.
                     </p>
+                    <div align="center">
+                        <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; padding: 2em "
+                                        value="/resources/imagenes/iconos/logo.jpg"/> 
+                    </div>
                 </p:panel>
-                <h:form>
-                    <p:commandButton value="Administrador" action="administrador/perfil" 
-                                     ajax="false" immediate="true"/>
-                    <p:commandButton value="Paciente" action="paciente/perfil" 
-                                     ajax="false" immediate="true"/>
-                    <p:commandButton value="Médico general" action="medicoGeneral/perfil" 
-                                     ajax="false" immediate="true"/>
-                    <p:commandButton value="Médico especialista" action="medicoEspecialista/perfil" 
-                                     ajax="false" immediate="true"/>
-                </h:form>
             </ui:insert>
         </div>
         <div id="divFooter" >
-            <p:outputLabel value="by BPC, ESR, JHRM, SBO" style="float: right"/>
+            <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right"/>
         </div>
     </h:body>
 

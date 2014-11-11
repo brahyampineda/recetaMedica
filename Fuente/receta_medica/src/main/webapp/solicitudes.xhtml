@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition template="/index.xhtml">
+
+        <ui:define name="titulo">
+            Solicitudes
+        </ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/administrador/perfil.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo.png"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <p:tabView id="tabsSolicitudes">
+                <p:tab title="Registro" >
+                    <h:form id="formRegistro">
+                        <p:dataTable id="tablaSolRegistro" value="#{beanAdministrador.lstRegistros}" var="registro"
+                                     emptyMessage="No hay solicitudes" sortBy="#{registro.estado}">
+                            <p:column headerText="Identificación" sortBy="#{registro.usuario.identificacion}"
+                                      filterBy="#{registro.usuario.identificacion}" filterMatchMode="contains"
+                                      style="text-align: right ; width: 12%">
+                                <p:outputLabel value="#{registro.usuario.identificacion}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{registro.usuario.nombre}"
+                                      filterBy="#{registro.usuario.nombre}" filterMatchMode="contains">
+                                <p:outputLabel value="#{registro.usuario.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Apellidos" sortBy="#{registro.usuario.apellidos}"
+                                      filterBy="#{registro.usuario.apellidos}" filterMatchMode="contains">
+                                <p:outputLabel value="#{registro.usuario.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Perfil(es)" sortBy="#{registro.perfil}"
+                                      filterBy="#{registro.perfil}" filterMatchMode="contains">
+                                <p:outputLabel value="#{registro.perfil}"/>
+                            </p:column>
+                            <p:column headerText="Estado" sortBy="#{registro.estado}"
+                                      filterBy="#{registro.estado}" filterMatchMode="contains"
+                                      style="width: 10%">
+                                <p:outputLabel value="#{registro.estado}"/>
+                            </p:column>
+                            <p:column headerText="Opción" style="width: 8%">
+                                <p:commandButton icon="ui-icon-check" action="#{beanAdministrador.aceptarSolicitudRegistro(registro)}"
+                                                 rendered="#{beanAdministrador.desactivarBotones(registro.estado)}"/>
+                                <p:commandButton icon="ui-icon-closethick" action="#{beanAdministrador.rechazarSolicitudRegistro(registro)}"
+                                                 update=":tabsSolicitudes:formRegistro:tablaSolRegistro"
+                                                 rendered="#{beanAdministrador.desactivarBotones(registro.estado)}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Quejas, sugerencias y peticiones">
+                    <h:form id="formSolGenerales">
+                        <p:dataTable id="tablaSolicitudesGenerales" value="#{beanAdministrador.lstSolicitudesQR}" var="sqr"
+                                     emptyMessage="No hay solicitudes" sortBy="#{sqr.usuario.nombre}">
+                            <p:column headerText="Nombre" sortBy="#{sqr.usuario.nombre}"
+                                      filterBy="#{sqr.usuario.nombre}" filterMatchMode="container">
+                                <p:outputLabel value="#{sqr.usuario.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Correo" sortBy="#{sqr.usuario.email}"
+                                      filterBy="#{sqr.usuario.email}" filterMatchMode="container">
+                                <p:outputLabel value="#{sqr.usuario.email}"/>
+                            </p:column>
+                            <p:column headerText="Asunto" sortBy="#{sqr.titulo}"
+                                      filterBy="#{sqr.titulo}" filterMatchMode="container" >
+                                <p:outputLabel value="#{sqr.titulo}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion" sortBy="#{sqr.descripcion}"
+                                      filterBy="#{sqr.descripcion}" filterMatchMode="container">
+                                <p:outputLabel value="#{sqr.descripcion}"/>
+                            </p:column> 
+                            <p:column headerText="Responder" style="width: 8%" >
+                                <p:commandButton icon="ui-icon-mail-closed" action="#{beanAdministrador.preparaResponderSolicitud(sqr)}"
+                                                 onclick="PF('dlgSolicitud').show();" update=":tabsSolicitudes:formSolGenerales:responderSolicitud" />
+                            </p:column> 
+                        </p:dataTable>
+                        <p:dialog header="Responder solicitud" widgetVar="dlgSolicitud"  
+                                  modal="true" width="50%" resizable="false">
+                            <p:outputPanel id="responderSolicitud" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Solicitante:" />
+                                    <p:outputLabel value="#{beanAdministrador.solicitudActual.usuario.nombre}" />
+
+                                    <p:outputLabel value="Asunto:" />
+                                    <p:outputLabel value="#{beanAdministrador.solicitudActual.titulo}" />
+
+                                    <p:outputLabel value="Descripción:" />
+                                    <p:outputLabel value="#{beanAdministrador.solicitudActual.descripcion}" />
+
+                                    <p:outputLabel value="Mensaje:" />
+                                    <p:inputTextarea value="#{beanAdministrador.respuestaSolicitud}" styleClass="styleInputText2"
+                                                     rows="5" placeholder="Mensaje..." autoResize="false"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Enviar respuesta" icon="ui-icon-mail-closed" action="#{beanAdministrador.responderSolicitudGeneral()}" 
+                                                     update="tablaSolicitudesGenerales" onclick="dlgEdicionLaboratorio.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </ui:define>
+
+    </ui:composition>
+</html>

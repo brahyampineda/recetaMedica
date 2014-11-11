@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+        <ui:composition template="./index.xhtml">
+
+            <ui:define name="titulo">
+                Perfil de #{loginBean.loggedUser.nombre}
+            </ui:define>
+
+            <ui:define name="imgindex">
+                <a href="../faces/perfilPaciente.xhtml" title="Ir a perfil">
+                    <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
+                                    value="/resources/imagenes/iconos/logo.png"/>
+                </a>
+            </ui:define>
+
+            <ui:define name="contenido">
+                contenido paciente
+            </ui:define>
+
+        </ui:composition>
+</html>

@@ -22,7 +22,7 @@ public class GrupoApoyoPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idGrupo_apoyo")
-    private int idGrupoapoyo;
+    private Integer idGrupoapoyo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -42,11 +42,11 @@ public class GrupoApoyoPK implements Serializable {
         this.enfermedadidEnfermedad = enfermedadidEnfermedad;
     }
 
-    public int getIdGrupoapoyo() {
+    public Integer getIdGrupoapoyo() {
         return idGrupoapoyo;
     }
 
-    public void setIdGrupoapoyo(int idGrupoapoyo) {
+    public void setIdGrupoapoyo(Integer idGrupoapoyo) {
         this.idGrupoapoyo = idGrupoapoyo;
     }
 

@@ -89,6 +89,7 @@ public class TablasFacade extends Crud {
         try {
             if (obj.getClass().equals(Administrador.class)) {
                 Administrador aux = (Administrador) obj;
+                save(aux.getUsuario());
                 save(aux);
             } else if (obj.getClass().equals(Usuario.class)) {
                 save(obj);
@@ -107,12 +108,33 @@ public class TablasFacade extends Crud {
                 save(aux);
             } else if (obj.getClass().equals(Registro.class)) {
                 Registro aux = (Registro) obj;
-                generarConsecutivo(aux);
+                if (aux.getIdRegistro() == null) {
+                    generarConsecutivo(aux);
+                }
                 save(aux);
             } else if (obj.getClass().equals(Medico.class)) {
                 // Analizar
                 save(obj);
+            } else if (obj.getClass().equals(GrupoApoyo.class)) {
+                GrupoApoyo aux = (GrupoApoyo) obj;
+                aux.getGrupoApoyoPK().setEnfermedadidEnfermedad(aux.getEnfermedad().getIdEnfermedad());
+                aux.getGrupoApoyoPK().setEntidadnit(aux.getEntidad().getNit());
+                if (aux.getGrupoApoyoPK().getIdGrupoapoyo() == null) {
+                    generarConsecutivo(aux);
+                }
+                save(aux);
+            } else if (obj.getClass().equals(Entidad.class)) {
+                save(obj);
+            } else if (obj.getClass().equals(Laboratorio.class)) {
+                save(obj);
+            } else if (obj.getClass().equals(Enfermedad.class)) {
+                Enfermedad aux = (Enfermedad) obj;
+                if (aux.getIdEnfermedad() == null) {
+                    generarConsecutivo(aux);
+                }
+                save(obj);
             }
+
             System.out.println("Guardado objeto de tipo " + obj.getClass().getSimpleName());
         } catch (Exception ex) {
             Logger.getLogger(TablasFacade.class.getName()).log(Level.SEVERE, null, ex);

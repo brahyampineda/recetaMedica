@@ -1,17 +1,16 @@
 package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.*;
-import com.utp.receta_medica.facade.LoginService;
 import com.utp.receta_medica.facade.TablasFacade;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
-import static java.lang.System.exit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -25,6 +24,13 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -40,10 +46,6 @@ public class BeanGeneral implements Serializable {
     //***************************************
     @EJB
     private TablasFacade crud;
-
-    //////Atributos para manejo de login//////
-    @ManagedProperty(value = "#{loginService}")
-    private LoginService loginService;
 
     @ManagedProperty(value = "#{beanAdministrador}")
     private static BeanAdministrador adminBean;
@@ -62,16 +64,18 @@ public class BeanGeneral implements Serializable {
     private String correoContacto;
     private String mensajeContacto;
 
-    List<Medicamento> lstMedicamentos;
-    List<Tratamiento> lstTratamientos;
-    List<Medico> lstMedicosGenerales;
-    List<Medico> lstMedicosEspecialistas;
-    List<String> lstLeyes;
-    List<GrupoApoyo> lstGruposApoyo;
-    List<Laboratorio> lstLaboratorios;
-    List<Entidad> lstEntidades;
-    
-    List<Enfermedad> lstEnfermedades;
+    private List<Medicamento> lstMedicamentos;
+    private List<Tratamiento> lstTratamientos;
+    private List<Medico> lstMedicosGenerales;
+    private List<Medico> lstMedicosEspecialistas;
+    private List<GrupoApoyo> lstGruposApoyo;
+    private List<Laboratorio> lstLaboratorios;
+    private List<Entidad> lstEntidades;
+    private List<String> lstLeyes;
+    private List<Enfermedad> lstEnfermedades;
+
+    private int tabIndex;
+
 
     public BeanGeneral() {
     }
@@ -123,7 +127,7 @@ public class BeanGeneral implements Serializable {
      * @param asunto El asunto del correo
      * @param mensajeCorreo El mensaje del correo
      */
-    private void enviarCorreo(String de, String para, String asunto, String mensajeCorreo) {
+    public void enviarCorreo(String de, String para, String asunto, String mensajeCorreo) {
         try {
             Properties propiedades = System.getProperties();                                // Obtenemos las propiedades del sistema
             propiedades.setProperty("mail.smtp.host", "smtp.gmail.com");                    // Configuramos el servidor de correo, host de correo
@@ -192,12 +196,16 @@ public class BeanGeneral implements Serializable {
     }
 
     public void buscarTodosLeyes() {
-        try {
-            //crud.buscarTodos(new Ley());
-        } catch (Exception e) {
-            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            adminBean.notificaciones(0, null);
-        }
+//        try {
+//            lstLeyes = new ArrayList();
+//            for (int i = 0; i < 2; i++) {
+//                lstLeyes.add(leerExcel("D:\\OneDrive\\UTP\\SEMESTRE 10\\Laboratorio de software\\Repositorio\\Fuente\\Leyes.xlsx", "Hoja1", "A"+(i+2)));
+//            }
+//            System.out.println("Longituddddddddd: " + lstLeyes.size());
+//
+//        } catch (Exception e) {
+//            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+//        }
     }
 
     public void buscarTodosGruposApoyo() {
@@ -239,7 +247,7 @@ public class BeanGeneral implements Serializable {
         buscarTodosTratamientos();
     }
 
-    public void buscarTodosEnfermedades(){
+    public void buscarTodosEnfermedades() {
         try {
             lstEnfermedades = crud.buscarTodos(new Enfermedad());
         } catch (Exception e) {
@@ -247,9 +255,9 @@ public class BeanGeneral implements Serializable {
             adminBean.notificaciones(0, null);
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
-    //////////  OTRAS SDOSFDGDOFSGDFH
+    //////////  Registro de Usuario
     ////////////////////////////////////////////////////////////////////////////
     /**
      * Se inicializan las variables que contendran información del nuevo usuario
@@ -277,7 +285,7 @@ public class BeanGeneral implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "Ya existe un usuario con esa identificación"));
             } else {
                 crud.guardar(usuarioActual);
-                registroActual.setEstado("en espera");
+                registroActual.setEstado("En espera");
                 registroActual.setUsuario(usuarioActual);
                 registroActual.setPerfil(Arrays.toString(perfiles));
                 crud.guardar(registroActual);
@@ -290,6 +298,72 @@ public class BeanGeneral implements Serializable {
             Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////// Otros Métodos
+    ////////////////////////////////////////////////////////////////////////////
+    public int cambioTab() {
+        System.out.println(FacesContext.getCurrentInstance().getAttributes());
+
+//        System.out.println("tab id = " + event.getTab().getId());
+//        switch (event.getTab().getId()) {
+//            case "tabMedicamentos":
+//                tabIndex =0;
+//                break;
+//            case "tabTratamientos":
+//                tabIndex =1;
+//                break;
+//            case "tabMedicosGenerales":
+//                tabIndex =2;
+//                break;
+//            default:
+//                tabIndex =0;
+//                break;
+//        }
+        System.out.println("tabIndex = " + tabIndex);
+        return tabIndex;
+    }
+//
+//    public String leerExcel(String excel_file, String sheet_name, String cell_num) {
+//        String datoCelda = "";
+//
+//        try {
+//            Workbook workbook = Workbook.getWorkbook(new File(excel_file));
+//
+//            //Gets the sheet
+//            Sheet sheet = workbook.getSheet(sheet_name);
+//
+//            /* Reads cell data*/
+//            Cell cell = sheet.getCell(cell_num);
+//            datoCelda = cell.getContents();
+//
+//            workbook.close();
+//        } catch (IOException | BiffException e) {
+//            System.out.println("readExcel ->" + e);
+//        }
+//        return datoCelda;
+//    }
+//
+//    public void escribirExcel(String excel_file, String sheet_name, int row, int column, Double value) {
+//        String cellData = new String();
+//        try {
+//            Workbook target_workbook = Workbook.getWorkbook(new File(excel_file));
+//            WritableWorkbook workbook = Workbook.createWorkbook(new File(excel_file), target_workbook);
+//
+//            target_workbook.close();
+//
+//            WritableSheet sheet = workbook.getSheet(sheet_name);
+//
+//            jxl.write.Number number = new jxl.write.Number(column, row, value);
+//            sheet.addCell(number);
+//
+//            workbook.write();
+//
+//            workbook.close();
+//        } catch (Exception e) {
+//            System.out.println("writeExcel ->" + e);
+//        }
+//    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
@@ -319,14 +393,6 @@ public class BeanGeneral implements Serializable {
 
     public void setAdminBean(BeanAdministrador adminBean) {
         this.adminBean = adminBean;
-    }
-
-    public LoginService getLoginService() {
-        return loginService;
-    }
-
-    public void setLoginService(LoginService loginService) {
-        this.loginService = loginService;
     }
 
     public Boolean getEsAdmin() {
@@ -391,6 +457,14 @@ public class BeanGeneral implements Serializable {
         this.mensajeContacto = mensajeContacto;
     }
 
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+    }
+
     //------------------------------ Listas ------------------------------------
     public List<Tratamiento> getLstTratamientos() {
         buscarTodosTratamientos();
@@ -428,15 +502,6 @@ public class BeanGeneral implements Serializable {
         this.lstMedicosEspecialistas = lstMedicosEspecialistas;
     }
 
-    public List<String> getLstLeyes() {
-        buscarTodosLeyes();
-        return lstLeyes;
-    }
-
-    public void setLstLeyes(List<String> lstLeyes) {
-        this.lstLeyes = lstLeyes;
-    }
-
     public List<GrupoApoyo> getLstGruposApoyo() {
         buscarTodosGruposApoyo();
         return lstGruposApoyo;
@@ -472,6 +537,14 @@ public class BeanGeneral implements Serializable {
     public void setLstEnfermedades(List<Enfermedad> lstEnfermedades) {
         this.lstEnfermedades = lstEnfermedades;
     }
-    
-    
+
+//    public List<String> getLstLeyes() {
+//        //buscarTodosLeyes();
+//        return lstLeyes;
+//    }
+//
+//    public void setLstLeyes(List<String> lstLeyes) {
+//        this.lstLeyes = lstLeyes;
+//    }
+
 }
