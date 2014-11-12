@@ -49,11 +49,10 @@ public class LoginBean implements Serializable {
 
     private List<String> lstPerfiles;
     private String perfilActual;
-    
+
     ////////////////////////////////////////////////////////////////////////////
     //////////  Perfiles
     ////////////////////////////////////////////////////////////////////////////
-
     public void preparaInicioDeSesion() {
         username = "";
         password = "";
@@ -81,19 +80,30 @@ public class LoginBean implements Serializable {
 
     public String accederAperfil() {
         System.out.println("Perfil seleccionado: " + perfilActual);
+        esEdicion = false;
+        cambioContraseña = false;
         if (perfilActual.equals("Paciente")) {
+            paciente = true;
+            medicoEspecialista = false;
+            medicoGeneral = false;
             return "/perfilPaciente";
         }
         if (perfilActual.equals("Médico especialista")) {
+            paciente = false;
+            medicoEspecialista = true;
+            medicoGeneral = false;
             return "/perfilMedicoEspecialista";
         }
         if (perfilActual.equals("Médico general")) {
+            paciente = false;
+            medicoEspecialista = false;
+            medicoGeneral = true;
             return "/perfilMedicoGeneral";
         }
         return null;
     }
-    
-    public void cambioPerfil(AjaxBehaviorEvent event){
+
+    public void cambioPerfil(AjaxBehaviorEvent event) {
         perfilActual = (String) ((UIOutput) event.getSource()).getValue();
         System.out.println("Perfil cambió a: " + perfilActual);
     }
@@ -159,16 +169,22 @@ public class LoginBean implements Serializable {
                 if (paciente) {
                     adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Paciente";
+                    medicoEspecialista = false;
+                    medicoGeneral = false;
                     return "/perfilPaciente";
                 }
                 if (medicoEspecialista) {
                     adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Médico especialista";
+                    paciente = false;
+                    medicoGeneral = false;
                     return "/perfilMedicoEspecialista";
                 }
                 if (medicoGeneral) {
                     adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Médico general";
+                    paciente = false;
+                    medicoEspecialista = false;
                     return "/perfilMedicoGeneral";
                 }
             } else {
@@ -203,8 +219,7 @@ public class LoginBean implements Serializable {
         contraseñaActual = "";
         nuevaContraseña = "";
         verificacionNuevaContraseña = "";
-        
-        
+
     }
 
     public void guardarPerfil() {
@@ -244,17 +259,19 @@ public class LoginBean implements Serializable {
         }
     }
 
-    public void preparaCambioContraseña(){
+    public void preparaCambioContraseña() {
         cambioContraseña = true;
     }
+
     ////////////////////////////////////////////////////////////////////////////
     //////////  Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
-    public static BeanAdministrador getAdminBean() {
-        if (adminBean == null) {
-            adminBean = new BeanAdministrador();
-        }
+    public BeanAdministrador getAdminBean() {
         return adminBean;
+    }
+
+    public void setAdminBean(BeanAdministrador adminBean) {
+        this.adminBean = adminBean;
     }
 
     public boolean isCambioContraseña() {
@@ -287,10 +304,6 @@ public class LoginBean implements Serializable {
 
     public void setVerificacionNuevaContraseña(String verificacionNuevaContraseña) {
         this.verificacionNuevaContraseña = verificacionNuevaContraseña;
-    }
-
-    public static void setAdminBean(BeanAdministrador adminBean) {
-        LoginBean.adminBean = adminBean;
     }
 
     public boolean isEsEdicion() {

@@ -40,7 +40,7 @@ import org.primefaces.event.TabChangeEvent;
 @ManagedBean
 @SessionScoped
 public class BeanGeneral implements Serializable {
-
+    
     //***************************************
     // ATRIBUTOS
     //***************************************
@@ -92,6 +92,9 @@ public class BeanGeneral implements Serializable {
     //***************************************
     // METODOS
     //***************************************
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Correos
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * Envía un correo de contacto a al administrador
      */
@@ -179,8 +182,6 @@ public class BeanGeneral implements Serializable {
         }
     }
 
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     //////////  Perfil
     ////////////////////////////////////////////////////////////////////////////
@@ -227,13 +228,13 @@ public class BeanGeneral implements Serializable {
     }
 
     public void preparaEditarPerfil() {
-        usuarioActual = loginBean.loggedUser;
+        usuarioActual = getLoginBean().getLoggedUser();
         esEdicion = true;
         contraseñaActual = "";
         nuevaContraseña = "";
         verificacionNuevaContraseña = "";
         
-        System.out.println("OEeeee: " + loginBean.loggedUser.getNombre());
+        System.out.println("OEeeee: " + getLoginBean().getLoggedUser().getNombre());
         System.out.println("OEeeeeUSUARIO: " + usuarioActual.getNombre());
     }
 
@@ -472,6 +473,15 @@ public class BeanGeneral implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
+    
+    public LoginBean getLoginBean() {
+        return loginBean;
+    }
+
+    public void setLoginBean(LoginBean loginBean) {
+        this.loginBean = loginBean;
+    }
+
     public Administrador getAdmin() {
         List<Administrador> aux = crud.buscarTodos(new Administrador());
         admin = aux.get(0);

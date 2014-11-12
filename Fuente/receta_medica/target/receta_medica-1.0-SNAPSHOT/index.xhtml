@@ -208,6 +208,41 @@
                     <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.medicoEspecialista}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    
+                    
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.medicoGeneral}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    
+                    
+                    
+                    <p:menuitem value="Perfil" outcome="/perfilPaciente" rendered="#{loginBean.paciente}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.paciente}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasPaciente" rendered="#{loginBean.paciente}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesPaciente" rendered="#{loginBean.paciente}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
 
                 </p:tabMenu>
             </h:form>
