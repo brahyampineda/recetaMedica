@@ -92,7 +92,7 @@ public class Usuario implements Serializable {
     private Collection<Administrador> administradorCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<SolicitudQuejasReclamos> solicitudQuejasReclamosCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario")
     private Collection<Registro> registroCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<Paciente> pacienteCollection;

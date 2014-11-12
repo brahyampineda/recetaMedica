@@ -10,10 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 
@@ -29,7 +27,7 @@ public class LoginBean implements Serializable {
     private TablasFacade crud;
 
     @ManagedProperty(value = "#{loginService}")
-    private static BeanAdministrador adminBean;
+    private static BeanAdministrador adminBean = new BeanAdministrador();
     Usuario loggedUser;
 
     private boolean loggedIn;
@@ -44,12 +42,17 @@ public class LoginBean implements Serializable {
     private String password;
 
     // Para el cambio de contraseña
+    private boolean cambioContraseña;
     private String contraseñaActual;
     private String nuevaContraseña;
     private String verificacionNuevaContraseña;
 
     private List<String> lstPerfiles;
     private String perfilActual;
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Perfiles
+    ////////////////////////////////////////////////////////////////////////////
 
     public void preparaInicioDeSesion() {
         username = "";
@@ -108,7 +111,7 @@ public class LoginBean implements Serializable {
         try {
             usuarios = crud.buscarTodos(usuario);
             if (usuarios.isEmpty()) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al entrar", "El usuario no está registrado"));
+                adminBean.notificaciones(-1, "El usuario no está registrado");
                 return null;
             } else {
                 usuario = usuarios.get(0);
@@ -130,7 +133,7 @@ public class LoginBean implements Serializable {
 
                 if (!usuario.getAdministradorCollection().isEmpty()) { // Verifica si es administrador
                     admin = true;
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Inicio de sesión", "Bienvenido " + loggedUser.getNombre()));
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Administrador";
                     return "/perfilAdmin";
                 } else {
@@ -154,24 +157,22 @@ public class LoginBean implements Serializable {
                 }
                 preparaListaPerfiles();
                 if (paciente) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Inicio de sesión", "Bienvenido " + loggedUser.getNombre()));
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Paciente";
                     return "/perfilPaciente";
                 }
                 if (medicoEspecialista) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Inicio de sesión", "Bienvenido " + loggedUser.getNombre()));
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Médico especialista";
                     return "/perfilMedicoEspecialista";
                 }
                 if (medicoGeneral) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Inicio de sesión", "Bienvenido " + loggedUser.getNombre()));
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
                     perfilActual = "Médico general";
                     return "/perfilMedicoGeneral";
                 }
             } else {
-                FacesMessage msg = new FacesMessage("Error al entrar", "Contraseña incorrecta");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+                adminBean.notificaciones(-1, "Contraseña incorrecta");
                 return null;
             }
         }
@@ -187,12 +188,10 @@ public class LoginBean implements Serializable {
         medicoGeneral = false;
         medicoEspecialista = false;
         visitante = true;
-
         perfilActual = "Visitante";
-        FacesMessage msg = new FacesMessage("Sesión finalizada", "Se ha cerrado la sesión correctamente");
-        msg.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
 
+        System.out.println("\n\nCerrando sesión.\n\n");
+        adminBean.notificaciones(-1, "Se ha cerrado la sesión correctamente");
         return "/index";
     }
 
@@ -204,6 +203,8 @@ public class LoginBean implements Serializable {
         contraseñaActual = "";
         nuevaContraseña = "";
         verificacionNuevaContraseña = "";
+        
+        
     }
 
     public void guardarPerfil() {
@@ -214,34 +215,38 @@ public class LoginBean implements Serializable {
                 contraseñaActual = "";
                 nuevaContraseña = "";
                 verificacionNuevaContraseña = "";
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Perfil guardado", "El perfil se ha guardado exitosamente"));
+                adminBean.notificaciones(6, null);
             }
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "El perfil no se ha podido guardar exitosamente."));
+            adminBean.notificaciones(-1, "El perfil no se ha podido guardar exitosamente.");
         }
     }
 
     private boolean verificarCambioContraseña() {
         if ("".equals(contraseñaActual)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "Debe escribir la contraseña para guardar el perfil"));
+            adminBean.notificaciones(-1, "Debe escribir la contraseña para guardar el perfil");
             return false;
         } else if (contraseñaActual.equals(loggedUser.getContrasena())) {
             if (nuevaContraseña.equals(verificacionNuevaContraseña)) {
                 if (!nuevaContraseña.equals("")) {
                     loggedUser.setContrasena(nuevaContraseña);
                 }
+                cambioContraseña = false;
                 return true;
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "La confirmación de la nueva contraseña no coincide."));
+                adminBean.notificaciones(-1, "La confirmación de la nueva contraseña no coincide.");
                 return false;
             }
         } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "La contraseña no es correcta."));
+            adminBean.notificaciones(-1, "La contraseña no es correcta.");
             return false;
         }
     }
 
+    public void preparaCambioContraseña(){
+        cambioContraseña = true;
+    }
     ////////////////////////////////////////////////////////////////////////////
     //////////  Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
@@ -250,6 +255,14 @@ public class LoginBean implements Serializable {
             adminBean = new BeanAdministrador();
         }
         return adminBean;
+    }
+
+    public boolean isCambioContraseña() {
+        return cambioContraseña;
+    }
+
+    public void setCambioContraseña(boolean cambioContraseña) {
+        this.cambioContraseña = cambioContraseña;
     }
 
     public String getContraseñaActual() {

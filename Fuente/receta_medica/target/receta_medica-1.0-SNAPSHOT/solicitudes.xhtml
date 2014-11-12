@@ -29,13 +29,13 @@
                                       style="text-align: right ; width: 12%">
                                 <p:outputLabel value="#{registro.usuario.identificacion}"/>
                             </p:column>
-                            <p:column headerText="Nombre" sortBy="#{registro.usuario.nombre}"
-                                      filterBy="#{registro.usuario.nombre}" filterMatchMode="contains">
-                                <p:outputLabel value="#{registro.usuario.nombre}"/>
+                            <p:column headerText="Nombre" sortBy="#{registro.usuario.nombre} #{registro.usuario.apellidos}"
+                                      filterBy="#{registro.usuario.nombre} #{registro.usuario.apellidos}" filterMatchMode="contains">
+                                <p:outputLabel value="#{registro.usuario.nombre} #{registro.usuario.apellidos}"/>
                             </p:column>
-                            <p:column headerText="Apellidos" sortBy="#{registro.usuario.apellidos}"
-                                      filterBy="#{registro.usuario.apellidos}" filterMatchMode="contains">
-                                <p:outputLabel value="#{registro.usuario.apellidos}"/>
+                            <p:column headerText="Email" sortBy="#{registro.usuario.email}"
+                                      filterBy="#{registro.usuario.email}" filterMatchMode="contains">
+                                <p:outputLabel value="#{registro.usuario.email}"/>
                             </p:column>
                             <p:column headerText="Perfil(es)" sortBy="#{registro.perfil}"
                                       filterBy="#{registro.perfil}" filterMatchMode="contains">
@@ -48,6 +48,7 @@
                             </p:column>
                             <p:column headerText="Opción" style="width: 8%">
                                 <p:commandButton icon="ui-icon-check" action="#{beanAdministrador.aceptarSolicitudRegistro(registro)}"
+                                                 update=":tabsSolicitudes:formRegistro:tablaSolRegistro"
                                                  rendered="#{beanAdministrador.desactivarBotones(registro.estado)}"/>
                                 <p:commandButton icon="ui-icon-closethick" action="#{beanAdministrador.rechazarSolicitudRegistro(registro)}"
                                                  update=":tabsSolicitudes:formRegistro:tablaSolRegistro"

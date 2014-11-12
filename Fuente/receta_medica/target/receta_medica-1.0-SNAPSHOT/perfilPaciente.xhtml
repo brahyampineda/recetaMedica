@@ -62,7 +62,10 @@
 
                             <p:outputLabel value="Nueva contraseña:" rendered="#{loginBean.esEdicion}"/>
                             <p:inputText value="#{loginBean.nuevaContraseña}" rendered="#{loginBean.esEdicion}" 
-                                         styleClass="styleInputText2"/>
+                                         styleClass="styleInputText2"
+                                         validatorMessage="La contraseña no cumple con los requisitos." >
+                                <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+                            </p:inputText>
 
                             <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{loginBean.esEdicion}"/>
                             <p:inputText value="#{loginBean.verificacionNuevaContraseña}" rendered="#{loginBean.esEdicion}" 

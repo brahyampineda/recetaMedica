@@ -40,13 +40,7 @@ public class BeanAdministrador implements Serializable {
     @EJB
     private TablasFacade crud;
 
-    //////Atributos para manejo de login//////
-//    @ManagedProperty(value = "#{loginService}")
-//    private LoginService loginService;
-    private Boolean esAdmin = true;
-    /////////////////////////////////////////
-
-    private static BeanGeneral beanGeneral;
+    private static BeanGeneral beanGeneral = new BeanGeneral();
     private Administrador administrador;
 
     private Medicamento medicamentoActual;
@@ -66,9 +60,6 @@ public class BeanAdministrador implements Serializable {
     private String respuestaSolicitud;
     private Usuario usuarioFiltro;
 
-    private int panelSeleccionado;
-    private boolean esEdicion = false;
-
     //***************************************
     // METODOS
     //***************************************
@@ -78,24 +69,7 @@ public class BeanAdministrador implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     //////////  Perfil Administrador
     ////////////////////////////////////////////////////////////////////////////
-    public void preparaEditarPerfil() {
-//        administrador = getAdministrador();
-        esEdicion = true;
-    }
-
-    public void guardarPerfil() {
-        try {
-            System.out.println("aewaf: " + administrador.getUsuario().getApellidos());
-            crud.guardar(administrador);
-            notificaciones(6, null);
-            esEdicion = false;
-        } catch (Exception e) {
-            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, null);
-        }
-    }
-
-    public void preparaAgregarContenido(){
+    public void preparaAgregarContenido() {
         System.out.println("Preparando entidades.......");
         preparaCrearEnfermedad();
         preparaCrearEntidad();
@@ -105,7 +79,7 @@ public class BeanAdministrador implements Serializable {
         preparaCrearMedicamento();
         preparaCrearTratamiento();
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     //////////  Medicamento
     ////////////////////////////////////////////////////////////////////////////
@@ -382,33 +356,59 @@ public class BeanAdministrador implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     public void aceptarSolicitudRegistro(Registro registro) {
         try {
-            for (Registro reg : getAdministrador().getRegistroCollection()) {
-                if (reg == registro) {
-                    reg.setEstado("Aceptada");
-                }
-            }
+            registro.setEstado("Aceptada");
+            crud.guardar(registro);
 
-            //algooooooo
-            crud.eliminar(registro);
+            if (registro.getPerfil().contains("Paciente")) {
+                Paciente nuevoPaciente = new Paciente(registro.getUsuario().getIdentificacion());
+                nuevoPaciente.setUsuario(registro.getUsuario());
+                registro.getUsuario().getPacienteCollection().add(nuevoPaciente);
+            }
+            if (registro.getPerfil().contains("Medico general")) {
+                Medico nuevoMedicoG = new Medico(registro.getUsuario().getIdentificacion());
+                nuevoMedicoG.setEsEspecialista(false);
+                nuevoMedicoG.setUsuario(registro.getUsuario());
+                registro.getUsuario().getMedicoCollection().add(nuevoMedicoG);
+            }
+            if (registro.getPerfil().contains("Medico especialista")) {
+                Medico nuevoMedicoE = new Medico(registro.getUsuario().getIdentificacion());
+                nuevoMedicoE.setEsEspecialista(true);
+                nuevoMedicoE.setUsuario(registro.getUsuario());
+                registro.getUsuario().getMedicoCollection().add(nuevoMedicoE);
+            }
+            registro.getUsuario().setContrasena("RecetaMedica123");
+            crud.guardar(registro.getUsuario());
+            beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), registro.getUsuario().getEmail(),
+                    "Solicitud de registro aceptada", "Señ@r " + registro.getUsuario().getNombre() + ",\n\n"
+                    + "Le informamos que su solicitud ha sido aceptada con los perfiles " + registro.getPerfil()
+                    + ". Su nueva contraseña es: " + registro.getUsuario().getContrasena()
+                    + ".\nInicie sesión para cambiar la contraseña y terminar de rellenar los datos de su perfil."
+                    + "\n\nAtt: Adminitrador");
+            notificaciones(4, null);
+//            crud.eliminar(registro);
+
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
         }
-
     }
 
     public void rechazarSolicitudRegistro(Registro registro) {
         try {
-//            registro.setEstado("Rechazada");
-//            crud.guardar(registro);
-            crud.eliminar(registro.getUsuario());
-            getBeanGeneral().enviarCorreo(getAdministrador().getUsuario().getEmail(), registro.getUsuario().getEmail(),
+            registro.setEstado("Rechazada");
+            registro.getUsuario().setIdentificacion("0");
+            registro.getUsuario().setEmail("Usuario rechazado");
+            crud.guardar(registro);
+            crud.guardar(registro.getUsuario());
+//            crud.eliminar(registro.getUsuario());
+            beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), registro.getUsuario().getEmail(),
                     "Solicitud de registro rechazada", "Señ@r " + registro.getUsuario().getNombre() + ",\n\n"
-                    + "Lamentamos informarle que su solicitud de registro ha sido rechazada.");
+                    + "Lamentamos informarle que su solicitud de registro ha sido rechazada." 
+                    + "\n\nAtt: Adminitrador");
             notificaciones(4, null);
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, null);
-            notificaciones(5, null);
+//            notificaciones(0, null);
+//            notificaciones(5, null);
         }
     }
 
@@ -442,6 +442,7 @@ public class BeanAdministrador implements Serializable {
      * Genera el mensaje que será notificado al usuario en la vista.
      *
      * @param codigoMensaje El código del mensaje a borrar:<br/>
+     * -1. Escribir el mensaje exacto que quiere visualizar <br/>
      * 0. Se produjo un error <br/>
      * 1. Objeto <code>tipoObjeto</code> guardado <br/>
      * 2. Objeto <code>tipoObjeto</code> editado <br/>
@@ -455,6 +456,10 @@ public class BeanAdministrador implements Serializable {
         String mensaje = "";
 
         switch (codigoMensaje) {
+            case -1: // Mensaje Libre
+                mensaje = tipoObjeto;
+                break;
+
             case 0: // Error
                 mensaje = "Se produjo un error.";
                 break;
@@ -601,14 +606,6 @@ public class BeanAdministrador implements Serializable {
         this.entidadActual = entidadActual;
     }
 
-    public Boolean getEsAdmin() {
-        return esAdmin;
-    }
-
-    public void setEsAdmin(Boolean esAdmin) {
-        this.esAdmin = esAdmin;
-    }
-
     public Administrador getAdministrador() {
         administrador = crud.buscar(new Administrador("1"));
         if (administrador.getRegistroCollection() == null) {
@@ -711,22 +708,6 @@ public class BeanAdministrador implements Serializable {
 
     public void setUsuarioFiltro(Usuario usuarioFiltro) {
         this.usuarioFiltro = usuarioFiltro;
-    }
-
-    public int getPanelSeleccionado() {
-        return panelSeleccionado;
-    }
-
-    public void setPanelSeleccionado(int panelSeleccionado) {
-        this.panelSeleccionado = panelSeleccionado;
-    }
-
-    public boolean isEsEdicion() {
-        return esEdicion;
-    }
-
-    public void setEsEdicion(boolean esEdicion) {
-        this.esEdicion = esEdicion;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -930,7 +911,7 @@ public class BeanAdministrador implements Serializable {
         }
         return null;
     }
-    
+
     @FacesConverter(value = "MedicoConverter", forClass = Medico.class)
     public static class MedicoConverter implements Converter {
 

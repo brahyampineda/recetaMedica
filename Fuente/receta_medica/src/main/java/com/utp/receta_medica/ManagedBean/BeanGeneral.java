@@ -48,7 +48,10 @@ public class BeanGeneral implements Serializable {
     private TablasFacade crud;
 
     @ManagedProperty(value = "#{beanAdministrador}")
-    private static BeanAdministrador adminBean;
+    private static BeanAdministrador adminBean = new BeanAdministrador();
+
+    @ManagedProperty(value = "#{loginBean}")
+    private LoginBean loginBean = (LoginBean) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("loginBean");;
 
     private Boolean esAdmin = true;
     /////////////////////////////////////////
@@ -75,6 +78,13 @@ public class BeanGeneral implements Serializable {
     private List<Enfermedad> lstEnfermedades;
 
     private String emailRestablecerContraseña;
+    
+    // Para el cambio de contraseña
+    private boolean esEdicion;
+    private boolean cambioContraseña;
+    private String contraseñaActual;
+    private String nuevaContraseña;
+    private String verificacionNuevaContraseña;
 
     public BeanGeneral() {
     }
@@ -169,6 +179,105 @@ public class BeanGeneral implements Serializable {
         }
     }
 
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Perfil
+    ////////////////////////////////////////////////////////////////////////////
+    
+    
+    public boolean getEsEdicion() {
+        return esEdicion;
+    }
+
+    public void setEsEdicion(boolean esEdicion) {
+        this.esEdicion = esEdicion;
+    }
+
+    public boolean getCambioContraseña() {
+        return cambioContraseña;
+    }
+
+    public void setCambioContraseña(boolean cambioContraseña) {
+        this.cambioContraseña = cambioContraseña;
+    }
+
+    public String getContraseñaActual() {
+        return contraseñaActual;
+    }
+
+    public void setContraseñaActual(String contraseñaActual) {
+        this.contraseñaActual = contraseñaActual;
+    }
+
+    public String getNuevaContraseña() {
+        return nuevaContraseña;
+    }
+
+    public void setNuevaContraseña(String nuevaContraseña) {
+        this.nuevaContraseña = nuevaContraseña;
+    }
+
+    public String getVerificacionNuevaContraseña() {
+        return verificacionNuevaContraseña;
+    }
+
+    public void setVerificacionNuevaContraseña(String verificacionNuevaContraseña) {
+        this.verificacionNuevaContraseña = verificacionNuevaContraseña;
+    }
+
+    public void preparaEditarPerfil() {
+        usuarioActual = loginBean.loggedUser;
+        esEdicion = true;
+        contraseñaActual = "";
+        nuevaContraseña = "";
+        verificacionNuevaContraseña = "";
+        
+        System.out.println("OEeeee: " + loginBean.loggedUser.getNombre());
+        System.out.println("OEeeeeUSUARIO: " + usuarioActual.getNombre());
+    }
+
+    public void guardarPerfil() {
+        try {
+            if (verificarCambioContraseña()) {
+                crud.guardar(usuarioActual);
+                esEdicion = false;
+                contraseñaActual = "";
+                nuevaContraseña = "";
+                verificacionNuevaContraseña = "";
+                adminBean.notificaciones(6, null);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            adminBean.notificaciones(-1, "El perfil no se ha podido guardar exitosamente.");
+        }
+    }
+
+    private boolean verificarCambioContraseña() {
+        if ("".equals(contraseñaActual)) {
+            adminBean.notificaciones(-1, "Debe escribir la contraseña para guardar el perfil");
+            return false;
+        } else if (contraseñaActual.equals(usuarioActual.getContrasena())) {
+            if (nuevaContraseña.equals(verificacionNuevaContraseña)) {
+                if (!nuevaContraseña.equals("")) {
+                    usuarioActual.setContrasena(nuevaContraseña);
+                }
+                cambioContraseña = false;
+                return true;
+            } else {
+                adminBean.notificaciones(-1, "La confirmación de la nueva contraseña no coincide.");
+                return false;
+            }
+        } else {
+            adminBean.notificaciones(-1, "La contraseña no es correcta.");
+            return false;
+        }
+    }
+
+    public void preparaCambioContraseña(){
+        cambioContraseña = true;
+    }
+    
     ////////////////////////////////////////////////////////////////////////////
     //////////  Consultas
     ////////////////////////////////////////////////////////////////////////////
