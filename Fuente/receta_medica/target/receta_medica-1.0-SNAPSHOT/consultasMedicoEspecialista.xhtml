@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="./index.xhtml">
 
@@ -13,19 +14,214 @@
 
         <ui:define name="imgindex">
             <a href="../faces/perfilMedicoEspecialista.xhtml" title="Ir a inicio">
-                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo.png"/>
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
             </a>
         </ui:define>
 
         <ui:define name="contenido">
-            <h:form id="formConsulta" >
-                <p:panel id="panelConsulta">
-                    consultas medico especialista
+            <p:tabView id="tabsConsultas">
+                <p:tab title="Nueva consulta" >
+                    <h:form id="formNueva" >
+                        <p:panel id="panelNueva" header="Nueva Consulta">
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                         style="width: 100% ; margin: 0 auto">
+
+                                <p:outputLabel value="Médico: " styleClass="styleInputText2" />
+                                <p:outputLabel value="#{loginBean.loggedUser.nombre} #{loginBean.loggedUser.apellidos}" styleClass="styleInputText2" />
+                                
+                                <p:spacer />
+                                <p:spacer />
+
+                                <p:outputLabel value="Paciente:" styleClass="styleInputText2"/>
+                                <p:selectOneMenu >
+
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Peso actual (Kg):" styleClass="styleInputText2"/>
+                                <p:inputText value="" styleClass="styleInputText2"
+                                             validatorMessage="El formato del peso es incorrecta.">
+                                    <!--required="true" requiredMessage="El peso es necesario"-->
+                                    <!--<f:validateRegex pattern="\d{1,3}(\.\d{1,2})?"/>-->
+                                </p:inputText>
+
+                                <p:outputLabel value="Estatura actual (cm):" styleClass="styleInputText2"/>
+                                <p:inputText value="" styleClass="styleInputText2"
+                                             validatorMessage="El formato de la estatura es incorrecta.">
+                                    <!--required="true" requiredMessage="La estatura es necesario"-->
+                                    <!--<f:validateRegex pattern="\d{1,3}"/>-->
+                                </p:inputText>
+
+                                <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
+                                <p:panel >
+                                    <p:selectManyCheckbox  styleClass="styleInputText2" columns="3" layout="grid">
+                                        <f:selectItem itemValue="Fútbol" itemLabel="Fútbol" />
+                                        <f:selectItem itemValue="Baloncesto" itemLabel="Baloncesto" />
+                                        <f:selectItem itemValue="Tenis" itemLabel="Tenis" />
+                                        <f:selectItem itemValue="Natación" itemLabel="Natación" />
+                                        <f:selectItem itemValue="Atletismo" itemLabel="Atletismo" />
+                                        <f:selectItem itemValue="Otro" itemLabel="Otro" />
+                                    </p:selectManyCheckbox>
+                                </p:panel>
+                            </h:panelGrid>
+                            <br/>
+                            <p:dataTable id="tablaRecetas" emptyMessage="No hay recetas." >
+                                <f:facet name="header" >Recetas</f:facet>
+                                <p:column headerText="Medicamento" >
+                                    <p:outputLabel value="" />
+                                </p:column>
+                                <p:column headerText="Dosis" >
+                                    <p:outputLabel value="" />
+                                </p:column>
+                                <p:column headerText="Periodicidad (por día)" >
+                                    <p:outputLabel value="" />
+                                </p:column>
+                                <p:column headerText="Fecha Inicio" >
+                                    <p:outputLabel value="" >
+                                        <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Edición" style="width: 5em">
+                                    <p:commandButton icon="ui-icon-pencil" 
+                                                     onclick="PF('dlgEdicionEnfermedad').show();"
+                                                     update=":tabsConsultas:formNueva:panelReceta"/>
+                                    <p:commandButton icon="ui-icon-trash" 
+                                                     update="tablaRecetas" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                        <br/>
+                        <p:commandButton value="Agregar Receta" onclick="PF('dlgAgregarReceta').show();" immediate="true"
+                                         update=":tabsConsultas:formNueva:panelAgregarReceta" />
+
+                        <p:dialog header="Agregar Receta" widgetVar="dlgAgregarReceta"  
+                                  modal="true" width="60em" resizable="false">
+                            <p:outputPanel id="panelAgregarReceta" >
+                                <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                             styleClass="stylePanelGrid">
+
+                                    <p:outputLabel value="Medicamento:" styleClass="styleInputText2" />
+                                    <p:selectOneMenu value="" style="width: 97%" filter="true"
+                                                     converter="MedicamentoConverter"
+                                                     required="true" requiredMessage="Debe elegir un medicamento.">
+                                        <f:selectItem noSelectionOption="true" />
+                                        <f:selectItems itemLabel="#{medicamento.nombre}" itemValue="#{medicamento}"
+                                                       value="#{beanGeneral.lstMedicamentos}" var="medicamento" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Dosis:" styleClass="styleInputText2" />
+                                    <p:inputText value="" styleClass="styleInputText2"
+                                                 required="true" requiredMessage="Debe especificar la dosis."
+                                                 validatorMessage="La dosis es un número." type="number"/>
+
+                                    <p:outputLabel value="Periodicidad (por día):" styleClass="styleInputText2" />
+                                    <p:inputText value="" styleClass="styleInputText2"
+                                                 required="true" requiredMessage="Debe especificar la periodicidad."
+                                                 validatorMessage="La periodicidad es un número." type="number"/>
 
 
-                </p:panel>
-            </h:form>
+                                    <p:outputLabel value="Fecha de inicio:" styleClass="styleInputText2" />
+                                    <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" style="width: 100%"/>
+
+                                </h:panelGrid>
+                                <div align="center" >
+                                    <p:commandButton value="Agregar" icon="ui-icon-plusthick"
+                                                     update=":tabsConsultas:formNueva:panelNueva" />
+                                    <!--onclick="dlgAgregarReceta.hide()"/>-->
+                                </div>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <br/>
+                        <div align="center" >
+                            <p:commandButton value="Guardar" icon="ui-icon-disk" ajax="false" />
+                            <p:commandButton value="Imprimir" icon="ui-icon-print">
+                                <p:printer target="panelNueva" />
+                            </p:commandButton>
+                        </div>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Historial" >
+                    <h:form id="formHistorial" >
+                        <p:panel >
+                            <div align="center">
+                                <p:outputLabel value="Identificación paciente: " style="font-weight: bold"/>
+                                <p:inputText value="" style="width: 20%" />
+                                <p:spacer width="2%" />
+                                <p:commandButton value="Buscar" icon="ui-icon-search"
+                                                 update="tablaHistorial"/>
+                            </div>
+                        </p:panel>
+                        <br/>
+                        <p:dataTable id="tablaHistorial" >
+                            <p:column headerText="Identificación" >
+                                <p:outputLabel value="" />
+                            </p:column>
+                            <p:column headerText="Nombre" >
+                                <p:outputLabel value="" />
+                            </p:column>
+                            <p:column headerText="Apellidos" >
+                                <p:outputLabel value="" />
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panel id="panelHistorial" header="Consulta">
+                                    <h:panelGrid id="detalleConsulta" rendered="true" 
+                                                 columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                                 styleClass="stylePanelGrid">
+
+                                        <p:outputLabel value="Médico: " styleClass="styleInputText2" />
+                                        <p:outputLabel value="#{loginBean.loggedUser.nombre} #{loginBean.loggedUser.apellidos}" styleClass="styleInputText2" />
+
+                                        <p:outputLabel value="Paciente:" styleClass="styleInputText2"/>
+                                        <p:outputLabel value="" styleClass="styleInputText2"/>
+
+                                        <p:outputLabel value="Peso actual (Kg):" styleClass="styleInputText2"/>
+                                        <p:outputLabel value="" styleClass="styleInputText2"/>
+
+                                        <p:outputLabel value="Estatura actual (cm):" styleClass="styleInputText2"/>
+                                        <p:outputLabel value="" styleClass="styleInputText2"/>
+
+                                        <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
+                                        <p:outputLabel value="" styleClass="styleInputText2"/>
+
+                                    </h:panelGrid>
+
+                                    <p:dataTable id="tablaRecetas" emptyMessage="No hay recetas." >
+                                        <f:facet name="header" >Recetas</f:facet>
+                                        <p:column headerText="Medicamento" >
+                                            <p:outputLabel value="" />
+                                        </p:column>
+                                        <p:column headerText="Dosis" >
+                                            <p:outputLabel value="" />
+                                        </p:column>
+                                        <p:column headerText="Periodicidad (por día)" >
+                                            <p:outputLabel value="" />
+                                        </p:column>
+                                        <p:column headerText="Fecha Inicio" >
+                                            <p:outputLabel value="" >
+                                                <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                            </p:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="Edición" style="width: 7%">
+                                            <p:commandButton icon="ui-icon-pencil" 
+                                                             onclick="PF('dlgEdicionEnfermedad').show();"
+                                                             update=":tabsConsultas:formNueva:panelReceta"/>
+                                            <p:commandButton icon="ui-icon-trash" 
+                                                             update="tablaRecetas" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                                <br/>
+                                <div align="right" >
+                                    <p:commandButton value="Imprimir" icon="ui-icon-print">
+                                        <p:printer target="panelHistorial" />
+                                    </p:commandButton>
+                                </div>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
         </ui:define>
 
     </ui:composition>

@@ -11,6 +11,13 @@
 
         <ui:define name="titulo">Listas</ui:define>
 
+        <ui:define name="imgindex">
+            <!--<a href="../faces/index.xhtml" title="Ir a inicio">-->
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
+            <!--</a>-->
+        </ui:define>
+
         <ui:define name="contenido">
             <p:tabView id="tabsListas" dynamic="true">
 
@@ -19,12 +26,12 @@
                         <p:dataTable id="tablaEnfermedades" value="#{beanGeneral.lstEnfermedades}" var="enfermedad" 
                                      sortBy="#{enfermedad.nombre}"  emptyMessage="No hay enfermedades.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Código" sortBy="#{enfermedad.idEnfermedad}" 
                                       filterBy="#{enfermedad.idEnfermedad}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{enfermedad.idEnfermedad}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{enfermedad.nombre}" 
@@ -35,7 +42,7 @@
                                       filterBy="#{enfermedad.recomendaciones}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{enfermedad.recomendaciones}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEnfermedad(enfermedad)}"
                                                  onclick="PF('dlgEdicionEnfermedad').show();"
                                                  update=":tabsListas:formEnfermedades:editarEnfermedad"/>
@@ -63,7 +70,7 @@
                             </p:rowExpansion>
                         </p:dataTable>
                         <p:dialog header="Editar enfermedad" widgetVar="dlgEdicionEnfermedad"  
-                                  modal="true" width="50%" resizable="false">
+                                  modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarEnfermedad" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                     <p:outputLabel value="Nombre:" />
@@ -88,12 +95,12 @@
                     <h:form id="formMedicamentos">
                         <p:dataTable id="tablaMedicamentos" value="#{beanGeneral.lstMedicamentos}" var="medicamento"
                                      sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos.">
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Código" sortBy="#{medicamento.idMedicamento}" 
                                       filterBy="#{medicamento.idMedicamento}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{medicamento.idMedicamento}" />
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medicamento.nombre}" 
@@ -110,10 +117,10 @@
                             </p:column>
                             <p:column headerText="Precio" sortBy="#{medicamento.precio}" 
                                       filterBy="#{medicamento.precio}" filterMatchMode="contains"
-                                      style="text-align: right ; width: 10%">
+                                      style="text-align: right">
                                 <p:outputLabel value="$ #{medicamento.precio}"  />
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarMedicamento(medicamento)}"
                                                  onclick="PF('dlgEdicionMedicamento').show();" 
                                                  update=":tabsListas:formMedicamentos:editarMedicamento" />
@@ -157,7 +164,7 @@
                                                  sortBy="#{laboratorio.nombre}" emptyMessage="No hay medicamentos.">
                                         <f:facet name="header">Laboratorios que lo distribuyen</f:facet>
 
-                                        <p:column headerText="NIT" style="width: 10%">
+                                        <p:column headerText="NIT" >
                                             <p:outputLabel value="#{laboratorio.nit}" />
                                         </p:column>
                                         <p:column headerText="Nombre" >
@@ -176,7 +183,7 @@
                         </p:dataTable>
 
                         <p:dialog header="Editar medicamento" widgetVar="dlgEdicionMedicamento"  
-                                  modal="true" width="50%" resizable="false" >
+                                  modal="true" width="45em" resizable="false" >
                             <p:outputPanel id="editarMedicamento">
                                 <h:panelGrid id="panelEdicionMedicamento"
                                              columns="2" columnClasses="derechaNegrita, izquierda" 
@@ -226,12 +233,12 @@
                         <p:dataTable id="tablaTratamientos" value="#{beanGeneral.lstTratamientos}" var="trat" 
                                      sortBy="#{trat.tratamientoPK.idTratamiento}"  emptyMessage="No hay tratamientos.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Código" sortBy="#{trat.tratamientoPK.idTratamiento}" 
                                       filterBy="#{trat.tratamientoPK.idTratamiento}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{trat.tratamientoPK.idTratamiento}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{trat.nombre}"
@@ -247,7 +254,7 @@
                                 <p:outputLabel value="#{trat.enfermedad.nombre}" />
                             </p:column>
 
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarTratamiento(trat)}"
                                                  onclick="PF('dlgEdicionTratamiento').show();"
                                                  update=":tabsListas:formTratamientos:editarTratamiento"/>
@@ -278,7 +285,7 @@
                         </p:dataTable>
 
                         <p:dialog header="Editar tratamiento" widgetVar="dlgEdicionTratamiento"  
-                                  modal="true" width="50%" resizable="false">
+                                  modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarTratamiento" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                     <p:outputLabel value="Nombre:" />
@@ -301,12 +308,12 @@
                         <p:dataTable id="tablaMedicosGenerales" value="#{beanGeneral.lstMedicosGenerales}" var="medG" 
                                      sortBy="#{medG.usuario.nombre}"  emptyMessage="No hay médicos generales.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Identificación" sortBy="#{medG.identificacion}" 
                                       filterBy="#{medG.identificacion}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{medG.identificacion}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medG.usuario.nombre} #{medG.usuario.apellidos}" 
@@ -319,12 +326,12 @@
                             </p:column>
                             <p:column headerText="Tarifa" sortBy="#{medG.tarifa}" 
                                       filterBy="#{medG.tarifa}" filterMatchMode="contains" 
-                                      style="text-align: right; width: 10%">
+                                      style="text-align: right">
                                 <p:outputLabel value="$ #{medG.tarifa}"/>
                             </p:column>
                             <p:column headerText="Experiencia" sortBy="#{medG.anosExperiencia}" 
                                       filterBy="#{medG.anosExperiencia}" filterMatchMode="contains" 
-                                      style="text-align: right; width: 10%">
+                                      style="text-align: right">
                                 <p:outputLabel value="#{medG.anosExperiencia} años"/>
                             </p:column>
 
@@ -362,7 +369,7 @@
                                                  sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos." >
                                         <f:facet name="header" >Medicamentos que conoce</f:facet>
 
-                                        <p:column headerText="Código" style="width: 10%">
+                                        <p:column headerText="Código" >
                                             <p:outputLabel value="#{medicamento.idMedicamento}" />
                                         </p:column>
                                         <p:column headerText="Nombre" >
@@ -374,7 +381,7 @@
                                         <p:column headerText="Indicaciones" >
                                             <p:outputLabel value="#{medicamento.indicaciones}" />
                                         </p:column>
-                                        <p:column headerText="Precio" style="text-align: right ; width: 10%">
+                                        <p:column headerText="Precio" style="text-align: right">
                                             <p:outputLabel value="$ #{medicamento.precio}"  />
                                         </p:column>
                                     </p:dataTable>
@@ -393,12 +400,12 @@
                         <p:dataTable id="tablaMedicosEspecialistas" value="#{beanGeneral.lstMedicosEspecialistas}" var="medE" 
                                      sortBy="#{medE.usuario.nombre}"  emptyMessage="No hay médicos especialistas.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Identificación" sortBy="#{medE.identificacion}" 
                                       filterBy="#{medE.identificacion}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{medE.identificacion}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medE.usuario.nombre} #{medE.usuario.apellidos}" 
@@ -411,7 +418,7 @@
                             </p:column>
                             <p:column headerText="Tarifa" sortBy="#{medE.tarifa}" 
                                       filterBy="#{medE.tarifa}" filterMatchMode="contains" 
-                                      style="text-align: right; width: 10%">
+                                      style="text-align: right">
                                 <p:outputLabel value="$ #{medE.tarifa}"/>
                             </p:column>
                             <p:column headerText="Especialidad" sortBy="#{medE.especialidad}" 
@@ -420,7 +427,7 @@
                             </p:column>
                             <p:column headerText="Experiencia" sortBy="#{medE.anosExperiencia}" 
                                       filterBy="#{medE.anosExperiencia}" filterMatchMode="contains" 
-                                      style="text-align: right; width: 10%">
+                                      style="text-align: right">
                                 <p:outputLabel value="#{medE.anosExperiencia} años"/>
                             </p:column>
 
@@ -462,7 +469,7 @@
                                                  sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos." >
                                         <f:facet name="header" >Medicamentos que conoce</f:facet>
 
-                                        <p:column headerText="Código" style="width: 10%">
+                                        <p:column headerText="Código" >
                                             <p:outputLabel value="#{medicamento.idMedicamento}" />
                                         </p:column>
                                         <p:column headerText="Nombre" >
@@ -474,7 +481,7 @@
                                         <p:column headerText="Indicaciones" >
                                             <p:outputLabel value="#{medicamento.indicaciones}" />
                                         </p:column>
-                                        <p:column headerText="Precio" style="text-align: right ; width: 10%">
+                                        <p:column headerText="Precio" style="text-align: right">
                                             <p:outputLabel value="$ #{medicamento.precio}"  />
                                         </p:column>
                                     </p:dataTable>
@@ -493,12 +500,12 @@
                         <p:dataTable id="tablaGruposApoyo" value="#{beanGeneral.lstGruposApoyo}" var="gruposApoyo" 
                                      sortBy="#{gruposApoyo.nombre}"  emptyMessage="No hay Grupos de apoyo.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Código" sortBy="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}" 
                                       filterBy="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}" filterMatchMode="contains" 
-                                      style="width: 10%">
+                                      >
                                 <p:outputLabel value="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{gruposApoyo.nombre}" 
@@ -513,7 +520,7 @@
                                       filterBy="#{gruposApoyo.nombreProfesional}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{gruposApoyo.nombreProfesional}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarGrupoApoyo(gruposApoyo)}"
                                                  onclick="PF('dlgEdicionGrupoApoyo').show();"
                                                  update=":tabsListas:formGruposApoyo:editarGrupoApoyo"/>
@@ -548,7 +555,7 @@
                             </p:rowExpansion>
                         </p:dataTable>
                         <p:dialog header="Editar Grupo de apoyo" widgetVar="dlgEdicionGrupoApoyo"  
-                                  modal="true" width="50%" resizable="false">
+                                  modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarGrupoApoyo" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                     <p:outputLabel value="Nombre:" />
@@ -571,7 +578,7 @@
                         <p:dataTable id="tablaEntidades" value="#{beanGeneral.lstEntidades}" var="entidad" 
                                      sortBy="#{entidad.nombre}"  emptyMessage="No hay entidades.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="NIT" sortBy="#{entidad.nit}" 
@@ -592,7 +599,7 @@
                                       style="width: 15%">
                                 <p:outputLabel value="#{(entidad.esEps == true)? 'EPS' : 'IPS'}" />
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEntidad(entidad)}"
                                                  onclick="PF('dlgEdicionEntidad').show();"
                                                  update=":tabsListas:formEntidades:editarEntidad"/>
@@ -627,7 +634,7 @@
                             </p:rowExpansion>
                         </p:dataTable>
                         <p:dialog header="Editar entidad" widgetVar="dlgEdicionEntidad"  
-                                  modal="true" width="50%" resizable="false">
+                                  modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarEntidad" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                     <p:outputLabel value="Nombre:" />
@@ -659,7 +666,7 @@
                         <p:dataTable id="tablaLaboratorios" value="#{beanGeneral.lstLaboratorios}" var="lab" 
                                      sortBy="#{lab.nombre}"  emptyMessage="No hay Laboratorios.">
 
-                            <p:column style="width: 3%">
+                            <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="NIT" sortBy="#{lab.nit}" 
@@ -675,7 +682,7 @@
                                       filterBy="#{lab.email}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{lab.email}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 7%">
+                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarLaboratorio(lab)}"
                                                  onclick="PF('dlgEdicionLaboratorio').show();"
                                                  update=":tabsListas:formLaboratorios:editarLaboratorio"/>
@@ -700,7 +707,7 @@
                                     <br/>
                                     <p:dataTable value="#{lab.medicamentoCollection}" var="medicamento"
                                                  sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos.">
-                                        <p:column headerText="Código" style="width: 10%">
+                                        <p:column headerText="Código" >
                                             <p:outputLabel value="#{medicamento.idMedicamento}" />
                                         </p:column>
                                         <p:column headerText="Nombre" >
@@ -712,7 +719,7 @@
                                         <p:column headerText="Indicaciones">
                                             <p:outputLabel value="#{medicamento.indicaciones}" />
                                         </p:column>
-                                        <p:column headerText="Precio" style="text-align: right ; width: 10%">
+                                        <p:column headerText="Precio" style="text-align: right ">
                                             <p:outputLabel value="$ #{medicamento.precio}"  />
                                         </p:column>
                                     </p:dataTable>
@@ -724,7 +731,7 @@
                             </p:rowExpansion>
                         </p:dataTable>
                         <p:dialog header="Editar Laboratorio" widgetVar="dlgEdicionLaboratorio"  
-                                  modal="true" width="50%" resizable="false">
+                                  modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarLaboratorio" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                     <p:outputLabel value="NIT:" />
@@ -759,7 +766,7 @@
                         <!--                        <p:dataTable id="tablaLeyes" value="{beanGeneral.lstLeyes}" var="ley" 
                                                              sortBy="{ley}"  emptyMessage="No hay leyes.">
                         
-                                                    <p:column style="width: 3%">
+                                                    <p:column style="width: 1em">
                                                         <p:rowToggler  />
                                                     </p:column>
                                                     <p:column headerText="ley" sortBy="{ley}" 
@@ -767,7 +774,7 @@
                                                               style="width: 15%">
                                                         <p:outputLabel value="{ley}"/>
                                                     </p:column>
-                                                    <p:column headerText="Edición" rendered="{loginBean.admin}" style="width: 7%">
+                                                    <p:column headerText="Edición" rendered="{loginBean.admin}" style="width: 5em">
                                                         <p:commandButton icon="ui-icon-pencil" action="{beanAdministrador.preparaEditarLey()}"
                                                                          onclick="PF('dlgEdicionLey').show();"
                                                                          update=":tabsListas:formLeyes:editarLey"/>
@@ -789,7 +796,7 @@
                                                     </p:rowExpansion>
                                                 </p:dataTable>
                                                 <p:dialog header="Editar ..." widgetVar="dlgEdicionLey"  
-                                                          modal="true" width="50%" resizable="false">
+                                                          modal="true" width="45em" resizable="false">
                                                     <p:outputPanel id="editarLey" >
                                                         <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                                                             <p:outputLabel value="" />

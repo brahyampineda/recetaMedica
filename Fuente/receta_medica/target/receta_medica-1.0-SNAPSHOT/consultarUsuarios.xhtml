@@ -14,25 +14,28 @@
 
         <ui:define name="imgindex">
             <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
-                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo.png"/>
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
             </a>
         </ui:define>
 
         <ui:define name="contenido">
             <p:panel >
                 <h:form id="formConsulta">
-                    <h:panelGrid id="panelConsulta" columns="3" columnClasses="derechaNegrita, izquierda, izquierda" styleClass="stylePanelGrid">
-                        <p:outputLabel value="Identificación:" />
-                        <p:inputText value="#{beanAdministrador.usuarioFiltro.identificacion}" styleClass="styleInputText2"
-                                     required="true" requiredMessage="Es necesaria la identificación para realizar una búsqueda."
-                                     validatorMessage="La identificación sólo tiene dígitos.">
-                            <f:validateRegex pattern="[0-9]{0,20}" />
-                        </p:inputText>
-
-                        <p:commandButton value="Buscar usuario" action="#{beanAdministrador.buscarUsuario()}"
-                                         icon="ui-icon-search" update="tablaConsulta panelConsulta" />
-                    </h:panelGrid>
+                    <p:panel id="panelConsulta">
+                        <div align="center">
+                            <p:outputLabel value="Identificación: " style="font-weight: bold"/>
+                            <p:inputText value="#{beanAdministrador.usuarioFiltro.identificacion}" style="width: 20%"
+                                         required="true" requiredMessage="Es necesaria la identificación para realizar una búsqueda."
+                                         validatorMessage="La identificación sólo tiene dígitos.">
+                                <f:validateRegex pattern="[0-9]{0,20}" />
+                            </p:inputText>
+                            <p:spacer width="2%" />
+                            <p:commandButton value="Buscar usuario" action="#{beanAdministrador.buscarUsuario()}"
+                                             icon="ui-icon-search" update="tablaConsulta panelConsulta" />
+                        </div>
+                    </p:panel>
+                    <br/>
                     <p:dataTable id="tablaConsulta" value="#{beanAdministrador.lstUsuarios}" var="usuario"
                                  rendered="true" emptyMessage="No hay coincidencias.">
                         <p:column headerText="Identificación" >
@@ -47,9 +50,9 @@
                         <p:column headerText="Email" >
                             <p:outputLabel value="#{usuario.email}" />
                         </p:column>
-<!--                        <p:column headerText="Perfil" >
-                            <p:outputLabel value="{}" />
-                        </p:column> -->
+                        <!--                        <p:column headerText="Perfil" >
+                                                    <p:outputLabel value="{}" />
+                                                </p:column> -->
                     </p:dataTable>
 
 

@@ -14,8 +14,8 @@
 
         <ui:define name="imgindex">
             <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
-                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo.png"/>
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
             </a>
         </ui:define>
 
@@ -52,7 +52,9 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha de nacimiento:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" />
+                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" >
+                                <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                            </p:outputLabel>
                             <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{loginBean.esEdicion}" 
                                         style="width: 100%"/>
 

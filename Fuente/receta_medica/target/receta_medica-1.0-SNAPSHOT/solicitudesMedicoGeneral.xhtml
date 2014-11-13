@@ -13,19 +13,55 @@
 
         <ui:define name="imgindex">
             <a href="../faces/perfilMedicoGeneral.xhtml" title="Ir a inicio">
-                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo.png"/>
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
             </a>
         </ui:define>
 
         <ui:define name="contenido">
-            <h:form id="formConsulta" >
-                <p:panel id="panelSolicitudes">
-                    solicitudes medico general
+            <p:tabView id="tabsSolicitudes" >
+                <p:tab title="Nueva">
+                    <h:form id="formNueva" >
+                        <p:panel id="panelNueva" header="Nueva solicitud">
+                            <h:panelGrid styleClass="stylePanelGrid" columns="2" columnClasses="derechaNegrita, izquierda" 
+                                         style="width: 100%" >
 
+                                <p:outputLabel value="Motivo:" />
+                                <p:inputText value="" styleClass="styleInputText1" 
+                                             required="true" requiredMessage="Debe especificar el motivo" 
+                                             placeholder="Motivo..." />
 
-                </p:panel>
-            </h:form>
+                                <p:outputLabel value="Descripción:" />
+                                <p:inputTextarea value="" styleClass="styleInputText1" 
+                                                 required="true" requiredMessage="Debe escribir un mensaje." 
+                                                 placeholder="Escriba acá su mensaje..."
+                                                 autoResize="false" maxlength="500" rows="7"/>
+
+                            </h:panelGrid>
+                            <br/>
+                            <div align="center">
+                                <p:commandButton value="Enviar" actionListener="#{beanGeneral.enviarCorreoDeContacto()}" 
+                                                 ajax="false" style="margin: 0 auto"/>
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Historial">
+                    <h:form id="formHistorial" >
+                        <p:panel id="panelHistorial" header="Historial de solicitudes">
+                            <p:dataTable emptyMessage="No ha hecho solicitudes.">
+                                <p:column headerText="Motivo">
+                                    
+                                </p:column>
+                                <p:column headerText="Descripción">
+                                    
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
         </ui:define>
 
     </ui:composition>

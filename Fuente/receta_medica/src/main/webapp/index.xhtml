@@ -21,26 +21,24 @@
                 <div id="divImagenes" style="float: left ; width: 95%">
                     <ui:insert name="imgindex">
                         <a href="../faces/index.xhtml" title="Ir a inicio">
-                            <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                            value="/resources/imagenes/iconos/logo.png"/>
+                            <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                            value="/resources/imagenes/iconos/logo-web.jpg"/>
                         </a>
                     </ui:insert>
-                    <p:spacer width="1%"/>
                     <!--                    <a href="http://www.mineducacion.gov.co/" title="Ir al portal del Ministerio de educación">
                                             <p:graphicImage id="imgMinEducacion" height="80px" style="margin: 5px 2px"
                                                             value="/resources/imagenes/iconos/ministerioeducacion.png" />
                                         </a>
                                         <p:spacer width="1%"/>-->
                     <a href="http://www.minsalud.gov.co/" title="Ir al portal del Ministerio de salud">
-                        <p:graphicImage id="imgMinSalud" height="80px" style="margin: 5px 2px"
-                                        value="/resources/imagenes/iconos/logo-minSalud.png" />
+                        <p:graphicImage id="imgMinSalud" height="60em" style="margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/logo-minsalud.png" />
                     </a>
-                    <p:spacer width="1%"/>
                     <a href="http://www.utp.edu.co" title="Ir al portal de la Universidad Tecnológica de Pereira">
-                        <p:graphicImage id="imgUTP" height="80px" style="margin: 5px 2px"
-                                        value="/resources/imagenes/iconos/utplogo.jpg"/>
+                        <p:graphicImage id="imgUTP" height="60em" style="margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/logo-utp2.jpg"/>
                     </a>
-                    <h1 style="margin-top: 30px ; float: right ; color: white; padding-right: 2%">TU RECETA MÉDICA</h1>
+                    <h1 style="margin-top: 0.5em ; float: right ; color: white; padding-right: 2%">TU RECETA MÉDICA</h1>
                 </div>
                 <div id="divIdioma" style="float: right ; width: 5%">
                     <p:outputLabel value="Idioma" style="float: right; color: white"/>
@@ -58,38 +56,37 @@
             </div>
             <div id="divLogin" align="right">
                 <h:form id="formBtnLogin">
-                    <p:panel >
-                        <h:panelGrid columns="1" style="margin: 0 auto; width: 100%">
-                            <p:commandButton action="#{loginBean.preparaInicioDeSesion()}" value="Iniciar sesión" rendered="#{loginBean.visitante}"
-                                             style="width: 90% ; margin: 0 auto ; float: right"
-                                             onclick="PF('dlgLogin').show();" update=":formInicioSesion:panelInicioSesion" />
-                            <p:commandButton value="Registrarse" style="width: 90% ; margin: 0 auto ; float: right" rendered="#{loginBean.visitante}"
+                    <p:panel style="width: 100%" rendered="#{loginBean.visitante}" >
+                        <h:panelGrid columns="1" styleClass="stylePanelGrid">
+                            <p:commandButton value="Iniciar sesión" style="width: 80%"
+                                             action="#{loginBean.preparaInicioDeSesion()}"
+                                             onclick="PF('dlgLogin').show();" 
+                                             update=":formInicioSesion:panelInicioSesion" />
+                            <p:commandButton value="Registrarse" style="width: 80%"
                                              action="#{beanGeneral.prepararRegistroUsuario()}"
                                              onclick="PF('dlgRegistro').show();"
                                              update=":formRegistroUsuario:panelRegistroUsuario"/>
-                            <h:panelGrid rendered="#{!loginBean.visitante}" >
-                                <h3>Perfil: #{loginBean.perfilActual} </h3>
-                                <h:panelGrid columns="2" styleClass="stylePanelGrid" >
-
-                                    <p:outputLabel value="Bienvenido, #{loginBean.loggedUser.nombre}" style="font-weight: bold"/>
-                                    <p:commandButton value="Salir" action="#{loginBean.doLogout()}" immediate="true"
-                                                     ajax="false" styleClass="styleInputText2"/>
-
-                                    <p:selectOneMenu value="#{loginBean.perfilActual}" rendered="#{!loginBean.admin}">
-                                        <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
-                                                       value="#{loginBean.lstPerfiles}" var="perfil" />
-                                        <p:ajax event="change" listener="#{loginBean.cambioPerfil}" />
-                                    </p:selectOneMenu>
-                                    <p:commandButton value="Ir a" action="#{loginBean.accederAperfil()}" styleClass="styleInputText2"
-                                                     rendered="#{!loginBean.admin}" ajax="false" immediate="true"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
-
                         </h:panelGrid>
+                    </p:panel>
+                    <p:panel style="width: 100%" rendered="#{!loginBean.visitante}" >
+                            <p:outputLabel value="Perfil: #{loginBean.perfilActual}" style="font-weight: bold; float: left"/>
+                            <h:panelGrid columns="2" styleClass="stylePanelGrid">
+                                <p:outputLabel value="Bienvenido, #{loginBean.loggedUser.nombre}" style="font-weight: bold"/>
+                                <p:commandButton value="Salir" action="#{loginBean.doLogout()}" immediate="true"
+                                                 ajax="false" styleClass="styleInputText2"/>
+
+                                <p:selectOneMenu value="#{loginBean.perfilActual}" rendered="#{!loginBean.admin}">
+                                    <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
+                                                   value="#{loginBean.lstPerfiles}" var="perfil" />
+                                    <p:ajax event="change" listener="#{loginBean.cambioPerfil}" />
+                                </p:selectOneMenu>
+                                <p:commandButton value="Ir a" action="#{loginBean.accederAperfil()}" immediate="true" 
+                                                 ajax="false" styleClass="styleInputText2" rendered="#{!loginBean.admin}"/>
+                            </h:panelGrid>
                     </p:panel>
                 </h:form>
                 <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" 
-                          modal="true" width="40%" resizable="false">
+                          modal="true" width="40em" resizable="false">
                     <h:form id="formInicioSesion">
                         <h:panelGrid id="panelInicioSesion" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Identificación:"/>
@@ -102,9 +99,10 @@
                             <p:spacer />
                             <p:commandLink value="Olvidó su contraseña" immediate="true"
                                            onclick="PF('dlgPassword').show();"/>
-                            <p:spacer />
-                            <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}" ajax="false"/>
                         </h:panelGrid>
+                        <div align="center">
+                            <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}" ajax="false"/>
+                        </div>
                     </h:form>
                     <h:form>
                         <p:dialog header="Restablecer contraseña" widgetVar="dlgPassword" 
@@ -124,7 +122,7 @@
                     </h:form>
                 </p:dialog>
                 <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" 
-                          modal="true" width="40%" resizable="false">
+                          modal="true" width="40em" resizable="false">
                     <h:form id="formRegistroUsuario">
                         <h:panelGrid id="panelRegistroUsuario" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Nombre:"/>
@@ -214,8 +212,8 @@
                     <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    
-                    
+
+
                     <p:menuitem value="Perfil" outcome="/perfilMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
@@ -228,9 +226,9 @@
                     <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    
-                    
-                    
+
+
+
                     <p:menuitem value="Perfil" outcome="/perfilPaciente" rendered="#{loginBean.paciente}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
@@ -259,14 +257,14 @@
                     </p>
                     <div align="center">
                         <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; padding: 2em "
-                                        value="/resources/imagenes/iconos/logo.jpg"/> 
+                                        value="/resources/imagenes/iconos/logo-grande.jpg"/> 
                     </div>
                 </p:panel>
             </ui:insert>
         </div>
         <div >
             <p:panel id="divFooter" >
-                <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right"/>
+                <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right; font-weight: bold"/>
             </p:panel>
         </div>
     </h:body>

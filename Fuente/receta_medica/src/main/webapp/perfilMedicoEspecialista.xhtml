@@ -14,8 +14,8 @@
 
         <ui:define name="imgindex">
             <a href="../faces/perfilMedicoEspecialista.xhtml" title="Ir a perfil">
-                <p:graphicImage id="imgLogo" height="80px" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo.png"/>
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
             </a>
         </ui:define>
 
@@ -52,7 +52,9 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha de nacimiento:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" />
+                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}" >
+                                <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                            </p:outputLabel>
                             <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{loginBean.esEdicion}" 
                                         styleClass="styleInputText2"/>
 
@@ -72,13 +74,13 @@
                                 <f:selectItem itemLabel="5" itemValue="5" />
                                 <f:selectItem itemLabel="6" itemValue="6" />
                             </p:selectOneMenu>
-                            
+
                             <p:outputLabel value="EPS o Sisbén:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.tieneEps}" rendered="#{!loginBean.esEdicion}" />
+                            <p:outputLabel value="#{((loginBean.loggedUser.tieneEps == true)? 'EPS' : 'Sisbén')}" rendered="#{!loginBean.esEdicion}" />
                             <p:selectOneMenu value="#{loginBean.loggedUser.tieneEps}" rendered="#{loginBean.esEdicion}"
                                              styleClass="styleInputText2">
                                 <f:selectItem itemLabel="EPS" itemValue="true" />
-                                <f:selectItem itemLabel="Sisben" itemValue="false" />
+                                <f:selectItem itemLabel="Sisbén" itemValue="false" />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Dirección de despacho:" />
@@ -86,9 +88,24 @@
                             <p:inputText value="#{loginBean.loggedUser.direccionDespechaMedicamentos}" styleClass="styleInputText2"
                                          rendered="#{loginBean.esEdicion}" />
 
+                            <p:outputLabel value="Universidad:" />
+                            <p:outputLabel value="UTP" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="UTP" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" />
+
+                            <p:outputLabel value="Años de experiencia:" />
+                            <p:outputLabel value="5" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="5" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" type="number" />
+
+                            <p:outputLabel value="Tarifa:" />
+                            <p:outputLabel value="$ 30000" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="$ 30000" styleClass="styleInputText2"
+                                         rendered="#{loginBean.esEdicion}" type="number" />
+
                             <p:outputLabel value="Especialidad:" />
-                            <p:outputLabel value="FALTA" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="" styleClass="styleInputText2"
+                            <p:outputLabel value="Cirujano" rendered="#{!loginBean.esEdicion}" />
+                            <p:inputText value="Cirujano" styleClass="styleInputText2"
                                          rendered="#{loginBean.esEdicion}" />
 
                             <p:outputLabel value="Contraseña actual:" rendered="#{loginBean.esEdicion}" />

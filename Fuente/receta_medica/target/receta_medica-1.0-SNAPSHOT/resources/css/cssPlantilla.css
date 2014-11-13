@@ -19,7 +19,7 @@
 
 #divEnlaces {
     /*background: red;*/
-    width: 77%;
+    width: 75%;
     float: left;
 }
 
@@ -35,7 +35,6 @@
 }
 
 #divFooter {
-    /*background: #045491;*/
     background: yellowgreen;
     color: white;
     float: bottom;
@@ -67,6 +66,5 @@
 .stylePanelGrid {
     background-color: white;
     margin: 0 auto;
-    width: 99.5%;
-    padding: 1%;
+    width: 99%;
 }
