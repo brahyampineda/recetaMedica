@@ -2,8 +2,6 @@ package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.*;
 import com.utp.receta_medica.facade.TablasFacade;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +14,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,13 +24,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -40,58 +33,301 @@ import org.primefaces.event.TabChangeEvent;
 @ManagedBean
 @SessionScoped
 public class BeanGeneral implements Serializable {
-    
-    //***************************************
-    // ATRIBUTOS
-    //***************************************
+
     @EJB
     private TablasFacade crud;
 
     @ManagedProperty(value = "#{beanAdministrador}")
     private static BeanAdministrador adminBean = new BeanAdministrador();
 
-    @ManagedProperty(value = "#{loginBean}")
-    private LoginBean loginBean = (LoginBean) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("loginBean");;
+    //Inicio de sesión
+    private Usuario loggedUser;
+    private boolean loggedIn;
+    private boolean admin;
+    private boolean paciente;
+    private boolean medicoGeneral;
+    private boolean medicoEspecialista;
+    private boolean visitante = true;
+    private boolean editarPerfil;
+    private String username;
+    private String password;
 
-    private Boolean esAdmin = true;
-    /////////////////////////////////////////
-
+    private List<String> lstPerfiles;
+    private String perfilActual;
+//..............................................................................
+    // Para el cambio de contraseña
+    private boolean cambioContraseña;
+    private String contraseñaActual;
+    private String nuevaContraseña;
+    private String verificacionNuevaContraseña;
+    private String emailRestablecerContraseña;
+//..............................................................................
+    // Perfiles
     private Usuario usuarioActual;
-    private Administrador admin;
+    private Administrador administrador;
+    private Paciente pacienteActual;
+    private Medico medicoActual;
 
     private Registro registroActual;
     private String[] perfiles;
 
-    //Datos de contacto
+    // Datos de contacto
     private String nombreContacto;
     private String correoContacto;
     private String mensajeContacto;
-
+//..............................................................................
+    // Listas
     private List<Medicamento> lstMedicamentos;
     private List<Tratamiento> lstTratamientos;
-    private List<Medico> lstMedicosGenerales;
-    private List<Medico> lstMedicosEspecialistas;
     private List<GrupoApoyo> lstGruposApoyo;
     private List<Laboratorio> lstLaboratorios;
     private List<Entidad> lstEntidades;
     private List<String> lstLeyes;
     private List<Enfermedad> lstEnfermedades;
 
-    private String emailRestablecerContraseña;
-    
-    // Para el cambio de contraseña
-    private boolean esEdicion;
-    private boolean cambioContraseña;
-    private String contraseñaActual;
-    private String nuevaContraseña;
-    private String verificacionNuevaContraseña;
+    private List<Paciente> lstPacientes;
+    private List<Medico> lstMedicosEspecialistas;
+    private List<Medico> lstMedicosGenerales;
+//..............................................................................
 
-    public BeanGeneral() {
+    //**************************************************************************
+    //**************************************************************************
+    //*******************************  MÉTODOS  ********************************
+    //**************************************************************************
+    //**************************************************************************
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Perfiles
+    ////////////////////////////////////////////////////////////////////////////
+    public void preparaInicioDeSesion() {
+        loggedUser = new Usuario();
+        username = "";
+        password = "";
+        loggedIn = false;
+        admin = false;
+        paciente = false;
+        medicoGeneral = false;
+        medicoEspecialista = false;
+        visitante = true;
+        editarPerfil = false;
     }
 
-    //***************************************
-    // METODOS
-    //***************************************
+    public void preparaListaPerfiles() {
+        lstPerfiles = new ArrayList<>();
+        if (paciente) {
+            lstPerfiles.add("Paciente");
+        }
+        if (medicoEspecialista) {
+            lstPerfiles.add("Médico especialista");
+        }
+        if (medicoGeneral) {
+            lstPerfiles.add("Médico general");
+        }
+    }
+
+    public String accederAperfil() {
+        System.out.println("Perfil seleccionado: " + perfilActual);
+        editarPerfil = false;
+        cambioContraseña = false;
+        if (perfilActual.equals("Paciente")) {
+            paciente = true;
+            medicoEspecialista = false;
+            medicoGeneral = false;
+            return "/perfilPaciente";
+        }
+        if (perfilActual.equals("Médico especialista")) {
+            paciente = false;
+            medicoEspecialista = true;
+            medicoGeneral = false;
+            return "/perfilMedicoEspecialista";
+        }
+        if (perfilActual.equals("Médico general")) {
+            paciente = false;
+            medicoEspecialista = false;
+            medicoGeneral = true;
+            return "/perfilMedicoGeneral";
+        }
+        return null;
+    }
+
+    public void cambioPerfil(AjaxBehaviorEvent event) {
+        perfilActual = (String) ((UIOutput) event.getSource()).getValue();
+        System.out.println("Perfil cambió a: " + perfilActual);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Manejo de sesión
+    ////////////////////////////////////////////////////////////////////////////
+    public String doLogin() {
+        System.out.println("USERNAME: " + username);
+        System.out.println("PASSWORD: " + password);
+
+        Usuario usuario = new Usuario();
+        usuario.setIdentificacion(username);
+        List<Usuario> usuarios;
+        try {
+            usuarios = crud.buscarTodos(usuario);
+            if (usuarios.isEmpty()) {
+                adminBean.notificaciones(-1, "El usuario no está registrado");
+                return null;
+            } else {
+                usuario = usuarios.get(0);
+            }
+        } catch (Exception ex) {
+            usuario = null;
+            Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        if (usuario.getContrasena() != null) {
+            if (usuario.getContrasena().equals(password)) {
+                loggedIn = true;
+                loggedUser = usuario;
+                admin = false;
+                paciente = false;
+                medicoGeneral = false;
+                medicoEspecialista = false;
+                visitante = false;
+
+                if (!usuario.getAdministradorCollection().isEmpty()) { // Verifica si es administrador
+                    admin = true;
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
+                    perfilActual = "Administrador";
+                    for (Administrador perfil : loggedUser.getAdministradorCollection()) {
+                        System.out.println("A");
+                        administrador = perfil;
+                    }
+                    return "/perfilAdmin";
+                } else {
+                    admin = false;
+                    if (!usuario.getPacienteCollection().isEmpty()) {
+                        System.out.println("Es Paciente");
+                        paciente = true;
+                        for (Paciente perfil : loggedUser.getPacienteCollection()) {
+                            System.out.println("P");
+                            pacienteActual = perfil;
+                        }
+                    }
+                    if (!usuario.getMedicoCollection().isEmpty()) {
+                        for (Medico item : usuario.getMedicoCollection()) {
+                            if (item.getEsEspecialista()) {
+                                medicoEspecialista = true;
+                                medicoActual = item;
+                                System.out.println("Es Médico Especialista");
+                            } else {
+                                medicoGeneral = true;
+                                medicoActual = item;
+                                System.out.println("Es Médico General");
+                            }
+                        }
+                    }
+                }
+                preparaListaPerfiles();
+                if (paciente) {
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
+                    perfilActual = "Paciente";
+                    medicoEspecialista = false;
+                    medicoGeneral = false;
+                    return "/perfilPaciente";
+                }
+                if (medicoEspecialista) {
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
+                    perfilActual = "Médico especialista";
+                    paciente = false;
+                    medicoGeneral = false;
+                    return "/perfilMedicoEspecialista";
+                }
+                if (medicoGeneral) {
+                    adminBean.notificaciones(-1, "Bienvenido " + loggedUser.getNombre());
+                    perfilActual = "Médico general";
+                    paciente = false;
+                    medicoEspecialista = false;
+                    return "/perfilMedicoGeneral";
+                }
+            } else {
+                adminBean.notificaciones(-1, "Contraseña incorrecta");
+                return null;
+            }
+        }
+        System.out.println("ojooooo!!!!");
+        return null;
+    }
+
+    public String doLogout() {
+        loggedIn = false;
+        loggedUser = null;
+        admin = false;
+        paciente = false;
+        medicoGeneral = false;
+        medicoEspecialista = false;
+        visitante = true;
+        perfilActual = "Visitante";
+
+        System.out.println("\n\nCerrando sesión.\n\n");
+        adminBean.notificaciones(-1, "Se ha cerrado la sesión correctamente");
+        return "/index";
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////  Perfil de Usuario
+    ////////////////////////////////////////////////////////////////////////////
+    public void preparaEditarPerfil() {
+        editarPerfil = true;
+        contraseñaActual = "";
+        nuevaContraseña = "";
+        verificacionNuevaContraseña = "";
+
+    }
+
+    public void guardarPerfil() {
+        try {
+            if (verificarCambioContraseña()) {
+                if (perfilActual.equals("Administrador")) {
+                    crud.guardar(administrador);
+                    crud.guardar(administrador.getUsuario());
+                } else if (perfilActual.equals("Paciente")) {
+                    crud.guardar(pacienteActual);
+                    crud.guardar(pacienteActual.getUsuario());
+                } else if (perfilActual.equals("Médico especialista") || perfilActual.equals("Médico general")) {
+                    crud.guardar(medicoActual);
+                    crud.guardar(medicoActual.getUsuario());
+                }
+                editarPerfil = false;
+                contraseñaActual = "";
+                nuevaContraseña = "";
+                verificacionNuevaContraseña = "";
+                adminBean.notificaciones(6, null);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            adminBean.notificaciones(-1, "El perfil no se ha podido guardar exitosamente.");
+        }
+    }
+
+    private boolean verificarCambioContraseña() {
+        if ("".equals(contraseñaActual)) {
+            adminBean.notificaciones(-1, "Debe escribir la contraseña para guardar el perfil");
+            return false;
+        } else if (contraseñaActual.equals(loggedUser.getContrasena())) {
+            if (nuevaContraseña.equals(verificacionNuevaContraseña)) {
+                if (!nuevaContraseña.equals("")) {
+                    loggedUser.setContrasena(nuevaContraseña);
+                }
+                cambioContraseña = false;
+                return true;
+            } else {
+                adminBean.notificaciones(-1, "La confirmación de la nueva contraseña no coincide.");
+                return false;
+            }
+        } else {
+            adminBean.notificaciones(-1, "La contraseña no es correcta.");
+            return false;
+        }
+    }
+
+    public void preparaCambioContraseña() {
+        cambioContraseña = true;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     //////////  Correos
     ////////////////////////////////////////////////////////////////////////////
@@ -100,7 +336,7 @@ public class BeanGeneral implements Serializable {
      */
     public void enviarCorreoDeContacto() {
         String de = correoContacto;     // La dirección de la cuenta de envío (from)
-        String para = getAdmin().getUsuario().getEmail();
+        String para = getAdministrador().getUsuario().getEmail();
         String asunto = "Mensaje de contacto de: " + correoContacto;
         String mensajeEnvio = nombreContacto + " envía el siguiente mensaje de contacto: \n\n" + mensajeContacto;
 
@@ -118,7 +354,7 @@ public class BeanGeneral implements Serializable {
     }
 
     public void enviarCorreoSolicitudRegistro(String de, String nombre, String perfiles[]) {
-        String para = getAdmin().getUsuario().getEmail();
+        String para = getAdministrador().getUsuario().getEmail();
         String asunto = "Solicitud de registro de: " + nombre;
         String mensaje = "El usuario " + nombre + " con correo " + de
                 + " solicita registrarse en la plataforma con los siguientes perfiles: " + Arrays.toString(perfiles);
@@ -136,6 +372,7 @@ public class BeanGeneral implements Serializable {
      * Envía un correo electrónico al administrador.
      *
      * @param de El usuario que envía el correo
+     * @param para El usuario que recibe el correo
      * @param asunto El asunto del correo
      * @param mensajeCorreo El mensaje del correo
      */
@@ -166,18 +403,18 @@ public class BeanGeneral implements Serializable {
 
     public void enviarCorreoRestablecerContraseña() {
         Usuario aux = crud.buscar(new Usuario(emailRestablecerContraseña));
-        
+
         if (aux == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "El email no se encuentra registrado"));
+            adminBean.notificaciones(-1, "El email no se encuentra registrado");
             emailRestablecerContraseña = "";
         } else {
-            String pass = "password";
+            String pass = "Password123";
             aux.setContrasena(pass);
             crud.guardar(aux);
-            enviarCorreo(getAdmin().getUsuario().getEmail(), aux.getEmail(), "Restablecer contraseña", "Buenas " + aux.getNombre() +
-                    ",\n\nUsted acaba de solicitar el cambio de contraseña de su usuario. La nueva contraseña de acceso es " + pass +
-                    ".\n\nRecuerde que la puede volver a cambiar en cualquier momento.");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Solicitud realizada", "Se envió a su email la nueva contraseña"));
+            enviarCorreo(getAdministrador().getUsuario().getEmail(), aux.getEmail(), "Restablecer contraseña", "Buenas " + aux.getNombre()
+                    + ",\n\nUsted acaba de solicitar el cambio de contraseña de su usuario. La nueva contraseña de acceso es " + pass
+                    + ".\n\nRecuerde que la puede volver a cambiar en cualquier momento desde el perfil.");
+            adminBean.notificaciones(-1, "Se envió a su email una nueva contraseña");
             emailRestablecerContraseña = "";
         }
     }
@@ -185,14 +422,12 @@ public class BeanGeneral implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     //////////  Perfil
     ////////////////////////////////////////////////////////////////////////////
-    
-    
-    public boolean getEsEdicion() {
-        return esEdicion;
+    public boolean getEditarPerfil() {
+        return editarPerfil;
     }
 
-    public void setEsEdicion(boolean esEdicion) {
-        this.esEdicion = esEdicion;
+    public void setEditarPerfil(boolean editarPerfil) {
+        this.editarPerfil = editarPerfil;
     }
 
     public boolean getCambioContraseña() {
@@ -226,59 +461,18 @@ public class BeanGeneral implements Serializable {
     public void setVerificacionNuevaContraseña(String verificacionNuevaContraseña) {
         this.verificacionNuevaContraseña = verificacionNuevaContraseña;
     }
+//
+//    public void preparaEditarPerfil() {
+//        usuarioActual = getLoginBean().getLoggedUser();
+//        editarPerfil = true;
+//        contraseñaActual = "";
+//        nuevaContraseña = "";
+//        verificacionNuevaContraseña = "";
+//        
+//        System.out.println("OEeeee: " + getLoginBean().getLoggedUser().getNombre());
+//        System.out.println("OEeeeeUSUARIO: " + usuarioActual.getNombre());
+//    }
 
-    public void preparaEditarPerfil() {
-        usuarioActual = getLoginBean().getLoggedUser();
-        esEdicion = true;
-        contraseñaActual = "";
-        nuevaContraseña = "";
-        verificacionNuevaContraseña = "";
-        
-        System.out.println("OEeeee: " + getLoginBean().getLoggedUser().getNombre());
-        System.out.println("OEeeeeUSUARIO: " + usuarioActual.getNombre());
-    }
-
-    public void guardarPerfil() {
-        try {
-            if (verificarCambioContraseña()) {
-                crud.guardar(usuarioActual);
-                esEdicion = false;
-                contraseñaActual = "";
-                nuevaContraseña = "";
-                verificacionNuevaContraseña = "";
-                adminBean.notificaciones(6, null);
-            }
-        } catch (Exception e) {
-            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            adminBean.notificaciones(-1, "El perfil no se ha podido guardar exitosamente.");
-        }
-    }
-
-    private boolean verificarCambioContraseña() {
-        if ("".equals(contraseñaActual)) {
-            adminBean.notificaciones(-1, "Debe escribir la contraseña para guardar el perfil");
-            return false;
-        } else if (contraseñaActual.equals(usuarioActual.getContrasena())) {
-            if (nuevaContraseña.equals(verificacionNuevaContraseña)) {
-                if (!nuevaContraseña.equals("")) {
-                    usuarioActual.setContrasena(nuevaContraseña);
-                }
-                cambioContraseña = false;
-                return true;
-            } else {
-                adminBean.notificaciones(-1, "La confirmación de la nueva contraseña no coincide.");
-                return false;
-            }
-        } else {
-            adminBean.notificaciones(-1, "La contraseña no es correcta.");
-            return false;
-        }
-    }
-
-    public void preparaCambioContraseña(){
-        cambioContraseña = true;
-    }
-    
     ////////////////////////////////////////////////////////////////////////////
     //////////  Consultas
     ////////////////////////////////////////////////////////////////////////////
@@ -396,7 +590,7 @@ public class BeanGeneral implements Serializable {
         perfiles = new String[3];
         usuarioActual = new Usuario();
         registroActual = new Registro();
-        registroActual.setAdministrador(getAdmin());
+        registroActual.setAdministrador(getAdministrador());
     }
 
     /**
@@ -416,8 +610,8 @@ public class BeanGeneral implements Serializable {
                 registroActual.setUsuario(usuarioActual);
                 registroActual.setPerfil(Arrays.toString(perfiles));
                 crud.guardar(registroActual);
-                getAdmin().getRegistroCollection().add(registroActual);
-                crud.guardar(getAdmin());
+                getAdministrador().getRegistroCollection().add(registroActual);
+                crud.guardar(getAdministrador());
                 enviarCorreoSolicitudRegistro(usuarioActual.getEmail(), usuarioActual.getNombre() + " " + usuarioActual.getApellidos(), perfiles);
                 prepararRegistroUsuario();
             }
@@ -473,78 +667,82 @@ public class BeanGeneral implements Serializable {
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
-    
-    public LoginBean getLoginBean() {
-        return loginBean;
+    //**************************************************************************
+    // Booleanos
+    //**************************************************************************
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
-    public void setLoginBean(LoginBean loginBean) {
-        this.loginBean = loginBean;
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
 
-    public Administrador getAdmin() {
-        List<Administrador> aux = crud.buscarTodos(new Administrador());
-        admin = aux.get(0);
-        if (admin.getRegistroCollection() == null) {
-            admin.setRegistroCollection(new ArrayList<Registro>());
-        }
-        if (admin.getSolicitudQuejasReclamosCollection() == null) {
-            admin.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
-        }
+    public boolean isAdmin() {
         return admin;
     }
 
-    public void setAdmin(Administrador admin) {
+    public void setAdmin(boolean admin) {
         this.admin = admin;
     }
 
-    public BeanAdministrador getAdminBean() {
-        if (adminBean == null) {
-            adminBean = new BeanAdministrador();
-        }
-        return adminBean;
+    public boolean isPaciente() {
+        return paciente;
     }
 
-    public void setAdminBean(BeanAdministrador adminBean) {
-        this.adminBean = adminBean;
+    public void setPaciente(boolean paciente) {
+        this.paciente = paciente;
     }
 
-    public Boolean getEsAdmin() {
-        return esAdmin;
+    public boolean isMedicoGeneral() {
+        return medicoGeneral;
     }
 
-    public void setEsAdmin(Boolean esAdmin) {
-        this.esAdmin = esAdmin;
+    public void setMedicoGeneral(boolean medicoGeneral) {
+        this.medicoGeneral = medicoGeneral;
     }
 
-    public Usuario getUsuarioActual() {
-        if (usuarioActual == null) {
-            usuarioActual = new Usuario();
-        }
-        return usuarioActual;
+    public boolean isMedicoEspecialista() {
+        return medicoEspecialista;
     }
 
-    public void setUsuarioActual(Usuario usuarioActual) {
-        this.usuarioActual = usuarioActual;
+    public void setMedicoEspecialista(boolean medicoEspecialista) {
+        this.medicoEspecialista = medicoEspecialista;
     }
 
-    public Registro getRegistroActual() {
-        if (registroActual == null) {
-            registroActual = new Registro();
-        }
-        return registroActual;
+    public boolean isVisitante() {
+        return visitante;
     }
 
-    public void setRegistroActual(Registro registroActual) {
-        this.registroActual = registroActual;
+    public void setVisitante(boolean visitante) {
+        this.visitante = visitante;
     }
 
-    public String[] getPerfiles() {
-        return perfiles;
+    //**************************************************************************
+    // Strings
+    //**************************************************************************
+    public String getUsername() {
+        return username;
     }
 
-    public void setPerfiles(String[] perfiles) {
-        this.perfiles = perfiles;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPerfilActual() {
+        return perfilActual;
+    }
+
+    public void setPerfilActual(String perfilActual) {
+        this.perfilActual = perfilActual;
     }
 
     public String getNombreContacto() {
@@ -579,7 +777,28 @@ public class BeanGeneral implements Serializable {
         this.emailRestablecerContraseña = emailRestablecerContraseña;
     }
 
-    //------------------------------ Listas ------------------------------------
+    //**************************************************************************
+    // Listas
+    //**************************************************************************
+    public String[] getPerfiles() {
+        return perfiles;
+    }
+
+    public void setPerfiles(String[] perfiles) {
+        this.perfiles = perfiles;
+    }
+
+    public List<String> getLstPerfiles() {
+        if (lstPerfiles == null) {
+            lstPerfiles = new ArrayList<>();
+        }
+        return lstPerfiles;
+    }
+
+    public void setLstPerfiles(List<String> lstPerfiles) {
+        this.lstPerfiles = lstPerfiles;
+    }
+
     public List<Tratamiento> getLstTratamientos() {
         buscarTodosTratamientos();
         return lstTratamientos;
@@ -661,4 +880,91 @@ public class BeanGeneral implements Serializable {
         this.lstLeyes = lstLeyes;
     }
 
+    public List<Paciente> getLstPacientes() {
+        if (lstPacientes == null) {
+            lstPacientes = new ArrayList<>();
+        }
+        return lstPacientes;
+    }
+
+    public void setLstPacientes(List<Paciente> lstPacientes) {
+        this.lstPacientes = lstPacientes;
+    }
+
+    //**************************************************************************
+    // Otros
+    //**************************************************************************
+    public Administrador getAdministrador() {
+        administrador = crud.buscar(new Administrador("1"));
+        if (administrador.getRegistroCollection() == null) {
+            administrador.setRegistroCollection(new ArrayList<Registro>());
+        }
+        if (administrador.getSolicitudQuejasReclamosCollection() == null) {
+            administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
+        }
+        return administrador;
+    }
+
+    public void setAdministrador(Administrador administrador) {
+        this.administrador = administrador;
+    }
+
+    public Usuario getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoggedUser(Usuario loggedUser) {
+        this.loggedUser = loggedUser;
+    }
+
+    public BeanAdministrador getAdminBean() {
+        if (adminBean == null) {
+            adminBean = new BeanAdministrador();
+        }
+        return adminBean;
+    }
+
+    public void setAdminBean(BeanAdministrador adminBean) {
+        this.adminBean = adminBean;
+    }
+
+    public Usuario getUsuarioActual() {
+        if (usuarioActual == null) {
+            usuarioActual = new Usuario();
+        }
+        return usuarioActual;
+    }
+
+    public void setUsuarioActual(Usuario usuarioActual) {
+        this.usuarioActual = usuarioActual;
+    }
+
+    public Registro getRegistroActual() {
+        if (registroActual == null) {
+            registroActual = new Registro();
+        }
+        return registroActual;
+    }
+
+    public void setRegistroActual(Registro registroActual) {
+        this.registroActual = registroActual;
+    }
+
+    public Paciente getPacienteActual() {
+        return pacienteActual;
+    }
+
+    public void setPacienteActual(Paciente pacienteActual) {
+        this.pacienteActual = pacienteActual;
+    }
+
+    public Medico getMedicoActual() {
+        return medicoActual;
+    }
+
+    public void setMedicoActual(Medico medicoActual) {
+        this.medicoActual = medicoActual;
+    }
+
+    //..........................................................................
 }

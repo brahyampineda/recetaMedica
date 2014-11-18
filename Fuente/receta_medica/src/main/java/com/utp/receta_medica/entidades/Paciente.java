@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Paciente.findAll", query = "SELECT p FROM Paciente p"),
     @NamedQuery(name = "Paciente.findByIdentificacion", query = "SELECT p FROM Paciente p WHERE p.identificacion = :identificacion"),
     @NamedQuery(name = "Paciente.findByTieneSisben", query = "SELECT p FROM Paciente p WHERE p.tieneSisben = :tieneSisben"),
-    @NamedQuery(name = "Paciente.findByDireccion", query = "SELECT p FROM Paciente p WHERE p.direccion = :direccion")})
+    @NamedQuery(name = "Paciente.findByDireccion", query = "SELECT p FROM Paciente p WHERE p.direccion = :direccion"),
+    @NamedQuery(name = "Paciente.findByDosisReceta", query = "SELECT p FROM Paciente p WHERE p.dosisReceta = :dosisReceta")})
 public class Paciente implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,6 +52,8 @@ public class Paciente implements Serializable {
     @Size(max = 100)
     @Column(name = "direccion")
     private String direccion;
+    @Column(name = "dosis_receta")
+    private int dosisReceta;
     @JoinTable(name = "paciente_has_tratamiento", joinColumns = {
         @JoinColumn(name = "Paciente_identificacion", referencedColumnName = "identificacion")}, inverseJoinColumns = {
         @JoinColumn(name = "Tratamiento_idTratamiento", referencedColumnName = "idTratamiento"),
@@ -101,6 +104,14 @@ public class Paciente implements Serializable {
 
     public void setTratamientoCollection(Collection<Tratamiento> tratamientoCollection) {
         this.tratamientoCollection = tratamientoCollection;
+    }
+    
+    public int getDosisReceta() {
+        return dosisReceta;
+    }
+
+    public void setDosisReceta(int dosisReceta) {
+        this.dosisReceta = dosisReceta;
     }
 
     public Usuario getUsuario() {

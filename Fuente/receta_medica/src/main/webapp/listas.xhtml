@@ -42,7 +42,7 @@
                                       filterBy="#{enfermedad.recomendaciones}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{enfermedad.recomendaciones}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEnfermedad(enfermedad)}"
                                                  onclick="PF('dlgEdicionEnfermedad').show();"
                                                  update=":tabsListas:formEnfermedades:editarEnfermedad"/>
@@ -120,7 +120,7 @@
                                       style="text-align: right">
                                 <p:outputLabel value="$ #{medicamento.precio}"  />
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarMedicamento(medicamento)}"
                                                  onclick="PF('dlgEdicionMedicamento').show();" 
                                                  update=":tabsListas:formMedicamentos:editarMedicamento" />
@@ -254,7 +254,7 @@
                                 <p:outputLabel value="#{trat.enfermedad.nombre}" />
                             </p:column>
 
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarTratamiento(trat)}"
                                                  onclick="PF('dlgEdicionTratamiento').show();"
                                                  update=":tabsListas:formTratamientos:editarTratamiento"/>
@@ -520,7 +520,7 @@
                                       filterBy="#{gruposApoyo.nombreProfesional}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{gruposApoyo.nombreProfesional}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarGrupoApoyo(gruposApoyo)}"
                                                  onclick="PF('dlgEdicionGrupoApoyo').show();"
                                                  update=":tabsListas:formGruposApoyo:editarGrupoApoyo"/>
@@ -599,7 +599,7 @@
                                       style="width: 15%">
                                 <p:outputLabel value="#{(entidad.esEps == true)? 'EPS' : 'IPS'}" />
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEntidad(entidad)}"
                                                  onclick="PF('dlgEdicionEntidad').show();"
                                                  update=":tabsListas:formEntidades:editarEntidad"/>
@@ -682,7 +682,7 @@
                                       filterBy="#{lab.email}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{lab.email}"/>
                             </p:column>
-                            <p:column headerText="Edición" rendered="#{loginBean.admin}" style="width: 5em">
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
                                 <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarLaboratorio(lab)}"
                                                  onclick="PF('dlgEdicionLaboratorio').show();"
                                                  update=":tabsListas:formLaboratorios:editarLaboratorio"/>
@@ -774,7 +774,7 @@
                                                               style="width: 15%">
                                                         <p:outputLabel value="{ley}"/>
                                                     </p:column>
-                                                    <p:column headerText="Edición" rendered="{loginBean.admin}" style="width: 5em">
+                                                    <p:column headerText="Edición" rendered="{beanGeneral.admin}" style="width: 5em">
                                                         <p:commandButton icon="ui-icon-pencil" action="{beanAdministrador.preparaEditarLey()}"
                                                                          onclick="PF('dlgEdicionLey').show();"
                                                                          update=":tabsListas:formLeyes:editarLey"/>

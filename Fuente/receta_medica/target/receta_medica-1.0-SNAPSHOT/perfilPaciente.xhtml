@@ -9,7 +9,7 @@
     <ui:composition template="./index.xhtml">
 
         <ui:define name="titulo">
-            Perfil de #{loginBean.loggedUser.nombre}
+            Perfil de #{beanGeneral.pacienteActual.usuario.nombre}
         </ui:define>
 
         <ui:define name="imgindex">
@@ -26,46 +26,46 @@
                         <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
                                      styleClass="stylePanelGrid">
                             <p:outputLabel value="Identificación:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.identificacion}" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.identificacion}" />
 
                             <p:outputLabel value="Nombre:" />
-                            <p:outputLabel id="nombre" value="#{loginBean.loggedUser.nombre}" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="#{loginBean.loggedUser.nombre}" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" />
+                            <p:outputLabel id="nombre" value="#{beanGeneral.pacienteActual.usuario.nombre}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.usuario.nombre}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" />
 
                             <p:outputLabel value="Apellidos:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.apellidos}" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="#{loginBean.loggedUser.apellidos}" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.apellidos}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.usuario.apellidos}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" />
 
                             <p:outputLabel value="Email:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.email}" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="#{loginBean.loggedUser.email}" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.email}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.usuario.email}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" />
 
                             <p:outputLabel value="Género:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.genero}" rendered="#{!loginBean.esEdicion}" />
-                            <p:selectOneMenu value="#{loginBean.loggedUser.genero}" rendered="#{loginBean.esEdicion}"
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.genero}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:selectOneMenu value="#{beanGeneral.pacienteActual.usuario.genero}" rendered="#{beanGeneral.editarPerfil}"
                                              styleClass="styleInputText2">
                                 <f:selectItem itemLabel="Masculino" itemValue="masculino" />
                                 <f:selectItem itemLabel="Femenino" itemValue="femenino" />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha de nacimiento:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{!loginBean.esEdicion}">
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.fechaNacimiento}" rendered="#{!beanGeneral.editarPerfil}">
                                 <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
                             </p:outputLabel>
-                            <p:calendar value="#{loginBean.loggedUser.fechaNacimiento}" rendered="#{loginBean.esEdicion}" 
+                            <p:calendar value="#{beanGeneral.pacienteActual.usuario.fechaNacimiento}" rendered="#{beanGeneral.editarPerfil}" 
                                         styleClass="styleInputText2"/>
 
                             <p:outputLabel value="Teléfono de contacto:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.telefonoContacto}" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="#{loginBean.loggedUser.telefonoContacto}" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" type="number" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.telefonoContacto}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.usuario.telefonoContacto}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" type="number" />
 
                             <p:outputLabel value="Estrato:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.estrato}" rendered="#{!loginBean.esEdicion}" />
-                            <p:selectOneMenu value="#{loginBean.loggedUser.estrato}" rendered="#{loginBean.esEdicion}"
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.estrato}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:selectOneMenu value="#{beanGeneral.pacienteActual.usuario.estrato}" rendered="#{beanGeneral.editarPerfil}"
                                              styleClass="styleInputText2">
                                 <f:selectItem itemLabel="1" itemValue="1" />
                                 <f:selectItem itemLabel="2" itemValue="2" />
@@ -76,47 +76,47 @@
                             </p:selectOneMenu>
                             
                             <p:outputLabel value="EPS o Sisbén:" />
-                            <p:outputLabel value="#{((loginBean.loggedUser.tieneEps == true)? 'EPS' : 'Sisbén')}" rendered="#{!loginBean.esEdicion}" />
-                            <p:selectOneMenu value="#{loginBean.loggedUser.tieneEps}" rendered="#{loginBean.esEdicion}"
+                            <p:outputLabel value="#{((beanGeneral.pacienteActual.usuario.tieneEps == true)? 'EPS' : 'Sisbén')}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:selectOneMenu value="#{beanGeneral.pacienteActual.usuario.tieneEps}" rendered="#{beanGeneral.editarPerfil}"
                                              styleClass="styleInputText2">
                                 <f:selectItem itemLabel="EPS" itemValue="true" />
                                 <f:selectItem itemLabel="Sisbén" itemValue="false" />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Dirección de despacho:" />
-                            <p:outputLabel value="#{loginBean.loggedUser.direccionDespechaMedicamentos}" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="#{loginBean.loggedUser.direccionDespechaMedicamentos}" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.usuario.direccionDespechaMedicamentos}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.usuario.direccionDespechaMedicamentos}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" />
                             
                             <p:outputLabel value="Dosis por receta:" />
-                            <p:outputLabel value="2" rendered="#{!loginBean.esEdicion}" />
-                            <p:inputText value="2" styleClass="styleInputText2"
-                                         rendered="#{loginBean.esEdicion}" type="number" />
+                            <p:outputLabel value="#{beanGeneral.pacienteActual.dosisReceta}" rendered="#{!beanGeneral.editarPerfil}" />
+                            <p:inputText value="#{beanGeneral.pacienteActual.dosisReceta}" styleClass="styleInputText2"
+                                         rendered="#{beanGeneral.editarPerfil}" type="number" />
                             
-                            <p:outputLabel value="Contraseña actual:" rendered="#{loginBean.esEdicion}" />
-                            <p:password value="#{loginBean.contraseñaActual}" rendered="#{loginBean.esEdicion}" 
+                            <p:outputLabel value="Contraseña:" rendered="#{beanGeneral.editarPerfil}" />
+                            <p:password value="#{beanGeneral.contraseñaActual}" rendered="#{beanGeneral.editarPerfil}" 
                                         styleClass="styleInputText2"/>
 
-                            <p:commandButton value="Cambiar contraseña" action="#{loginBean.preparaCambioContraseña()}"
-                                             rendered="#{loginBean.esEdicion and !loginBean.cambioContraseña}" ajax="false"
+                            <p:commandButton value="Cambiar contraseña" action="#{beanGeneral.preparaCambioContraseña()}"
+                                             rendered="#{beanGeneral.editarPerfil and !beanGeneral.cambioContraseña}" ajax="false"
                                              update="panelCambioPass"/>
                         </h:panelGrid>
                         <div align="center" >
                             <h:panelGrid id="panelCambioPass" columns="2" columnClasses="derechaNegrita, izquierda" 
-                                         rendered="#{loginBean.cambioContraseña}">
-                                <p:outputLabel value="Nueva contraseña:" rendered="#{loginBean.esEdicion}"/>
-                                <p:inputText value="#{loginBean.nuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                         rendered="#{beanGeneral.cambioContraseña}">
+                                <p:outputLabel value="Nueva contraseña:" rendered="#{beanGeneral.editarPerfil}"/>
+                                <p:inputText value="#{beanGeneral.nuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
                                              styleClass="styleInputText2"
                                              validatorMessage="La contraseña no cumple con los requisitos." >
                                     <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
                                 </p:inputText>
 
-                                <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{loginBean.esEdicion}"/>
-                                <p:inputText value="#{loginBean.verificacionNuevaContraseña}" rendered="#{loginBean.esEdicion}" 
+                                <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{beanGeneral.editarPerfil}"/>
+                                <p:inputText value="#{beanGeneral.verificacionNuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
                                              styleClass="styleInputText2"/>
 
                                 <div align="left" style="width: 30%" >
-                                    <p:panel rendered="#{loginBean.esEdicion}">
+                                    <p:panel rendered="#{beanGeneral.editarPerfil}">
                                         <p:outputLabel value="La contraseña debe cumplir con lo siguiente:"/><br/><br/>
                                         <p:outputLabel value="- Mínimo 8 caracteres"/><br/>
                                         <p:outputLabel value="- Mínimo una letra mayúscula y una minúscula"/><br/>
@@ -126,11 +126,11 @@
                             </h:panelGrid>
                         </div>
                         <div align="center">
-                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{loginBean.preparaEditarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{!loginBean.esEdicion}"
+                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{beanGeneral.preparaEditarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{!beanGeneral.editarPerfil}"
                                              update=":formPerfil:panelPerfil"/>
-                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{loginBean.guardarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{loginBean.esEdicion}"
+                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{beanGeneral.guardarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{beanGeneral.editarPerfil}"
                                              update="panelPerfil"/>
                         </div>
                     </p:panel>

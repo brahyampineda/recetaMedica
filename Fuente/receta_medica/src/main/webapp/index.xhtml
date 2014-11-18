@@ -25,11 +25,6 @@
                                             value="/resources/imagenes/iconos/logo-web.jpg"/>
                         </a>
                     </ui:insert>
-                    <!--                    <a href="http://www.mineducacion.gov.co/" title="Ir al portal del Ministerio de educación">
-                                            <p:graphicImage id="imgMinEducacion" height="80px" style="margin: 5px 2px"
-                                                            value="/resources/imagenes/iconos/ministerioeducacion.png" />
-                                        </a>
-                                        <p:spacer width="1%"/>-->
                     <a href="http://www.minsalud.gov.co/" title="Ir al portal del Ministerio de salud">
                         <p:graphicImage id="imgMinSalud" height="60em" style="margin: 5px 2px"
                                         value="/resources/imagenes/iconos/logo-minsalud.png" />
@@ -56,10 +51,10 @@
             </div>
             <div id="divLogin" align="right">
                 <h:form id="formBtnLogin">
-                    <p:panel style="width: 100%" rendered="#{loginBean.visitante}" >
+                    <p:panel style="width: 100%" rendered="#{beanGeneral.visitante}" >
                         <h:panelGrid columns="1" styleClass="stylePanelGrid">
                             <p:commandButton value="Iniciar sesión" style="width: 80%"
-                                             action="#{loginBean.preparaInicioDeSesion()}"
+                                             action="#{beanGeneral.preparaInicioDeSesion()}"
                                              onclick="PF('dlgLogin').show();" 
                                              update=":formInicioSesion:panelInicioSesion" />
                             <p:commandButton value="Registrarse" style="width: 80%"
@@ -68,21 +63,21 @@
                                              update=":formRegistroUsuario:panelRegistroUsuario"/>
                         </h:panelGrid>
                     </p:panel>
-                    <p:panel style="width: 100%" rendered="#{!loginBean.visitante}" >
-                            <p:outputLabel value="Perfil: #{loginBean.perfilActual}" style="font-weight: bold; float: left"/>
-                            <h:panelGrid columns="2" styleClass="stylePanelGrid">
-                                <p:outputLabel value="Bienvenido, #{loginBean.loggedUser.nombre}" style="font-weight: bold"/>
-                                <p:commandButton value="Salir" action="#{loginBean.doLogout()}" immediate="true"
-                                                 ajax="false" styleClass="styleInputText2"/>
+                    <p:panel style="width: 100%" rendered="#{!beanGeneral.visitante}" >
+                        <p:outputLabel value="Perfil: #{beanGeneral.perfilActual}" style="font-weight: bold; float: left"/>
+                        <h:panelGrid columns="2" styleClass="stylePanelGrid">
+                            <p:outputLabel value="Bienvenido, #{beanGeneral.loggedUser.nombre}" style="font-weight: bold"/>
+                            <p:commandButton value="Salir" action="#{beanGeneral.doLogout()}" immediate="true"
+                                             ajax="false" styleClass="styleInputText2"/>
 
-                                <p:selectOneMenu value="#{loginBean.perfilActual}" rendered="#{!loginBean.admin}">
-                                    <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
-                                                   value="#{loginBean.lstPerfiles}" var="perfil" />
-                                    <p:ajax event="change" listener="#{loginBean.cambioPerfil}" />
-                                </p:selectOneMenu>
-                                <p:commandButton value="Ir a" action="#{loginBean.accederAperfil()}" immediate="true" 
-                                                 ajax="false" styleClass="styleInputText2" rendered="#{!loginBean.admin}"/>
-                            </h:panelGrid>
+                            <p:selectOneMenu value="#{beanGeneral.perfilActual}" rendered="#{!beanGeneral.admin}">
+                                <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
+                                               value="#{beanGeneral.lstPerfiles}" var="perfil" />
+                                <p:ajax event="change" listener="#{beanGeneral.cambioPerfil}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Ir a" action="#{beanGeneral.accederAperfil()}" immediate="true" 
+                                             ajax="false" styleClass="styleInputText2" rendered="#{!beanGeneral.admin}"/>
+                        </h:panelGrid>
                     </p:panel>
                 </h:form>
                 <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" 
@@ -90,35 +85,37 @@
                     <h:form id="formInicioSesion">
                         <h:panelGrid id="panelInicioSesion" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
                             <p:outputLabel value="Identificación:"/>
-                            <p:inputText  value="#{loginBean.username}" style="width: 80%"
+                            <p:inputText  value="#{beanGeneral.username}" style="width: 80%"
                                           validatorMessage="No es una identificación válida.">
                                 <f:validateRegex pattern="[0-9]{1,20}" />
                             </p:inputText>
                             <p:outputLabel value="Contraseña:"/>
-                            <p:password value="#{loginBean.password}" style="width: 80%"/>
+                            <p:password value="#{beanGeneral.password}" style="width: 80%"/>
                             <p:spacer />
                             <p:commandLink value="Olvidó su contraseña" immediate="true"
                                            onclick="PF('dlgPassword').show();"/>
                         </h:panelGrid>
                         <div align="center">
-                            <p:commandButton value="Iniciar sesión" action="#{loginBean.doLogin()}" ajax="false"/>
+                            <p:commandButton value="Iniciar sesión" action="#{beanGeneral.doLogin()}" ajax="false"/>
                         </div>
                     </h:form>
+                </p:dialog>
+                <p:dialog header="Restablecer contraseña" widgetVar="dlgPassword" 
+                          width="40%" resizable="false" modal="true">
                     <h:form>
-                        <p:dialog header="Restablecer contraseña" widgetVar="dlgPassword" 
-                                  width="40%" resizable="false">
-                            <h:panelGrid id="panelRestablecerPass" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid" >
-                                <p:outputLabel value="Escriba su email:" />
-                                <p:inputText id="email" value="#{beanGeneral.emailRestablecerContraseña}" styleClass="styleInputText2" 
-                                             required="true" requiredMessage="Debe especificar el email"
-                                             validatorMessage="El formato del email no es correcto.">
-                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                                </p:inputText>
-                            </h:panelGrid>
-                            <p:spacer />
+                        <h:panelGrid id="panelRestablecerPass" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid" >
+                            <p:outputLabel value="Email:" />
+                            <p:inputText value="#{beanGeneral.emailRestablecerContraseña}" styleClass="styleInputText2" 
+                                         required="true" requiredMessage="Campo requerido"
+                                         validatorMessage="El formato del email no es correcto.">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </p:inputText>
+                        </h:panelGrid>
+                        <br/>
+                        <div align="center">
                             <p:commandButton value="Restablecer" action="#{beanGeneral.enviarCorreoRestablecerContraseña()}"
                                              update="panelRestablecerPass"/>
-                        </p:dialog>
+                        </div>
                     </h:form>
                 </p:dialog>
                 <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" 
@@ -173,72 +170,72 @@
             <p:growl autoUpdate="true" showDetail="true"/>
             <h:form>
                 <p:tabMenu activeIndex="#{param.i}" >
-                    <p:menuitem value="Inicio" outcome="/index" rendered="#{loginBean.visitante}">
+                    <p:menuitem value="Inicio" outcome="/index" rendered="#{beanGeneral.visitante}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
-                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.visitante}">
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.visitante}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Contacto" outcome="/contacto" rendered="#{loginBean.visitante}">
+                    <p:menuitem value="Contacto" outcome="/contacto" rendered="#{beanGeneral.visitante}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
 
-                    <p:menuitem value="Perfil" outcome="/perfilAdmin" rendered="#{loginBean.admin}">
+                    <p:menuitem value="Perfil" outcome="/perfilAdmin" rendered="#{beanGeneral.admin}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
-                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.admin}">
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.admin}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{loginBean.admin}">
+                    <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{beanGeneral.admin}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{loginBean.admin}" 
+                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{beanGeneral.admin}" 
                                 action="#{beanAdministrador.preparaAgregarContenido()}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{loginBean.admin}">
+                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{beanGeneral.admin}">
                         <f:param name="i" value="4" />
                     </p:menuitem>
 
-                    <p:menuitem value="Perfil" outcome="/perfilMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
-                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.medicoEspecialista}">
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.medicoEspecialista}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{loginBean.medicoEspecialista}">
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
 
 
-                    <p:menuitem value="Perfil" outcome="/perfilMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
-                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.medicoGeneral}">
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.medicoGeneral}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Consultas" outcome="/consultasMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoGeneral" rendered="#{loginBean.medicoGeneral}">
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
 
 
 
-                    <p:menuitem value="Perfil" outcome="/perfilPaciente" rendered="#{loginBean.paciente}">
+                    <p:menuitem value="Perfil" outcome="/perfilPaciente" rendered="#{beanGeneral.paciente}">
                         <f:param name="i" value="0" />
                     </p:menuitem>
-                    <p:menuitem value="Listas" outcome="/listas" rendered="#{loginBean.paciente}">
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.paciente}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Consultas" outcome="/consultasPaciente" rendered="#{loginBean.paciente}">
+                    <p:menuitem value="Consultas" outcome="/consultasPaciente" rendered="#{beanGeneral.paciente}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesPaciente" rendered="#{loginBean.paciente}">
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesPaciente" rendered="#{beanGeneral.paciente}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
 

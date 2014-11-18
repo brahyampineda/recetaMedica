@@ -30,19 +30,19 @@
                                 <p:inputText value="#{beanAdministrador.enfermedadActual.nombre}" styleClass="styleInputText2"
                                              required="true" requiredMessage="Debe especificar un nombre."
                                              validatorMessage="El nombre no debe ser mayor a 45 caracteres">
-                                    <f:validateRegex pattern="\w{1,45}" />
+                                    <f:validateRegex pattern="[\w\s]{1,45}" />
                                 </p:inputText>
                                 <p:outputLabel value="Recomendaciones:" />
                                 <p:inputTextarea value="#{beanAdministrador.enfermedadActual.recomendaciones}" styleClass="styleInputText2"
                                                  required="true" requiredMessage="Debe especificar las recomendaciones." rows="4"
                                                  validatorMessage="Las recomendaciones no deben ser mayor a 300 caracteres">
-                                    <f:validateRegex pattern="\w{1,300}" />
+                                    <f:validateRegex pattern="[\w\s]{1,300}" />
                                 </p:inputTextarea>
                                 <p:outputLabel value="Posología:" />
                                 <p:inputTextarea value="#{beanAdministrador.enfermedadActual.posologia}" rows="4" autoResize="false"
                                                  required="true" requiredMessage="Debe especificar la posología." styleClass="styleInputText2"
                                                  validatorMessage="La posología no debe ser mayor a 150 caracteres">
-                                    <f:validateRegex pattern="\w{1,150}" />
+                                    <f:validateRegex pattern="[\w\s]{1,150}" />
                                 </p:inputTextarea>
                             </h:panelGrid>
                             <div align="center" >
@@ -58,41 +58,47 @@
                             <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
                                          styleClass="stylePanelGrid">
                                 <p:outputLabel value="Nombre:" />
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText2"
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText2" label="Nombre"
                                              required="true" requiredMessage="Debe especificar un nombre." maxlength="45"
                                              validatorMessage="El nombre no debe ser mayor a 45 caracteres." />
 
                                 <p:outputLabel value="Precio:" />
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2"
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2" label="Precio"
                                              required="true" requiredMessage="Debe especificar un precio."
                                              validatorMessage="El formato del precio no es correcto." />
 
                                 <p:outputLabel value="Composición:" />
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="stylInputText2"
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" style="width: 95%" label="Composición"
                                                  autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
-                                    <f:validateRegex pattern="\w{0,300}" />
+                                    <f:validateRegex pattern="[\w\s]{0,300}" />
                                 </p:inputTextarea>
 
-                                <p:outputLabel value="Indicaciones:" />
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="stylInputText2"
+                                <p:outputLabel value="Precauciones:" />
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" style="width: 95%" label="Precauciones"
                                                  autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
-                                    <f:validateRegex pattern="\w{0,300}" />
+                                    <f:validateRegex pattern="[\w\s]{0,300}" />
+                                </p:inputTextarea>
+                                
+                                <p:outputLabel value="Indicaciones:" />
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" style="width: 95%" label="Indicaciones"
+                                                 autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
+                                    <f:validateRegex pattern="[\w\s]{0,300}" />
                                 </p:inputTextarea>
 
                                 <p:outputLabel value="Contraindicaciones:" />
-                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="stylInputText2"
+                                <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" style="width: 95%"
                                                  autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
-                                    <f:validateRegex pattern="\w{0,300}" />
+                                    <f:validateRegex pattern="[\w\s]{0,300}" />
                                 </p:inputTextarea>
 
                                 <p:outputLabel value="Presentación:" />
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText2" label="Presentación"/>
 
                                 <p:outputLabel value="Dosis usual:" />
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText2"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText2" label="Dosis Usual"/>
 
                                 <p:outputLabel value="Cantidad:" />
-                                <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText2"/>
+                                <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText2" label="Cantidad"/>
 
                                 <p:outputLabel value="Tipo:" />
                                 <p:selectOneMenu value="#{beanAdministrador.medicamentoActual.esPos}" styleClass="styleInputText2">
@@ -125,13 +131,13 @@
                                              required="true" requiredMessage="Debe especificar un nombre"/>
 
                                 <p:outputLabel value="Descripción:" />
-                                <p:inputTextarea value="#{beanAdministrador.tratamientoActual.descripcion}" styleClass="stylInputText2"
+                                <p:inputTextarea value="#{beanAdministrador.tratamientoActual.descripcion}" style="width: 95%"
                                                  autoResize="false" validatorMessage="Máximo 300 caracteres." rows="4">
-                                    <f:validateRegex pattern="\w{0,300}" />
+                                    <f:validateRegex pattern="[\w\s]{0,300}" />
                                 </p:inputTextarea>
 
                                 <p:outputLabel value="Enfermedad que trata:" />
-                                <p:selectOneMenu value="#{beanAdministrador.tratamientoActual.enfermedad}" styleClass="styleInputText2"
+                                <p:selectOneMenu value="#{beanAdministrador.tratamientoActual.enfermedad}" style="width: 50%"
                                                  filter="true" filterMatchMode="contains" converter="EnfermedadConverter"
                                                  required="true" requiredMessage="Debe especificar la enfermedad que trata.">
                                     <f:selectItem noSelectionOption="true" />
@@ -163,7 +169,7 @@
                                 </p:inputText>
 
                                 <p:outputLabel value="Enfermedad que ayuda:" />
-                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.enfermedad}" styleClass="styleInputText2"
+                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.enfermedad}" style="width: 95%"
                                                  filter="true" filterMatchMode="contains" converter="EnfermedadConverter"
                                                  required="true" requiredMessage="Debe especificar la enfermedad que ayuda.">
                                     <f:selectItem noSelectionOption="true" />
@@ -172,7 +178,7 @@
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Entidad a la que pertenece:" />
-                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.entidad}" styleClass="styleInputText2"
+                                <p:selectOneMenu value="#{beanAdministrador.grupoApoyoActual.entidad}" style="width: 95%"
                                                  filter="true" filterMatchMode="contains" converter="EntidadConverter"
                                                  required="true" requiredMessage="Debe especificar la entidad a la que pertenece.">
                                     <f:selectItem noSelectionOption="true" />
