@@ -12,10 +12,31 @@
         <ui:define name="titulo">Listas</ui:define>
 
         <ui:define name="imgindex">
-            <!--<a href="../faces/index.xhtml" title="Ir a inicio">-->
-                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
-                                value="/resources/imagenes/iconos/logo-web.jpg"/>
-            <!--</a>-->
+            <a href="../faces/index.xhtml" title="Ir a inicio">
+                <p:graphicImage id="imgLogoV" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg" 
+                                rendered="#{beanGeneral.visitante}"/>
+            </a>
+            <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoA" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.admin}"/>
+            </a>
+            <a href="../faces/perfilPaciente.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoP" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.paciente}"/>
+            </a>
+            <a href="../faces/perfilMedicoEspecialista.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoME" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.medicoEspecialista}"/>
+            </a>
+            <a href="../faces/perfilMedicoGeneral.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoMG" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.medicoGeneral}"/>
+            </a>
         </ui:define>
 
         <ui:define name="contenido">
@@ -28,11 +49,6 @@
 
                             <p:column style="width: 1em">
                                 <p:rowToggler  />
-                            </p:column>
-                            <p:column headerText="Código" sortBy="#{enfermedad.idEnfermedad}" 
-                                      filterBy="#{enfermedad.idEnfermedad}" filterMatchMode="contains" 
-                                      >
-                                <p:outputLabel value="#{enfermedad.idEnfermedad}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{enfermedad.nombre}" 
                                       filterBy="#{enfermedad.nombre}" filterMatchMode="contains" >
@@ -54,8 +70,6 @@
                                 <p:panelGrid id="detalleEnfermedad" columns="4" styleClass="stylePanelGrid"
                                              columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
 
-                                    <p:outputLabel value="Código:" />
-                                    <p:outputLabel value="#{enfermedad.idEnfermedad}" />                                    
                                     <p:outputLabel value="Nombre:" />
                                     <p:outputLabel value="#{enfermedad.nombre}" />                                    
                                     <p:outputLabel value="Recomendaciones:" />
@@ -99,8 +113,7 @@
                                 <p:rowToggler  />
                             </p:column>
                             <p:column headerText="Código" sortBy="#{medicamento.idMedicamento}" 
-                                      filterBy="#{medicamento.idMedicamento}" filterMatchMode="contains" 
-                                      >
+                                      filterBy="#{medicamento.idMedicamento}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{medicamento.idMedicamento}" />
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medicamento.nombre}" 
@@ -231,16 +244,12 @@
                 <p:tab title="Tratamientos" id="tabTratamientos" >
                     <h:form id="formTratamientos">
                         <p:dataTable id="tablaTratamientos" value="#{beanGeneral.lstTratamientos}" var="trat" 
-                                     sortBy="#{trat.tratamientoPK.idTratamiento}"  emptyMessage="No hay tratamientos.">
+                                     sortBy="#{trat.nombre}"  emptyMessage="No hay tratamientos.">
 
                             <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
-                            <p:column headerText="Código" sortBy="#{trat.tratamientoPK.idTratamiento}" 
-                                      filterBy="#{trat.tratamientoPK.idTratamiento}" filterMatchMode="contains" 
-                                      >
-                                <p:outputLabel value="#{trat.tratamientoPK.idTratamiento}"/>
-                            </p:column>
+
                             <p:column headerText="Nombre" sortBy="#{trat.nombre}"
                                       filterBy="#{trat.nombre}" filterMatchMode="contains">
                                 <p:outputLabel value="#{trat.nombre}" />
@@ -249,7 +258,7 @@
                                       filterBy="#{trat.descripcion}" filterMatchMode="contains">
                                 <p:outputLabel value="#{trat.descripcion}" />
                             </p:column>                                        
-                            <p:column headerText="Enfemedad relacionada" filterBy="#{trat.enfermedad.nombre}"
+                            <p:column headerText="Enfermedad relacionada" filterBy="#{trat.enfermedad.nombre}"
                                       sortBy="#{trat.enfermedad.nombre}" filterMatchMode="contains">
                                 <p:outputLabel value="#{trat.enfermedad.nombre}" />
                             </p:column>
@@ -265,8 +274,6 @@
                             <p:rowExpansion >
                                 <p:panelGrid id="detalleTratamiento" columns="4" styleClass="stylePanelGrid"
                                              columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
-                                    <p:outputLabel value="Código: " />
-                                    <p:outputLabel value="#{trat.tratamientoPK.idTratamiento}" />
 
                                     <p:outputLabel value="Nombre: " />
                                     <p:outputLabel value="#{trat.nombre}" />
@@ -311,14 +318,18 @@
                             <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
-                            <p:column headerText="Identificación" sortBy="#{medG.identificacion}" 
-                                      filterBy="#{medG.identificacion}" filterMatchMode="contains" 
+                            <p:column headerText="Identificación" sortBy="#{medG.usuario.identificacion}" 
+                                      filterBy="#{medG.usuario.identificacion}" filterMatchMode="contains" 
                                       >
-                                <p:outputLabel value="#{medG.identificacion}"/>
+                                <p:outputLabel value="#{medG.usuario.identificacion}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medG.usuario.nombre} #{medG.usuario.apellidos}" 
                                       filterBy="#{medG.usuario.nombre} #{medG.usuario.apellidos}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{medG.usuario.nombre} #{medG.usuario.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Género" sortBy="#{medG.usuario.genero}" 
+                                      filterBy="#{medG.usuario.genero}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medG.usuario.genero}"/>
                             </p:column>
                             <p:column headerText="Correo" sortBy="#{medG.usuario.email}" 
                                       filterBy="#{medG.usuario.email}" filterMatchMode="contains" >
@@ -337,17 +348,25 @@
 
                             <p:rowExpansion >
                                 <p:outputPanel id="detalleMedicoGeneral">
+                                    <br/>
+                                    <div align="center" >
+                                        <p:graphicImage height="100em"  value="#{medG.usuario.foto}" />
+                                    </div>
+                                    <br/>
                                     <p:panelGrid columns="4" styleClass="stylePanelGrid"
                                                  columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
 
                                         <p:outputLabel value="Identificación: " />
-                                        <p:outputLabel value="#{medG.identificacion}" />
+                                        <p:outputLabel value="#{medG.usuario.identificacion}" />
 
                                         <p:outputLabel value="Nombre: " />
                                         <p:outputLabel value="#{medG.usuario.nombre} #{medG.usuario.apellidos}" />
 
                                         <p:outputLabel value="Tarifa: " />
                                         <p:outputLabel value="$ #{medG.tarifa}" />
+
+                                        <p:outputLabel value="Género: " />
+                                        <p:outputLabel value="$ #{medG.usuario.genero}" />
 
                                         <p:outputLabel value="Correo: " />
                                         <p:outputLabel value="#{medG.usuario.email}" />
@@ -403,14 +422,18 @@
                             <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
-                            <p:column headerText="Identificación" sortBy="#{medE.identificacion}" 
-                                      filterBy="#{medE.identificacion}" filterMatchMode="contains" 
+                            <p:column headerText="Identificación" sortBy="#{medE.usuario.identificacion}" 
+                                      filterBy="#{medE.usuario.identificacion}" filterMatchMode="contains" 
                                       >
-                                <p:outputLabel value="#{medE.identificacion}"/>
+                                <p:outputLabel value="#{medE.usuario.identificacion}"/>
                             </p:column>
                             <p:column headerText="Nombre" sortBy="#{medE.usuario.nombre} #{medE.usuario.apellidos}" 
                                       filterBy="#{medE.usuario.nombre} #{medE.usuario.apellidos}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{medE.usuario.nombre} #{medE.usuario.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Género" sortBy="#{medE.usuario.genero}" 
+                                      filterBy="#{medE.usuario.genero}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medE.usuario.genero}"/>
                             </p:column>
                             <p:column headerText="Correo" sortBy="#{medE.usuario.email}" 
                                       filterBy="#{medE.usuario.email}" filterMatchMode="contains" >
@@ -433,17 +456,24 @@
 
                             <p:rowExpansion >
                                 <p:outputPanel id="detalleMedicoEspecialista">
+                                    <br/>
+                                    <div align="center" >
+                                        <p:graphicImage height="100em"  value="#{medE.usuario.foto}" />
+                                    </div>
+                                    <br/>
                                     <p:panelGrid columns="4" styleClass="stylePanelGrid"
                                                  columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
-
                                         <p:outputLabel value="Identificación: " />
-                                        <p:outputLabel value="#{medE.identificacion}" />
+                                        <p:outputLabel value="#{medE.usuario.identificacion}" />
 
                                         <p:outputLabel value="Nombre: " />
                                         <p:outputLabel value="#{medE.usuario.nombre} #{medE.usuario.apellidos}" />
 
                                         <p:outputLabel value="Tarifa: " />
                                         <p:outputLabel value="$ #{medE.tarifa}" />
+
+                                        <p:outputLabel value="Género: " />
+                                        <p:outputLabel value="#{medE.usuario.genero}" />
 
                                         <p:outputLabel value="Correo: " />
                                         <p:outputLabel value="#{medE.usuario.email}" />
@@ -503,11 +533,7 @@
                             <p:column style="width: 1em">
                                 <p:rowToggler  />
                             </p:column>
-                            <p:column headerText="Código" sortBy="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}" 
-                                      filterBy="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}" filterMatchMode="contains" 
-                                      >
-                                <p:outputLabel value="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}"/>
-                            </p:column>
+
                             <p:column headerText="Nombre" sortBy="#{gruposApoyo.nombre}" 
                                       filterBy="#{gruposApoyo.nombre}" filterMatchMode="contains" >
                                 <p:outputLabel value="#{gruposApoyo.nombre}"/>
@@ -531,9 +557,6 @@
                             <p:rowExpansion >
                                 <p:panelGrid id="detalleGruposApoyo" columns="4" styleClass="stylePanelGrid"
                                              columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
-
-                                    <p:outputLabel value="Código:" />
-                                    <p:outputLabel value="#{gruposApoyo.grupoApoyoPK.idGrupoapoyo}" />
 
                                     <p:outputLabel value="Nombre:" />
                                     <p:outputLabel value="#{gruposApoyo.nombre}" />
@@ -734,9 +757,7 @@
                                   modal="true" width="45em" resizable="false">
                             <p:outputPanel id="editarLaboratorio" >
                                 <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
-                                    <p:outputLabel value="NIT:" />
-                                    <p:inputText value="#{beanAdministrador.laboratorioActual.nit}" styleClass="styleInputText2"/>
-
+                                    
                                     <p:outputLabel value="Nombre:" />
                                     <p:inputText value="#{beanAdministrador.laboratorioActual.nombre}" styleClass="styleInputText2"/>
 
@@ -763,52 +784,131 @@
 
                 <p:tab title="Leyes">
                     <h:form id="formLeyes">
-                        <!--                        <p:dataTable id="tablaLeyes" value="{beanGeneral.lstLeyes}" var="ley" 
-                                                             sortBy="{ley}"  emptyMessage="No hay leyes.">
-                        
-                                                    <p:column style="width: 1em">
-                                                        <p:rowToggler  />
-                                                    </p:column>
-                                                    <p:column headerText="ley" sortBy="{ley}" 
-                                                              filterBy="{ley}" filterMatchMode="contains" 
-                                                              style="width: 15%">
-                                                        <p:outputLabel value="{ley}"/>
-                                                    </p:column>
-                                                    <p:column headerText="Edición" rendered="{beanGeneral.admin}" style="width: 5em">
-                                                        <p:commandButton icon="ui-icon-pencil" action="{beanAdministrador.preparaEditarLey()}"
-                                                                         onclick="PF('dlgEdicionLey').show();"
-                                                                         update=":tabsListas:formLeyes:editarLey"/>
-                                                        <p:commandButton icon="ui-icon-trash" action="{beanAdministrador.eliminarLey()}"
-                                                                         update="tablaLeyes" />
-                                                    </p:column>
-                        
-                                                    <p:rowExpansion >
-                                                        <p:panelGrid id="detalleLey" columns="4" styleClass="stylePanelGrid"
-                                                                     columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
-                        
-                                                            <p:outputLabel value="Ley:" />
-                                                            <p:outputLabel value="{ley}" />                                    
-                                                        </p:panelGrid>
-                                                        <br />
-                                                        <p:commandButton type="button" icon="ui-icon-print" style="float: right">
-                                                            <p:printer target="detalleLey" />
-                                                        </p:commandButton>
-                                                    </p:rowExpansion>
-                                                </p:dataTable>
-                                                <p:dialog header="Editar ..." widgetVar="dlgEdicionLey"  
-                                                          modal="true" width="45em" resizable="false">
-                                                    <p:outputPanel id="editarLey" >
-                                                        <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
-                                                            <p:outputLabel value="" />
-                                                            <p:inputText value="{beanAdministrador.}" styleClass="styleInputText2"/>
-                        
-                        
-                                                            <p:spacer />
-                                                            <p:commandButton value="Guardar" icon="ui-icon-disk" action="{beanAdministrador.guardarLey()}" 
-                                                                             update="tablaLeyes" onclick="dlgEdicionLey.hide()" />
-                                                        </h:panelGrid>
-                                                    </p:outputPanel>
-                                                </p:dialog>-->
+                        <p:dataTable id="tablaLeyes" value="#{beanGeneral.lstLeyes}" var="ley" 
+                                     sortBy="#{ley.codigo}"  emptyMessage="No hay leyes.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Código" sortBy="#{ley.codigo}" style="width: 8em"
+                                      filterBy="#{ley.codigo}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.codigo}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{ley.nombre}" 
+                                      filterBy="#{ley.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Fecha" sortBy="#{ley.fecha}" 
+                                      filterBy="#{ley.fecha}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.fecha}" >
+                                    <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarLey(ley)}"
+                                                 onclick="PF('dlgEdicionLey').show();"
+                                                 update=":tabsListas:formLeyes:editarLey"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarLey(ley)}"
+                                                 update="tablaLeyes" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <h:panelGrid id="detalleLey" >
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                        <p:outputLabel value="Código:" />
+                                        <p:outputLabel value="#{ley.codigo}" />
+
+                                        <p:outputLabel value="Nombre:" />
+                                        <p:outputLabel value="#{ley.nombre}" />
+
+                                        <p:outputLabel value="Fecha:" />
+                                        <p:outputLabel value="#{ley.fecha}" >
+                                            <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                        </p:outputLabel>
+
+                                        <p:outputLabel value="Preámbulo:" />
+                                        <p:outputLabel value="#{ley.preambulo}" />
+
+                                    </p:panelGrid>
+                                    <p:dataTable value="#{ley.articuloCollection}" var="articulo" emptyMessage="No hay artículos." 
+                                                 sortBy="#{articulo.articuloPK.idArticulo}">
+                                        <p:column headerText="# artículo" style="width: 6em" >
+                                            <p:outputLabel value="#{articulo.articuloPK.idArticulo}" />
+                                        </p:column>
+                                        <p:column headerText="Capítulo" >
+                                            <p:outputLabel value="#{articulo.nombreCapitulo}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{articulo.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Descripción" >
+                                            <p:outputLabel value="#{articulo.descripcion}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleLey" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar Ley" widgetVar="dlgEdicionLey"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarLey" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.leyActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Fecha:" />
+                                    <p:calendar value="#{beanAdministrador.leyActual.fecha}" style="width: 97%"/>
+
+                                    <p:outputLabel value="Preámbulo:" />
+                                    <p:inputText value="#{beanAdministrador.leyActual.preambulo}" styleClass="styleInputText2"/>
+
+                                </h:panelGrid>
+                                <br/>
+                                <p:dataTable id="tablaArticulos" value="#{beanAdministrador.leyActual.articuloCollection}" var="articulo" emptyMessage="No hay artículos."
+                                             sortBy="#{articulo.articuloPK.idArticulo}" >
+                                    <p:column headerText="Capítulo" >
+                                        <p:outputLabel value="#{articulo.nombreCapitulo}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" >
+                                        <p:outputLabel value="#{articulo.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Descripción" >
+                                        <p:outputLabel value="#{articulo.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Edición" style="width: 5em">
+                                        <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarArticulo(articulo)}"
+                                                         update=":tabsListas:formLeyes:panelArticulo"/>
+                                        <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarArticulo(articulo)}"
+                                                         update=":tabsListas:formLeyes:tablaArticulos" />
+                                    </p:column>
+                                </p:dataTable>
+                                <br/>
+                                <p:panel id="panelArticulo" header="Artículo">
+                                    <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                                 styleClass="stylePanelGrid" >
+                                        <p:outputLabel value="Nombre del capítulo:" />
+                                        <p:inputText value="#{beanAdministrador.articuloActual.nombreCapitulo}" maxlength="45"/>
+
+                                        <p:outputLabel value="Nombre:" />
+                                        <p:inputText value="#{beanAdministrador.articuloActual.nombre}" maxlength="45"/>
+
+                                        <p:outputLabel value="Descripción:" />
+                                        <p:inputTextarea value="#{beanAdministrador.articuloActual.descripcion}" rows="5" 
+                                                         maxlength="1500" autoResize="false"/>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Agregar artículo" icon="ui-icon-plus" action="#{beanAdministrador.agregarArticulo()}"
+                                                     update="panelArticulo tablaArticulos" />
+                                </p:panel>
+                                <br/>
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarLey()}" 
+                                                 update="tablaLeyes" onclick="dlgEdicionLey.hide()" />
+                            </p:outputPanel>
+                        </p:dialog>
                     </h:form>
                 </p:tab>
             </p:tabView>

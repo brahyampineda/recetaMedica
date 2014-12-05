@@ -59,7 +59,7 @@
                 </p:tab>
                 <p:tab title="Quejas, sugerencias y peticiones">
                     <h:form id="formSolGenerales">
-                        <p:dataTable id="tablaSolicitudesGenerales" value="#{beanAdministrador.lstSolicitudesQR}" var="sqr"
+                        <p:dataTable id="tablaSolicitudesGenerales" value="#{beanAdministrador.administrador.solicitudQuejasReclamosCollection}" var="sqr"
                                      emptyMessage="No hay solicitudes" sortBy="#{sqr.usuario.nombre}">
                             <p:column headerText="Nombre" sortBy="#{sqr.usuario.nombre}"
                                       filterBy="#{sqr.usuario.nombre}" filterMatchMode="container">
@@ -73,13 +73,24 @@
                                       filterBy="#{sqr.titulo}" filterMatchMode="container" >
                                 <p:outputLabel value="#{sqr.titulo}"/>
                             </p:column>
-                            <p:column headerText="Descripcion" sortBy="#{sqr.descripcion}"
+                            <p:column headerText="Descripción" sortBy="#{sqr.descripcion}"
                                       filterBy="#{sqr.descripcion}" filterMatchMode="container">
                                 <p:outputLabel value="#{sqr.descripcion}"/>
                             </p:column> 
-                            <p:column headerText="Responder" style="width: 8%" >
-                                <p:commandButton icon="ui-icon-mail-closed" action="#{beanAdministrador.preparaResponderSolicitud(sqr)}"
+                            <p:column headerText="Estado" sortBy="#{sqr.estado}"
+                                      filterBy="#{sqr.estado}" filterMatchMode="container" >
+                                <p:outputLabel value="#{sqr.estado}" />
+                            </p:column>
+                            <p:column headerText="Responder" style="width: 10em" >
+                                <p:commandButton value="Responder" icon="ui-icon-mail-closed" action="#{beanAdministrador.preparaResponderSolicitud(sqr)}" 
+                                                 rendered="#{(sqr.estado == 'Nueva')? true : false}"
                                                  onclick="PF('dlgSolicitud').show();" update=":tabsSolicitudes:formSolGenerales:responderSolicitud" />
+                                <p:commandButton value="Eliminar" icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(sqr, true)}" 
+                                                 rendered="#{(sqr.estado == 'Eliminación')? true : false}" 
+                                                 update=":tabsSolicitudes:formSolGenerales:tablaSolicitudesGenerales" />
+                                <p:commandButton value="NO eliminar" icon="ui-icon-trash" action="#{beanAdministrador.eliminarUsuario(sqr, false)}" 
+                                                 rendered="#{(sqr.estado == 'Eliminación')? true : false}" 
+                                                 update=":tabsSolicitudes:formSolGenerales:tablaSolicitudesGenerales" />
                             </p:column> 
                         </p:dataTable>
                         <p:dialog header="Responder solicitud" widgetVar="dlgSolicitud"  
@@ -101,7 +112,7 @@
 
                                     <p:spacer />
                                     <p:commandButton value="Enviar respuesta" icon="ui-icon-mail-closed" action="#{beanAdministrador.responderSolicitudGeneral()}" 
-                                                     update="tablaSolicitudesGenerales" onclick="dlgEdicionLaboratorio.hide()" />
+                                                     update="tablaSolicitudesGenerales" onclick="dlgSolicitud.hide()" />
                                 </h:panelGrid>
                             </p:outputPanel>
                         </p:dialog>

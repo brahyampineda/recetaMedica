@@ -22,7 +22,7 @@ public class ConsultaPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idConsulta")
-    private int idConsulta;
+    private Integer idConsulta;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -37,17 +37,17 @@ public class ConsultaPK implements Serializable {
     public ConsultaPK() {
     }
 
-    public ConsultaPK(int idConsulta, String medicoidentificacion, String pacienteidentificacion) {
+    public ConsultaPK(Integer idConsulta, String medicoidentificacion, String pacienteidentificacion) {
         this.idConsulta = idConsulta;
         this.medicoidentificacion = medicoidentificacion;
         this.pacienteidentificacion = pacienteidentificacion;
     }
 
-    public int getIdConsulta() {
+    public Integer getIdConsulta() {
         return idConsulta;
     }
 
-    public void setIdConsulta(int idConsulta) {
+    public void setIdConsulta(Integer idConsulta) {
         this.idConsulta = idConsulta;
     }
 

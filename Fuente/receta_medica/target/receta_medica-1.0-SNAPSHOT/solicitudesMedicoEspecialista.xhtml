@@ -27,12 +27,12 @@
                                          style="width: 100%" >
 
                                 <p:outputLabel value="Motivo:" />
-                                <p:inputText value="" styleClass="styleInputText1" 
+                                <p:inputText value="#{beanGeneral.solicitudActual.titulo}" styleClass="styleInputText2" 
                                              required="true" requiredMessage="Debe especificar el motivo" 
                                              placeholder="Motivo..." />
 
                                 <p:outputLabel value="Descripción:" />
-                                <p:inputTextarea value="" styleClass="styleInputText1" 
+                                <p:inputTextarea value="#{beanGeneral.solicitudActual.descripcion}" styleClass="styleInputText2" 
                                                  required="true" requiredMessage="Debe escribir un mensaje." 
                                                  placeholder="Escriba acá su mensaje..."
                                                  autoResize="false" maxlength="500" rows="7"/>
@@ -40,8 +40,8 @@
                             </h:panelGrid>
                             <br/>
                             <div align="center">
-                                <p:commandButton value="Enviar" actionListener="#{beanGeneral.enviarCorreoDeContacto()}" 
-                                                 ajax="false" style="margin: 0 auto"/>
+                                <p:commandButton value="Enviar" actionListener="#{beanGeneral.crearSolicitud()}" 
+                                                 update=":tabsSolicitudes" />
                             </div>
                         </p:panel>
                     </h:form>
@@ -50,12 +50,16 @@
                 <p:tab title="Historial">
                     <h:form id="formHistorial" >
                         <p:panel id="panelHistorial" header="Historial de solicitudes">
-                            <p:dataTable emptyMessage="No ha hecho solicitudes.">
+                            <p:dataTable emptyMessage="No ha hecho solicitudes." var="solicitud"
+                                         value="#{beanGeneral.medicoActual.usuario.solicitudQuejasReclamosCollection}">
                                 <p:column headerText="Motivo">
-
+                                    <p:outputLabel value="#{solicitud.titulo}" />
                                 </p:column>
                                 <p:column headerText="Descripción">
-
+                                    <p:outputLabel value="#{solicitud.descripcion}" />
+                                </p:column>
+                                <p:column headerText="Estado">
+                                    <p:outputLabel value="#{solicitud.estado}" />
                                 </p:column>
                             </p:dataTable>
                         </p:panel>

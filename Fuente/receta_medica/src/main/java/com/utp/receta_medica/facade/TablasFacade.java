@@ -89,14 +89,12 @@ public class TablasFacade extends Crud {
         try {
             if (obj.getClass().equals(Administrador.class)) {
                 Administrador aux = (Administrador) obj;
-                save(aux.getUsuario());
                 save(aux);
             } else if (obj.getClass().equals(Usuario.class)) {
                 save(obj);
-            } else if (obj.getClass().equals(Tratamiento.class)) {
-                Tratamiento aux = (Tratamiento) obj;
-                aux.getTratamientoPK().setEnfermedadidEnfermedad1(aux.getEnfermedad().getIdEnfermedad());
-                if (aux.getTratamientoPK().getIdTratamiento() == null) {
+            } else if (obj.getClass().equals(Enfermedad.class)) {
+                Enfermedad aux = (Enfermedad) obj;
+                if (aux.getIdEnfermedad() == null) {
                     generarConsecutivo(aux);
                 }
                 save(aux);
@@ -106,15 +104,13 @@ public class TablasFacade extends Crud {
                     generarConsecutivo(aux);
                 }
                 save(aux);
-            } else if (obj.getClass().equals(Registro.class)) {
-                Registro aux = (Registro) obj;
-                if (aux.getIdRegistro() == null) {
+            } else if (obj.getClass().equals(Tratamiento.class)) {
+                Tratamiento aux = (Tratamiento) obj;
+                aux.getTratamientoPK().setEnfermedadidEnfermedad1(aux.getEnfermedad().getIdEnfermedad());
+                if (aux.getTratamientoPK().getIdTratamiento() == null) {
                     generarConsecutivo(aux);
                 }
                 save(aux);
-            } else if (obj.getClass().equals(Medico.class)) {
-                // Analizar
-                save(obj);
             } else if (obj.getClass().equals(GrupoApoyo.class)) {
                 GrupoApoyo aux = (GrupoApoyo) obj;
                 aux.getGrupoApoyoPK().setEnfermedadidEnfermedad(aux.getEnfermedad().getIdEnfermedad());
@@ -127,12 +123,73 @@ public class TablasFacade extends Crud {
                 save(obj);
             } else if (obj.getClass().equals(Laboratorio.class)) {
                 save(obj);
-            } else if (obj.getClass().equals(Enfermedad.class)) {
-                Enfermedad aux = (Enfermedad) obj;
-                if (aux.getIdEnfermedad() == null) {
+            } else if (obj.getClass().equals(Ley.class)) {
+                Ley aux = (Ley) obj;
+                Integer a = 1;
+
+                for (Articulo articulo : aux.getArticuloCollection()) {
+                    if (a == 1) {
+                        if (articulo.getArticuloPK().getIdArticulo() == null) {
+                            generarConsecutivo(articulo);
+                            a = articulo.getArticuloPK().getIdArticulo() + 1;
+                        }
+                    } else {
+                        articulo.getArticuloPK().setIdArticulo(a++);
+                    }
+                }
+                save(aux);
+            } else if (obj.getClass().equals(Articulo.class)) {
+                Articulo aux = (Articulo) obj;
+                if (aux.getArticuloPK().getIdArticulo() == null) {
                     generarConsecutivo(aux);
                 }
+                save(aux);
+            } else if (obj.getClass().equals(Registro.class)) {
+                Registro aux = (Registro) obj;
+                if (aux.getIdRegistro() == null) {
+                    generarConsecutivo(aux);
+                }
+                save(aux);
+            } else if (obj.getClass().equals(Medico.class)) {
+                Medico aux = (Medico) obj;
+                save(aux);
+            } else if (obj.getClass().equals(Paciente.class)) {
                 save(obj);
+            } else if (obj.getClass().equals(SolicitudQuejasReclamos.class)) {
+                SolicitudQuejasReclamos aux = (SolicitudQuejasReclamos) obj;
+                if (aux.getSolicitudQuejasReclamosPK().getIdSolicitudquejasreclamos() == null) {
+                    generarConsecutivo(aux);
+                }
+                save(aux);
+            } else if (obj.getClass().equals(Consulta.class)) {
+                Consulta aux = (Consulta) obj;
+                if (aux.getConsultaPK().getIdConsulta() == null) {
+                    generarConsecutivo(aux);
+                }
+                
+                Integer a = 1;
+                for (RecetaMedica receta : aux.getRecetaMedicaCollection()) {
+                    receta.setConsulta(aux);
+                    if (receta.getRecetaMedicaPK() == null) {
+                        receta.setRecetaMedicaPK(new RecetaMedicaPK());
+                    }
+                    receta.getRecetaMedicaPK().setConsultaPacienteidentificacion(aux.getConsultaPK().getPacienteidentificacion());
+                    receta.getRecetaMedicaPK().setConsultaidConsulta(aux.getConsultaPK().getIdConsulta());
+                    receta.getRecetaMedicaPK().setConsultaMedicoidentificacion(aux.getConsultaPK().getMedicoidentificacion());
+                    receta.getRecetaMedicaPK().setMedicamentoidMedicamento(receta.getMedicamento().getIdMedicamento());
+                    if (a == 1) {
+                        if (receta.getRecetaMedicaPK().getIdRecetamedica() == null) {
+                            generarConsecutivo(receta);
+                            a = receta.getRecetaMedicaPK().getIdRecetamedica() + 1;
+                        }
+                    } else {
+                        receta.getRecetaMedicaPK().setIdRecetamedica(a++);
+                    }
+                }
+                aux.getMedico().getConsultaCollection().add(aux);
+                aux.getPaciente().getConsultaCollection().add(aux);
+                
+                save(aux);
             }
 
             System.out.println("Guardado objeto de tipo " + obj.getClass().getSimpleName());

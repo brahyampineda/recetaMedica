@@ -16,6 +16,10 @@
     </h:head>
 
     <h:body>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="/imagenes/iconos/ajaxloadingbar.gif" style="width: 4em" />
+        </p:dialog>
         <div id="divCabecera">
             <div id="divEnlaces">
                 <div id="divImagenes" style="float: left ; width: 95%">
@@ -51,7 +55,7 @@
             </div>
             <div id="divLogin" align="right">
                 <h:form id="formBtnLogin">
-                    <p:panel style="width: 100%" rendered="#{beanGeneral.visitante}" >
+                    <p:panel style="width: 100%; text-align: center" rendered="#{beanGeneral.visitante}" >
                         <h:panelGrid columns="1" styleClass="stylePanelGrid">
                             <p:commandButton value="Iniciar sesión" style="width: 80%"
                                              action="#{beanGeneral.preparaInicioDeSesion()}"
@@ -64,19 +68,21 @@
                         </h:panelGrid>
                     </p:panel>
                     <p:panel style="width: 100%" rendered="#{!beanGeneral.visitante}" >
-                        <p:outputLabel value="Perfil: #{beanGeneral.perfilActual}" style="font-weight: bold; float: left"/>
+                        <p:graphicImage width="70em" height="70em"  value="#{beanGeneral.loggedUser.foto}" style="float: left"/>
+                        <p:outputLabel value="Bienvenido, #{beanGeneral.loggedUser.nombre}" style="font-weight: bold"/>
+                        <br/>
+                        <p:outputLabel value="Perfil: #{beanGeneral.perfilActual}" style="font-weight: bold"/>
                         <h:panelGrid columns="2" styleClass="stylePanelGrid">
-                            <p:outputLabel value="Bienvenido, #{beanGeneral.loggedUser.nombre}" style="font-weight: bold"/>
-                            <p:commandButton value="Salir" action="#{beanGeneral.doLogout()}" immediate="true"
-                                             ajax="false" styleClass="styleInputText2"/>
-
+                            <p:commandButton value="Ir a" action="#{beanGeneral.accederAperfil()}" immediate="true" 
+                                             ajax="false" styleClass="styleInputText2" rendered="#{!beanGeneral.admin}"/>
                             <p:selectOneMenu value="#{beanGeneral.perfilActual}" rendered="#{!beanGeneral.admin}">
                                 <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
                                                value="#{beanGeneral.lstPerfiles}" var="perfil" />
                                 <p:ajax event="change" listener="#{beanGeneral.cambioPerfil}" />
                             </p:selectOneMenu>
-                            <p:commandButton value="Ir a" action="#{beanGeneral.accederAperfil()}" immediate="true" 
-                                             ajax="false" styleClass="styleInputText2" rendered="#{!beanGeneral.admin}"/>
+
+                            <p:commandButton value="Salir" action="#{beanGeneral.doLogout()}" immediate="true"
+                                             ajax="false" styleClass="styleInputText2"/>
                         </h:panelGrid>
                     </p:panel>
                 </h:form>
@@ -107,7 +113,7 @@
                             <p:outputLabel value="Email:" />
                             <p:inputText value="#{beanGeneral.emailRestablecerContraseña}" styleClass="styleInputText2" 
                                          required="true" requiredMessage="Campo requerido"
-                                         validatorMessage="El formato del email no es correcto.">
+                                         validatorMessage="El formato del email no es correcto: ejemplo@ejemplo.com">
                                 <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                             </p:inputText>
                         </h:panelGrid>
@@ -136,6 +142,14 @@
                                 <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
                             </p:inputText>
 
+                            <p:outputLabel value="Género:" />
+                            <p:selectOneMenu value="#{beanGeneral.usuarioActual.genero}"
+                                             styleClass="styleInputText2">
+                                <f:selectItem noSelectionOption="true" />
+                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                            </p:selectOneMenu>
+
                             <p:outputLabel value="Número de identificacion:"></p:outputLabel>
                             <p:inputText value="#{beanGeneral.usuarioActual.identificacion}" styleClass="styleInputText2"
                                          required="true" requiredMessage="Escriba su identificación"
@@ -152,22 +166,23 @@
 
                             <p:outputLabel value="Perfiles:"/>
                             <h:panelGrid columns="2">
-                                <p:selectManyCheckbox value="#{beanGeneral.perfiles}" styleClass="styleInputText2">
+                                <p:selectManyCheckbox value="#{beanGeneral.perfiles}" styleClass="styleInputText2"
+                                                      required="true" requiredMessage="Debe seleccionar por lo menos un perfil.">
                                     <f:selectItem itemLabel="Médico general" itemValue="Medico general" />
                                     <f:selectItem itemLabel="Médico especialista" itemValue="Medico especialista" />
                                     <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
                                 </p:selectManyCheckbox>
                             </h:panelGrid>
                             <p:spacer />
-                            <p:commandButton value="Solicitar registro" actionListener="#{beanGeneral.solicitarRegistroUsuario()}"
-                                             update="panelRegistroUsuario"/>
+                            <p:commandButton value="Solicitar registro" action="#{beanGeneral.solicitarRegistroUsuario()}"
+                                             update="panelRegistroUsuario" />
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
             </div>
         </div>
         <div id="divContenido" >
-            <p:growl autoUpdate="true" showDetail="true"/>
+            <p:growl id="notificaciones" autoUpdate="true" showDetail="true"/>
             <h:form>
                 <p:tabMenu activeIndex="#{param.i}" >
                     <p:menuitem value="Inicio" outcome="/index" rendered="#{beanGeneral.visitante}">
@@ -193,7 +208,8 @@
                                 action="#{beanAdministrador.preparaAgregarContenido()}">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{beanGeneral.admin}">
+                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{beanGeneral.admin}"
+                                action="#{beanAdministrador.preparaConsultaUsuario()}">
                         <f:param name="i" value="4" />
                     </p:menuitem>
 
@@ -203,7 +219,8 @@
                     <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.medicoEspecialista}">
                         <f:param name="i" value="1" />
                     </p:menuitem>
-                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}" 
+                                action="#{beanGeneral.preparaCrearConsultaMedica()}">
                         <f:param name="i" value="2" />
                     </p:menuitem>
                     <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">

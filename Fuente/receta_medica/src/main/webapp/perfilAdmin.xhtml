@@ -20,7 +20,7 @@
         </ui:define>
 
         <ui:define name="contenido">
-            <h:form >
+            <h:form id="formPerfil">
                 <p:panel id="panelPerfil">
                     <p:panel header="DATOS DEL PERFIL">
                         <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
@@ -29,48 +29,23 @@
                             <p:outputLabel value="#{beanGeneral.administrador.usuario.identificacion}" />
 
                             <p:outputLabel value="Nombre:" />
-                            <p:outputLabel id="nombre" value="#{beanGeneral.administrador.usuario.nombre}" rendered="#{!beanGeneral.editarPerfil}" />
-                            <p:inputText value="#{beanGeneral.administrador.usuario.nombre}" styleClass="styleInputText2"
-                                         rendered="#{beanGeneral.editarPerfil}" />
-
+                            <p:outputLabel id="nombre" value="#{beanGeneral.administrador.usuario.nombre}" />
+                            
                             <p:outputLabel value="Apellidos:" />
-                            <p:outputLabel value="#{beanGeneral.administrador.usuario.apellidos}" rendered="#{!beanGeneral.editarPerfil}" />
-                            <p:inputText value="#{beanGeneral.administrador.usuario.apellidos}" styleClass="styleInputText2"
-                                         rendered="#{beanGeneral.editarPerfil}" />
-
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.apellidos}" />
+                            
                             <p:outputLabel value="Email:" />
-                            <p:outputLabel value="#{beanGeneral.administrador.usuario.email}" rendered="#{!beanGeneral.editarPerfil}" />
-                            <p:inputText value="#{beanGeneral.administrador.usuario.email}" styleClass="styleInputText2"
-                                         rendered="#{beanGeneral.editarPerfil}" />
-
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.email}" />
+                            
                             <p:outputLabel value="Género:" />
-                            <p:outputLabel value="#{beanGeneral.administrador.usuario.genero}" rendered="#{!beanGeneral.editarPerfil}" />
-                            <p:selectOneMenu value="#{beanGeneral.administrador.usuario.genero}" rendered="#{beanGeneral.editarPerfil}"
-                                             styleClass="styleInputText2">
-                                <f:selectItem itemLabel="Masculino" itemValue="masculino" />
-                                <f:selectItem itemLabel="Femenino" itemValue="femenino" />
-                            </p:selectOneMenu>
-
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.genero}"/>
+                            
                             <p:outputLabel value="Fecha de nacimiento:" />
                             <p:outputLabel value="#{beanGeneral.administrador.usuario.fechaNacimiento}" rendered="#{!beanGeneral.editarPerfil}" >
                                 <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
                             </p:outputLabel>
-                            <p:calendar value="#{beanGeneral.administrador.usuario.fechaNacimiento}" rendered="#{beanGeneral.editarPerfil}" 
-                                        style="width: 100%"/>
-
-                            <p:outputLabel value="Contraseña:" rendered="#{beanGeneral.editarPerfil}" />
-                            <p:password value="#{beanGeneral.contraseñaActual}" rendered="#{beanGeneral.editarPerfil}" 
-                                        styleClass="styleInputText2"/>
-
+                            
                         </h:panelGrid>
-                        <div align="center">
-                            <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{beanGeneral.preparaEditarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{!beanGeneral.editarPerfil}"
-                                             update="panelPerfil"/>
-                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{beanGeneral.guardarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{beanGeneral.editarPerfil}"
-                                             update="panelPerfil"/>
-                        </div>
                     </p:panel>
                 </p:panel>
             </h:form>

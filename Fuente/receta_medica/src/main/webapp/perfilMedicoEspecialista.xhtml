@@ -23,10 +23,58 @@
             <h:form id="formPerfil">
                 <p:panel id="panelPerfil">
                     <p:panel header="DATOS DEL PERFIL">
+                        <div align="center" >
+                            <p:graphicImage id="imagenPerfil" width="200em" value="#{beanGeneral.loggedUser.foto}" />
+                            <br/>
+                            <div style="width: 20em" align="center">
+                                <p:commandButton value="Cambiar foto de perfil" onclick="PF('dlgFotoPerfil').show();" 
+                                                 rendered="#{beanGeneral.editarPerfil}" icon="ui-icon-pencil" />
+                            </div>
+                            <p:dialog widgetVar="dlgFotoPerfil" header="Cambiar foto de peril" 
+                                      width="70%" resizable="false" modal="true">
+                                <h:panelGrid id="panelFoto" border="0" columns="1" cellspacing="5" width="100%">
+                                    <p:panel style="width: 100%">
+                                        <p:commandButton value="Establecer foto de perfil"
+                                                         disabled="#{beanGeneral.imageTemp==null}"
+                                                         action="#{beanGeneral.actionGuardarFoto()}"
+                                                         oncomplete="dlgFotoPerfil.hide();"
+                                                         update="panelPerfil" ajax="false"/>
+                                        <p:spacer width="1em" />
+                                        <p:commandButton value="Cancelar"
+                                                         type="button"
+                                                         onclick="dlgFotoPerfil.hide();"/>
+                                    </p:panel>
+
+                                    <p:panel styleClass="editorFoto">
+                                        <p:imageCropper value="#{beanGeneral.croppeFoto}"
+                                                        image="/resources/imagenes/imagenes de perfil/temp/#{beanGeneral.imageTemp}"
+                                                        rendered="#{beanGeneral.imageTemp!=null}"
+                                                        initialCoords="0,0,140,150"
+                                                        minSize="85,85"
+                                                        maxSize="400,400"
+                                                        aspectRatio="0.9"/>
+
+                                        <p:fileUpload fileUploadListener="#{beanGeneral.uploadFile}"
+                                                      rendered="#{beanGeneral.imageTemp==null}"
+                                                      mode="advanced"
+                                                      label="Seleccione Foto (máximo 1000kb)"
+                                                      auto="true"
+                                                      update="panelFoto"
+                                                      sizeLimit="1000000"
+                                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                    </p:panel>
+
+                                </h:panelGrid>
+                            </p:dialog>
+                        </div>
+                        <br/>
                         <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
                                      styleClass="stylePanelGrid">
                             <p:outputLabel value="Identificación:" />
-                            <p:outputLabel value="#{beanGeneral.medicoActual.identificacion}" />
+                            <p:outputLabel value="#{beanGeneral.medicoActual.usuario.identificacion}" />
+
+                            <p:outputLabel value="Email:" />
+                            <p:outputLabel value="#{beanGeneral.medicoActual.usuario.email}" />
 
                             <p:outputLabel value="Nombre:" />
                             <p:outputLabel id="nombre" value="#{beanGeneral.medicoActual.usuario.nombre}" rendered="#{!beanGeneral.editarPerfil}" />
@@ -38,17 +86,12 @@
                             <p:inputText value="#{beanGeneral.medicoActual.usuario.apellidos}" styleClass="styleInputText2"
                                          rendered="#{beanGeneral.editarPerfil}" />
 
-                            <p:outputLabel value="Email:" />
-                            <p:outputLabel value="#{beanGeneral.medicoActual.usuario.email}" rendered="#{!beanGeneral.editarPerfil}" />
-                            <p:inputText value="#{beanGeneral.medicoActual.usuario.email}" styleClass="styleInputText2"
-                                         rendered="#{beanGeneral.editarPerfil}" />
-
                             <p:outputLabel value="Género:" />
                             <p:outputLabel value="#{beanGeneral.medicoActual.usuario.genero}" rendered="#{!beanGeneral.editarPerfil}" />
                             <p:selectOneMenu value="#{beanGeneral.medicoActual.usuario.genero}" rendered="#{beanGeneral.editarPerfil}"
                                              styleClass="styleInputText2">
-                                <f:selectItem itemLabel="Masculino" itemValue="masculino" />
-                                <f:selectItem itemLabel="Femenino" itemValue="femenino" />
+                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha de nacimiento:" />
@@ -67,6 +110,7 @@
                             <p:outputLabel value="#{beanGeneral.medicoActual.usuario.estrato}" rendered="#{!beanGeneral.editarPerfil}" />
                             <p:selectOneMenu value="#{beanGeneral.medicoActual.usuario.estrato}" rendered="#{beanGeneral.editarPerfil}"
                                              styleClass="styleInputText2">
+                                <f:selectItem noSelectionOption="true" />
                                 <f:selectItem itemLabel="1" itemValue="1" />
                                 <f:selectItem itemLabel="2" itemValue="2" />
                                 <f:selectItem itemLabel="3" itemValue="3" />
@@ -108,27 +152,36 @@
                             <p:inputText value="#{beanGeneral.medicoActual.especialidad}" styleClass="styleInputText2"
                                          rendered="#{beanGeneral.editarPerfil}" />
 
+                            <p:outputLabel value="Medicamentos conocidos:" />
+                            <p:dataList value="#{beanGeneral.medicoActual.medicamentoCollection}" var="medicamento" type="ordered"
+                                        emptyMessage="No conoce ningún medicamento." rendered="#{!beanGeneral.editarPerfil}">
+                                #{medicamento.nombre}
+                            </p:dataList>
+                            <p:selectCheckboxMenu value="#{beanGeneral.medicoActual.medicamentoCollection}" label="Medicamentos conocidos"
+                                                  filter="true" filterMatchMode="contains" converter="MedicamentoConverter"
+                                                  style="width: 97%" rendered="#{beanGeneral.editarPerfil}" >
+                                <f:selectItems itemLabel="#{medicamento.nombre}" itemValue="#{medicamento}"
+                                               value="#{beanGeneral.lstMedicamentos}" var="medicamento"/>
+                            </p:selectCheckboxMenu>
+
                             <p:outputLabel value="Contraseña:" rendered="#{beanGeneral.editarPerfil}" />
                             <p:password value="#{beanGeneral.contraseñaActual}" rendered="#{beanGeneral.editarPerfil}" 
                                         styleClass="styleInputText2"/>
 
-                            <p:commandButton value="Cambiar contraseña" action="#{beanGeneral.preparaCambioContraseña()}"
-                                             rendered="#{beanGeneral.editarPerfil and !beanGeneral.cambioContraseña}" ajax="false"
-                                             update="panelCambioPass"/>
                         </h:panelGrid>
                         <div align="center" >
                             <h:panelGrid id="panelCambioPass" columns="2" columnClasses="derechaNegrita, izquierda" 
                                          rendered="#{beanGeneral.cambioContraseña}">
                                 <p:outputLabel value="Nueva contraseña:" rendered="#{beanGeneral.editarPerfil}"/>
-                                <p:inputText value="#{beanGeneral.nuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
-                                             styleClass="styleInputText2"
-                                             validatorMessage="La contraseña no cumple con los requisitos." >
+                                <p:password value="#{beanGeneral.nuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
+                                            styleClass="styleInputText2"
+                                            validatorMessage="La contraseña no cumple con los requisitos." >
                                     <f:validateRegex pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
-                                </p:inputText>
+                                </p:password>
 
                                 <p:outputLabel value="Vuelva a escribir la contraseña:" rendered="#{beanGeneral.editarPerfil}"/>
-                                <p:inputText value="#{beanGeneral.verificacionNuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
-                                             styleClass="styleInputText2"/>
+                                <p:password value="#{beanGeneral.verificacionNuevaContraseña}" rendered="#{beanGeneral.editarPerfil}" 
+                                            styleClass="styleInputText2"/>
 
                                 <div align="left" style="width: 30%" >
                                     <p:panel rendered="#{beanGeneral.editarPerfil}">
@@ -141,12 +194,26 @@
                             </h:panelGrid>
                         </div>
                         <div align="center">
+                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{beanGeneral.guardarPerfil()}"
+                                             style="margin: 0 auto" rendered="#{beanGeneral.editarPerfil}" ajax="false" />
+                            <p:commandButton value="Cambiar contraseña" action="#{beanGeneral.preparaCambioContraseña()}"
+                                             rendered="#{beanGeneral.editarPerfil and !beanGeneral.cambioContraseña}" ajax="false"
+                                             update="panelCambioPass"/>
                             <p:commandButton value="Editar perfil" icon="ui-icon-pencil" action="#{beanGeneral.preparaEditarPerfil()}"
                                              style="margin: 0 auto" rendered="#{!beanGeneral.editarPerfil}"
                                              update=":formPerfil:panelPerfil"/>
-                            <p:commandButton value="Guardar perfil" icon="ui-icon-pencil" action="#{beanGeneral.guardarPerfil()}"
-                                             style="margin: 0 auto" rendered="#{beanGeneral.editarPerfil}"
-                                             update="panelPerfil"/>
+                            <p:commandButton value="Eliminar cuenta" icon="ui-icon-trash" onclick="PF('dlgEliminarCuenta').show();"
+                                             style="margin: 0 auto" rendered="#{!beanGeneral.editarPerfil}"/>
+
+                            <p:dialog widgetVar="dlgEliminarCuenta" dynamic="true" resizable="false" modal="true"
+                                      header="Eliminar cuenta">
+                                <p:outputLabel value="¿Está seguro que desea solicitar la eliminación de su cuenta?" />
+                                <br/>
+                                <br/>
+                                <p:commandButton value="Si" action="#{beanGeneral.solicitarEliminarCuenta()}" immediate="true"
+                                                 ajax="false" />
+                                <p:commandButton value="No" immediate="true" onclick="PF('dlgEliminarCuenta').hide();"/>
+                            </p:dialog>
                         </div>
                     </p:panel>
                 </p:panel>

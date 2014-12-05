@@ -22,15 +22,15 @@ public class RecetaMedicaPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idReceta_medica")
-    private int idRecetamedica;
+    private Integer idRecetamedica;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Medicamento_idMedicamento")
-    private int medicamentoidMedicamento;
+    private Integer medicamentoidMedicamento;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Consulta_idConsulta")
-    private int consultaidConsulta;
+    private Integer consultaidConsulta;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -45,7 +45,7 @@ public class RecetaMedicaPK implements Serializable {
     public RecetaMedicaPK() {
     }
 
-    public RecetaMedicaPK(int idRecetamedica, int medicamentoidMedicamento, int consultaidConsulta, String consultaMedicoidentificacion, String consultaPacienteidentificacion) {
+    public RecetaMedicaPK(Integer idRecetamedica, Integer medicamentoidMedicamento, Integer consultaidConsulta, String consultaMedicoidentificacion, String consultaPacienteidentificacion) {
         this.idRecetamedica = idRecetamedica;
         this.medicamentoidMedicamento = medicamentoidMedicamento;
         this.consultaidConsulta = consultaidConsulta;
@@ -53,27 +53,27 @@ public class RecetaMedicaPK implements Serializable {
         this.consultaPacienteidentificacion = consultaPacienteidentificacion;
     }
 
-    public int getIdRecetamedica() {
+    public Integer getIdRecetamedica() {
         return idRecetamedica;
     }
 
-    public void setIdRecetamedica(int idRecetamedica) {
+    public void setIdRecetamedica(Integer idRecetamedica) {
         this.idRecetamedica = idRecetamedica;
     }
 
-    public int getMedicamentoidMedicamento() {
+    public Integer getMedicamentoidMedicamento() {
         return medicamentoidMedicamento;
     }
 
-    public void setMedicamentoidMedicamento(int medicamentoidMedicamento) {
+    public void setMedicamentoidMedicamento(Integer medicamentoidMedicamento) {
         this.medicamentoidMedicamento = medicamentoidMedicamento;
     }
 
-    public int getConsultaidConsulta() {
+    public Integer getConsultaidConsulta() {
         return consultaidConsulta;
     }
 
-    public void setConsultaidConsulta(int consultaidConsulta) {
+    public void setConsultaidConsulta(Integer consultaidConsulta) {
         this.consultaidConsulta = consultaidConsulta;
     }
 

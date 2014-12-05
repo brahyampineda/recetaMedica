@@ -22,15 +22,22 @@
         <ui:define name="contenido">
             <h:form id="formConsulta" >
                 <p:panel>
-                    <p:dataTable id="tablaHistorial" >
-                        <p:column headerText="Identificación" >
-                            <p:outputLabel value="" />
+                    <p:dataTable id="tablaHistorial" value="#{beanGeneral.pacienteActual.consultaCollection}" var="consulta"
+                                 emptyMessage="No hay consultas." >
+                        <p:column style="width: 1em">
+                            <p:rowToggler  />
                         </p:column>
-                        <p:column headerText="Nombre" >
-                            <p:outputLabel value="" />
+                        <p:column headerText="Médico" >
+                            <p:outputLabel value="#{consulta.medico.usuario.nombre} #{consulta.medico.usuario.apellidos}" />
                         </p:column>
-                        <p:column headerText="Apellidos" >
-                            <p:outputLabel value="" />
+                        <p:column headerText="Peso" >
+                            <p:outputLabel value="#{consulta.peso} kg" />
+                        </p:column>
+                        <p:column headerText="Estatura" >
+                            <p:outputLabel value="#{consulta.altura} cm" />
+                        </p:column>
+                        <p:column headerText="Deportes que practica" >
+                            <p:outputLabel value="#{consulta.deportes}" />
                         </p:column>
                         <p:rowExpansion>
                             <p:panel id="panelHistorial" header="Consulta">
@@ -39,44 +46,48 @@
                                              styleClass="stylePanelGrid">
 
                                     <p:outputLabel value="Médico: " styleClass="styleInputText2" />
-                                    <p:outputLabel value="#{loginBean.loggedUser.nombre} #{loginBean.loggedUser.apellidos}" styleClass="styleInputText2" />
+                                    <p:outputLabel value="#{consulta.medico.usuario.nombre} #{consulta.medico.usuario.apellidos}" styleClass="styleInputText2" />
 
-                                    <p:outputLabel value="Paciente:" styleClass="styleInputText2"/>
-                                    <p:outputLabel value="" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="Peso:" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.peso} kg" styleClass="styleInputText2"/>
 
-                                    <p:outputLabel value="Peso actual (Kg):" styleClass="styleInputText2"/>
-                                    <p:outputLabel value="" styleClass="styleInputText2"/>
-
-                                    <p:outputLabel value="Estatura actual (cm):" styleClass="styleInputText2"/>
-                                    <p:outputLabel value="" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="Estatura:" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.altura} cm" styleClass="styleInputText2"/>
 
                                     <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
-                                    <p:outputLabel value="" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.deportes}" styleClass="styleInputText2"/>
 
                                 </h:panelGrid>
-
-                                <p:dataTable id="tablaRecetas" emptyMessage="No hay recetas." >
+                                <br/>
+                                <p:panelGrid columns="2" >
+                                    <p:dataList value="#{consulta.enfermedadCollection}" var="enfermedad" type="ordered"
+                                                emptyMessage="No se detectó enfermedades.">
+                                        <f:facet name="header">Enfermedades identificadas</f:facet>
+                                            #{enfermedad.nombre}
+                                    </p:dataList>
+                                    <p:dataList value="#{consulta.grupoApoyoCollection}" var="grupoApoyo" type="ordered"
+                                                emptyMessage="No pertenece a ningún grupo de apoyo.">
+                                        <f:facet name="header">Grupos de apoyo del paciente</f:facet>
+                                            #{grupoApoyo.nombre}
+                                    </p:dataList>
+                                </p:panelGrid>
+                                <br/>
+                                <p:dataTable id="tablaRecetas" emptyMessage="No hay recetas." 
+                                             value="#{consulta.recetaMedicaCollection}" var="receta">
                                     <f:facet name="header" >Recetas</f:facet>
                                     <p:column headerText="Medicamento" >
-                                        <p:outputLabel value="" />
+                                        <p:outputLabel value="#{receta.medicamento.nombre}" />
                                     </p:column>
                                     <p:column headerText="Dosis" >
-                                        <p:outputLabel value="" />
+                                        <p:outputLabel value="#{receta.dosis}" />
                                     </p:column>
                                     <p:column headerText="Periodicidad (por día)" >
-                                        <p:outputLabel value="" />
+                                        <p:outputLabel value="#{receta.periodicidad}" />
                                     </p:column>
                                     <p:column headerText="Fecha Inicio" >
-                                        <p:outputLabel value="" >
+                                        <p:outputLabel value="#{receta.fechaInicio}" >
                                             <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
                                         </p:outputLabel>
-                                    </p:column>
-                                    <p:column headerText="Edición" style="width: 7%">
-                                        <p:commandButton icon="ui-icon-pencil" 
-                                                         onclick="PF('dlgEdicionEnfermedad').show();"
-                                                         update=":tabsConsultas:formNueva:panelReceta"/>
-                                        <p:commandButton icon="ui-icon-trash" 
-                                                         update="tablaRecetas" />
                                     </p:column>
                                 </p:dataTable>
                             </p:panel>

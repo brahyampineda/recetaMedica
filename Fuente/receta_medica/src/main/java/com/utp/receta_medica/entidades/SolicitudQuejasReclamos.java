@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByIdSolicitudquejasreclamos", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.idSolicitudquejasreclamos = :idSolicitudquejasreclamos"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByEstado", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.estado = :estado"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioemail", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioemail = :usuarioemail")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -41,12 +42,15 @@ public class SolicitudQuejasReclamos implements Serializable {
     @Size(max = 300)
     @Column(name = "descripcion")
     private String descripcion;
-    @JoinColumn(name = "Usuario_email", referencedColumnName = "email", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Usuario usuario;
+    @Size(max = 15)
+    @Column(name = "estado")
+    private String estado;
     @JoinColumn(name = "Administrador_identificacion", referencedColumnName = "identificacion")
     @ManyToOne(optional = false)
     private Administrador administrador;
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Usuario usuario;
 
     public SolicitudQuejasReclamos() {
     }
@@ -83,12 +87,12 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Administrador getAdministrador() {
@@ -97,6 +101,14 @@ public class SolicitudQuejasReclamos implements Serializable {
 
     public void setAdministrador(Administrador administrador) {
         this.administrador = administrador;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

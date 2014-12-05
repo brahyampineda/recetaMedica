@@ -2,11 +2,19 @@ package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.*;
 import com.utp.receta_medica.facade.TablasFacade;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -17,6 +25,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,6 +33,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.CroppedImage;
 
 /**
  *
@@ -82,13 +93,25 @@ public class BeanGeneral implements Serializable {
     private List<GrupoApoyo> lstGruposApoyo;
     private List<Laboratorio> lstLaboratorios;
     private List<Entidad> lstEntidades;
-    private List<String> lstLeyes;
+    private List<Ley> lstLeyes;
     private List<Enfermedad> lstEnfermedades;
 
     private List<Paciente> lstPacientes;
     private List<Medico> lstMedicosEspecialistas;
     private List<Medico> lstMedicosGenerales;
+
+    private List<Consulta> lstConsultasPorMedico;
 //..............................................................................
+
+    private SolicitudQuejasReclamos solicitudActual;
+    private Consulta consultaMedicaActual;
+    private Paciente pacienteConsulta;
+    private String identificacionPacienteConsultas;
+    private RecetaMedica recetaMedicaActual;
+    private List<String> deportesConsulta;
+
+    private CroppedImage croppeFoto;
+    private String imageTemp;
 
     //**************************************************************************
     //**************************************************************************
@@ -128,6 +151,7 @@ public class BeanGeneral implements Serializable {
         System.out.println("Perfil seleccionado: " + perfilActual);
         editarPerfil = false;
         cambioContraseña = false;
+        inicializarVariables();
         if (perfilActual.equals("Paciente")) {
             paciente = true;
             medicoEspecialista = false;
@@ -138,12 +162,28 @@ public class BeanGeneral implements Serializable {
             paciente = false;
             medicoEspecialista = true;
             medicoGeneral = false;
+            if (loggedUser.getMedicoCollection().size() > 1) {
+                for (Medico medico : loggedUser.getMedicoCollection()) {
+                    if (medico.getEsEspecialista()) {
+                        medicoActual = medico;
+                        break;
+                    }
+                }
+            }
             return "/perfilMedicoEspecialista";
         }
         if (perfilActual.equals("Médico general")) {
             paciente = false;
             medicoEspecialista = false;
             medicoGeneral = true;
+            if (loggedUser.getMedicoCollection().size() > 1) {
+                for (Medico medico : loggedUser.getMedicoCollection()) {
+                    if (!medico.getEsEspecialista()) {
+                        medicoActual = medico;
+                        break;
+                    }
+                }
+            }
             return "/perfilMedicoGeneral";
         }
         return null;
@@ -261,6 +301,18 @@ public class BeanGeneral implements Serializable {
         medicoEspecialista = false;
         visitante = true;
         perfilActual = "Visitante";
+        editarPerfil = false;
+        lstConsultasPorMedico = new ArrayList<>();
+        lstPerfiles = new ArrayList<>();
+        username = "";
+        password = "";
+        usuarioActual = null;
+        pacienteActual = null;
+        medicoActual = null;
+        solicitudActual = null;
+        recetaMedicaActual = null;
+        pacienteConsulta = null;
+        identificacionPacienteConsultas = "";
 
         System.out.println("\n\nCerrando sesión.\n\n");
         adminBean.notificaciones(-1, "Se ha cerrado la sesión correctamente");
@@ -275,21 +327,33 @@ public class BeanGeneral implements Serializable {
         contraseñaActual = "";
         nuevaContraseña = "";
         verificacionNuevaContraseña = "";
-
     }
 
     public void guardarPerfil() {
         try {
             if (verificarCambioContraseña()) {
-                if (perfilActual.equals("Administrador")) {
-                    crud.guardar(administrador);
-                    crud.guardar(administrador.getUsuario());
-                } else if (perfilActual.equals("Paciente")) {
-                    crud.guardar(pacienteActual);
-                    crud.guardar(pacienteActual.getUsuario());
-                } else if (perfilActual.equals("Médico especialista") || perfilActual.equals("Médico general")) {
-                    crud.guardar(medicoActual);
-                    crud.guardar(medicoActual.getUsuario());
+                System.out.println("Perfil actual a guardar: " + perfilActual);
+                switch (perfilActual) {
+                    case "Administrador":
+                        administrador.setUsuario(loggedUser);
+                        crud.guardar(administrador);
+                        crud.guardar(administrador.getUsuario());
+                        break;
+                    case "Paciente":
+                        pacienteActual.getUsuario().setFoto("/resources/imagenes/imagenes de perfil/" + pacienteActual.getUsuario().getEmail() + ".jpg");
+                        crud.guardar(pacienteActual);
+                        crud.guardar(pacienteActual.getUsuario());
+                        break;
+                    case "Médico especialista":
+                        medicoActual.getUsuario().setFoto("/resources/imagenes/imagenes de perfil/" + medicoActual.getUsuario().getEmail() + ".jpg");
+                        crud.guardar(medicoActual);
+                        crud.guardar(medicoActual.getUsuario());
+                        break;
+                    case "Médico general":
+                        medicoActual.getUsuario().setFoto("/resources/imagenes/imagenes de perfil/" + medicoActual.getUsuario().getEmail() + ".jpg");
+                        crud.guardar(medicoActual);
+                        crud.guardar(medicoActual.getUsuario());
+                        break;
                 }
                 editarPerfil = false;
                 contraseñaActual = "";
@@ -326,6 +390,106 @@ public class BeanGeneral implements Serializable {
 
     public void preparaCambioContraseña() {
         cambioContraseña = true;
+        nuevaContraseña = "";
+        verificacionNuevaContraseña = "";
+    }
+
+    public void inicializarVariables() {
+        lstConsultasPorMedico = new ArrayList<>();
+        identificacionPacienteConsultas = "";
+        pacienteConsulta = null;
+        getPacienteConsulta();
+    }
+
+    public String solicitarEliminarCuenta() {
+        SolicitudQuejasReclamos aux = new SolicitudQuejasReclamos(new SolicitudQuejasReclamosPK(null, loggedUser.getEmail()));
+        aux.setAdministrador(getAdministrador());
+        aux.setUsuario(loggedUser);
+        aux.setDescripcion("El usuario " + loggedUser.getNombre() + " " + loggedUser.getApellidos()
+                + " solicita eliminar su cuenta de usuario.");
+        aux.setEstado("Eliminación");
+        aux.setTitulo("Eliminar cuenta");
+        crud.guardar(aux);
+        getAdministrador().getSolicitudQuejasReclamosCollection().add(aux);
+        crud.guardar(getAdministrador());
+        loggedUser.getSolicitudQuejasReclamosCollection().add(aux);
+        crud.guardar(loggedUser);
+
+        enviarCorreo(aux.getUsuario().getEmail(), getAdministrador().getUsuario().getEmail(), "Eliminar cuenta de usuario", "El usuario "
+                + aux.getUsuario().getNombre() + " " + aux.getUsuario().getApellidos() + " solicita eliminar su cuenta de usuario.");
+
+        return doLogout();
+    }
+
+    public void actionFoto() {
+        this.croppeFoto = null;
+        this.imageTemp = null;
+    }
+
+    public void actionGuardarFoto() {
+        String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/resources/imagenes/imagenes de perfil");
+        String archivo = path + File.separator + this.getLoggedUser().getEmail() + ".jpg";
+
+        loggedUser.setFoto("/resources/imagenes/imagenes de perfil/" + loggedUser.getEmail() + ".jpg");
+        crud.guardar(loggedUser);
+
+        try {
+
+            if (croppeFoto != null) {
+                FileImageOutputStream imageOutput = new FileImageOutputStream(new File(archivo));
+                imageOutput.write(croppeFoto.getBytes(), 0, croppeFoto.getBytes().length);
+                imageOutput.close();
+            } else {
+                OutputStream outStream = new FileOutputStream(new File(archivo));
+                InputStream inputStream = new FileInputStream(path + "/temp/" + this.getImageTemp());
+                byte[] buffer = new byte[6124];
+                int bulk;
+                while (true) {
+                    bulk = inputStream.read(buffer);
+                    if (bulk < 0) {
+                        break;
+                    }
+                    outStream.write(buffer, 0, bulk);
+                    outStream.flush();
+                }
+                outStream.close();
+                inputStream.close();
+            }
+            actionFoto();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadFile(FileUploadEvent event) {
+        try {
+            String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/resources/imagenes/imagenes de perfil/temp");
+            String archivo = path + File.separator + event.getFile().getFileName();
+
+            FileOutputStream fileOutputStream = new FileOutputStream(archivo);
+            byte[] buffer = new byte[6124];
+            int bulk;
+            InputStream inputStream = event.getFile().getInputstream();
+            while (true) {
+                bulk = inputStream.read(buffer);
+                if (bulk < 0) {
+                    break;
+                }
+                fileOutputStream.write(buffer, 0, bulk);
+                fileOutputStream.flush();
+            }
+            fileOutputStream.close();
+            inputStream.close();
+
+            this.setImageTemp(event.getFile().getFileName());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Error al subir el archivo"));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -420,60 +584,6 @@ public class BeanGeneral implements Serializable {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    //////////  Perfil
-    ////////////////////////////////////////////////////////////////////////////
-    public boolean getEditarPerfil() {
-        return editarPerfil;
-    }
-
-    public void setEditarPerfil(boolean editarPerfil) {
-        this.editarPerfil = editarPerfil;
-    }
-
-    public boolean getCambioContraseña() {
-        return cambioContraseña;
-    }
-
-    public void setCambioContraseña(boolean cambioContraseña) {
-        this.cambioContraseña = cambioContraseña;
-    }
-
-    public String getContraseñaActual() {
-        return contraseñaActual;
-    }
-
-    public void setContraseñaActual(String contraseñaActual) {
-        this.contraseñaActual = contraseñaActual;
-    }
-
-    public String getNuevaContraseña() {
-        return nuevaContraseña;
-    }
-
-    public void setNuevaContraseña(String nuevaContraseña) {
-        this.nuevaContraseña = nuevaContraseña;
-    }
-
-    public String getVerificacionNuevaContraseña() {
-        return verificacionNuevaContraseña;
-    }
-
-    public void setVerificacionNuevaContraseña(String verificacionNuevaContraseña) {
-        this.verificacionNuevaContraseña = verificacionNuevaContraseña;
-    }
-//
-//    public void preparaEditarPerfil() {
-//        usuarioActual = getLoginBean().getLoggedUser();
-//        editarPerfil = true;
-//        contraseñaActual = "";
-//        nuevaContraseña = "";
-//        verificacionNuevaContraseña = "";
-//        
-//        System.out.println("OEeeee: " + getLoginBean().getLoggedUser().getNombre());
-//        System.out.println("OEeeeeUSUARIO: " + usuarioActual.getNombre());
-//    }
-
-    ////////////////////////////////////////////////////////////////////////////
     //////////  Consultas
     ////////////////////////////////////////////////////////////////////////////
     public void buscarTodosMedicamentos() {
@@ -517,16 +627,12 @@ public class BeanGeneral implements Serializable {
     }
 
     public void buscarTodosLeyes() {
-//        try {
-//            lstLeyes = new ArrayList();
-//            for (int i = 0; i < 2; i++) {
-//                lstLeyes.add(leerExcel("D:\\OneDrive\\UTP\\SEMESTRE 10\\Laboratorio de software\\Repositorio\\Fuente\\Leyes.xlsx", "Hoja1", "A"+(i+2)));
-//            }
-//            System.out.println("Longituddddddddd: " + lstLeyes.size());
-//
-//        } catch (Exception e) {
-//            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-//        }
+        try {
+            lstLeyes = crud.buscarTodos(new Ley());
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            adminBean.notificaciones(0, null);
+        }
     }
 
     public void buscarTodosGruposApoyo() {
@@ -605,18 +711,175 @@ public class BeanGeneral implements Serializable {
             if (crud.buscarTodos(aux).size() > 0) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "Ya existe un usuario con esa identificación"));
             } else {
-                crud.guardar(usuarioActual);
-                registroActual.setEstado("En espera");
-                registroActual.setUsuario(usuarioActual);
-                registroActual.setPerfil(Arrays.toString(perfiles));
-                crud.guardar(registroActual);
-                getAdministrador().getRegistroCollection().add(registroActual);
-                crud.guardar(getAdministrador());
-                enviarCorreoSolicitudRegistro(usuarioActual.getEmail(), usuarioActual.getNombre() + " " + usuarioActual.getApellidos(), perfiles);
-                prepararRegistroUsuario();
+                if (crud.buscar(usuarioActual) != null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error", "Ya existe un usuario con ese email"));
+                } else {
+                    crud.guardar(usuarioActual);
+                    registroActual.setEstado("En espera");
+                    registroActual.setUsuario(usuarioActual);
+                    registroActual.setPerfil(Arrays.toString(perfiles));
+                    crud.guardar(registroActual);
+                    getAdministrador().getRegistroCollection().add(registroActual);
+                    crud.guardar(getAdministrador());
+                    enviarCorreoSolicitudRegistro(usuarioActual.getEmail(), usuarioActual.getNombre() + " " + usuarioActual.getApellidos(), perfiles);
+                    prepararRegistroUsuario();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(BeanGeneral.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////// Solicitudes
+    ////////////////////////////////////////////////////////////////////////////
+    public void preparaCrearSolicitud() {
+        solicitudActual = null;
+        getSolicitudActual();
+    }
+
+    public void crearSolicitud() {
+        try {
+            solicitudActual.setEstado("Nueva");
+            solicitudActual.setUsuario(loggedUser);
+            solicitudActual.setAdministrador(getAdministrador());
+            solicitudActual.getSolicitudQuejasReclamosPK().setUsuarioemail(loggedUser.getEmail());
+            crud.guardar(solicitudActual);
+            solicitudActual.getAdministrador().getSolicitudQuejasReclamosCollection().add(solicitudActual);
+            crud.guardar(solicitudActual.getAdministrador());
+            loggedUser.getSolicitudQuejasReclamosCollection().add(solicitudActual);
+            crud.guardar(loggedUser);
+
+            String mensaje = "El usuario " + loggedUser.getNombre() + " " + loggedUser.getApellidos() + " envía la solicitud con el motivo: "
+                    + solicitudActual.getTitulo() + "\n\nDescripción del mensaje: " + solicitudActual.getDescripcion();
+            enviarCorreo(loggedUser.getEmail(), getAdministrador().getUsuario().getEmail(), "Solicitud General", mensaje);
+            adminBean.notificaciones(-1, "La solicitud se ha enviado correctamente");
+            preparaCrearSolicitud();
+
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////// Consultas médicas
+    ////////////////////////////////////////////////////////////////////////////
+    public void buscarTodosPacientes() {
+        try {
+            lstPacientes = crud.buscarTodos(new Paciente());
+            System.out.println("Cantidad de pacientes: " + lstPacientes.size());
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void preparaCrearConsultaMedica() {
+        consultaMedicaActual = null;
+        getConsultaMedicaActual();
+        deportesConsulta = new ArrayList<>();
+        buscarTodosPacientes();
+    }
+
+//    public void preparaEditarConsultaMedica(Consulta obj) {
+//        consultaMedicaActual = obj;
+//        buscarTodosPacientes();
+//    }
+    public void guardarConsultaMedica() {
+        try {
+            if (consultaMedicaActual.getAltura() < 0 || consultaMedicaActual.getPeso() < 0) {
+                adminBean.notificaciones(-1, "No se permiten valores negativos.");
+            } else {
+                consultaMedicaActual.setDeportes(deportesConsulta.toString());
+                consultaMedicaActual.setMedico(medicoActual);
+                consultaMedicaActual.getConsultaPK().setMedicoidentificacion(consultaMedicaActual.getMedico().getUsuario().getIdentificacion());
+                consultaMedicaActual.getConsultaPK().setPacienteidentificacion(consultaMedicaActual.getPaciente().getUsuario().getIdentificacion());
+                crud.guardar(consultaMedicaActual);
+                adminBean.notificaciones(1, "La consulta médica ");
+                preparaCrearConsultaMedica();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+//    public void borrarConsultaMedica(Consulta obj) {
+//        try {
+//            crud.eliminar(obj);
+//            adminBean.notificaciones(3, "La consulta médica ");
+//        } catch (Exception e) {
+//            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+//        }
+//    }
+    public void preparaBusquedaConsultasPaciente() {
+        pacienteConsulta = null;
+        getPacienteConsulta();
+        identificacionPacienteConsultas = "";
+        lstConsultasPorMedico = new ArrayList<>();
+    }
+
+    public void buscarConsultasPaciente() {
+        try {
+            pacienteConsulta = crud.buscar(new Paciente(identificacionPacienteConsultas));
+
+            Consulta aux = new Consulta();
+            Medico medico = medicoActual;
+            if (medico.getIdentificacion().endsWith("00")) {
+                medico.setIdentificacion(medico.getUsuario().getIdentificacion());
+            }
+            aux.setMedico(medico);
+            aux.setPaciente(pacienteConsulta);
+            if (pacienteConsulta != null) {
+                lstConsultasPorMedico = crud.buscarTodos(aux);
+            }else{
+                lstConsultasPorMedico = new ArrayList<>();
+            }
+            System.out.println("Cantidad consultas: " + lstConsultasPorMedico.size());
+            System.out.println("Medico: " + medico.getIdentificacion());
+
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void preparaCrearRecetaMedica() {
+        recetaMedicaActual = null;
+        getRecetaMedicaActual();
+    }
+
+    public void preparaEditarRecetaMedica(RecetaMedica obj) {
+        recetaMedicaActual = obj;
+    }
+
+    public void guardarRecetaMedica() {
+        try {
+            if (recetaMedicaActual.getDosis() == null || recetaMedicaActual.getFechaInicio() == null
+                    || recetaMedicaActual.getMedicamento() == null || recetaMedicaActual.getPeriodicidad() == null) {
+                adminBean.notificaciones(-1, "Debe llenar todos los campos");
+            } else {
+                if (recetaMedicaActual.getDosis() <= 0 || recetaMedicaActual.getPeriodicidad() <= 0) {
+                    adminBean.notificaciones(-1, "No se permiten valores negativos.");
+                } else if (recetaMedicaActual.getDosis() < recetaMedicaActual.getPeriodicidad()) {
+                    adminBean.notificaciones(-1, "La periodicidad no debe ser mayor a la dosis total.");
+                } else {
+                    if (recetaMedicaActual.getConsulta() == null) {
+                        recetaMedicaActual.setConsulta(consultaMedicaActual);
+                        consultaMedicaActual.getRecetaMedicaCollection().add(recetaMedicaActual);
+                    }
+                    adminBean.notificaciones(2, "La receta médica ");
+                    preparaCrearRecetaMedica();
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void borrarRecetaMedica(RecetaMedica obj) {
+        try {
+            consultaMedicaActual.getRecetaMedicaCollection().remove(obj);
+            adminBean.notificaciones(3, "La receta médica ");
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -718,6 +981,22 @@ public class BeanGeneral implements Serializable {
         this.visitante = visitante;
     }
 
+    public boolean getEditarPerfil() {
+        return editarPerfil;
+    }
+
+    public void setEditarPerfil(boolean editarPerfil) {
+        this.editarPerfil = editarPerfil;
+    }
+
+    public boolean getCambioContraseña() {
+        return cambioContraseña;
+    }
+
+    public void setCambioContraseña(boolean cambioContraseña) {
+        this.cambioContraseña = cambioContraseña;
+    }
+
     //**************************************************************************
     // Strings
     //**************************************************************************
@@ -775,6 +1054,38 @@ public class BeanGeneral implements Serializable {
 
     public void setEmailRestablecerContraseña(String emailRestablecerContraseña) {
         this.emailRestablecerContraseña = emailRestablecerContraseña;
+    }
+
+    public String getContraseñaActual() {
+        return contraseñaActual;
+    }
+
+    public void setContraseñaActual(String contraseñaActual) {
+        this.contraseñaActual = contraseñaActual;
+    }
+
+    public String getNuevaContraseña() {
+        return nuevaContraseña;
+    }
+
+    public void setNuevaContraseña(String nuevaContraseña) {
+        this.nuevaContraseña = nuevaContraseña;
+    }
+
+    public String getVerificacionNuevaContraseña() {
+        return verificacionNuevaContraseña;
+    }
+
+    public void setVerificacionNuevaContraseña(String verificacionNuevaContraseña) {
+        this.verificacionNuevaContraseña = verificacionNuevaContraseña;
+    }
+
+    public String getIdentificacionPacienteConsultas() {
+        return identificacionPacienteConsultas;
+    }
+
+    public void setIdentificacionPacienteConsultas(String identificacionPacienteConsultas) {
+        this.identificacionPacienteConsultas = identificacionPacienteConsultas;
     }
 
     //**************************************************************************
@@ -871,19 +1182,8 @@ public class BeanGeneral implements Serializable {
         this.lstEnfermedades = lstEnfermedades;
     }
 
-    public List<String> getLstLeyes() {
-        buscarTodosLeyes();
-        return lstLeyes;
-    }
-
-    public void setLstLeyes(List<String> lstLeyes) {
-        this.lstLeyes = lstLeyes;
-    }
-
     public List<Paciente> getLstPacientes() {
-        if (lstPacientes == null) {
-            lstPacientes = new ArrayList<>();
-        }
+        buscarTodosPacientes();
         return lstPacientes;
     }
 
@@ -891,11 +1191,43 @@ public class BeanGeneral implements Serializable {
         this.lstPacientes = lstPacientes;
     }
 
+    public List<Ley> getLstLeyes() {
+        buscarTodosLeyes();
+        return lstLeyes;
+    }
+
+    public void setLstLeyes(List<Ley> lstLeyes) {
+        this.lstLeyes = lstLeyes;
+    }
+
+    public List<Consulta> getLstConsultasPorMedico() {
+        if (lstConsultasPorMedico == null) {
+            lstConsultasPorMedico = new ArrayList<>();
+        }
+        return lstConsultasPorMedico;
+    }
+
+    public void setLstConsultasPorMedico(List<Consulta> lstConsultasPorMedico) {
+        this.lstConsultasPorMedico = lstConsultasPorMedico;
+    }
+
+    public List<String> getDeportesConsulta() {
+        if (deportesConsulta == null) {
+            deportesConsulta = new ArrayList<>();
+        }
+        return deportesConsulta;
+    }
+
+    public void setDeportesConsulta(List<String> deportesConsulta) {
+        this.deportesConsulta = deportesConsulta;
+    }
+
     //**************************************************************************
     // Otros
     //**************************************************************************
     public Administrador getAdministrador() {
         administrador = crud.buscar(new Administrador("1"));
+        System.out.println("Admin: " + administrador.getUsuario().getNombre());
         if (administrador.getRegistroCollection() == null) {
             administrador.setRegistroCollection(new ArrayList<Registro>());
         }
@@ -966,5 +1298,72 @@ public class BeanGeneral implements Serializable {
         this.medicoActual = medicoActual;
     }
 
-    //..........................................................................
+    public SolicitudQuejasReclamos getSolicitudActual() {
+        if (solicitudActual == null) {
+            solicitudActual = new SolicitudQuejasReclamos(new SolicitudQuejasReclamosPK());
+        }
+        return solicitudActual;
+    }
+
+    public void setSolicitudActual(SolicitudQuejasReclamos solicitudActual) {
+        this.solicitudActual = solicitudActual;
+    }
+
+    public Consulta getConsultaMedicaActual() {
+        if (consultaMedicaActual == null) {
+            consultaMedicaActual = new Consulta(new ConsultaPK());
+            consultaMedicaActual.setEnfermedadCollection(new ArrayList<Enfermedad>());
+            consultaMedicaActual.setGrupoApoyoCollection(new ArrayList<GrupoApoyo>());
+            consultaMedicaActual.setRecetaMedicaCollection(new ArrayList<RecetaMedica>());
+            consultaMedicaActual.setMedico(medicoActual);
+//            consultaMedicaActual.setPaciente(new Paciente());
+        }
+        return consultaMedicaActual;
+    }
+
+    public void setConsultaMedicaActual(Consulta consultaMedicaActual) {
+        this.consultaMedicaActual = consultaMedicaActual;
+    }
+
+    public Paciente getPacienteConsulta() {
+        if (pacienteConsulta == null) {
+            pacienteConsulta = new Paciente();
+            pacienteConsulta.setConsultaCollection(new ArrayList<Consulta>());
+            pacienteConsulta.setTratamientoCollection(new ArrayList<Tratamiento>());
+            pacienteConsulta.setUsuario(new Usuario());
+        }
+        return pacienteConsulta;
+    }
+
+    public void setPacienteConsulta(Paciente pacienteConsulta) {
+        this.pacienteConsulta = pacienteConsulta;
+    }
+
+    public RecetaMedica getRecetaMedicaActual() {
+        if (recetaMedicaActual == null) {
+            recetaMedicaActual = new RecetaMedica(new RecetaMedicaPK());
+        }
+        return recetaMedicaActual;
+    }
+
+    public void setRecetaMedicaActual(RecetaMedica recetaMedicaActual) {
+        this.recetaMedicaActual = recetaMedicaActual;
+    }
+
+    public CroppedImage getCroppeFoto() {
+        return croppeFoto;
+    }
+
+    public void setCroppeFoto(CroppedImage croppeFoto) {
+        this.croppeFoto = croppeFoto;
+    }
+
+    public String getImageTemp() {
+        return imageTemp;
+    }
+
+    public void setImageTemp(String imageTemp) {
+        this.imageTemp = imageTemp;
+    }
+
 }

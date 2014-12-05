@@ -22,7 +22,7 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "idSolicitud_quejas_reclamos")
-    private int idSolicitudquejasreclamos;
+    private Integer idSolicitudquejasreclamos;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -32,16 +32,16 @@ public class SolicitudQuejasReclamosPK implements Serializable {
     public SolicitudQuejasReclamosPK() {
     }
 
-    public SolicitudQuejasReclamosPK(int idSolicitudquejasreclamos, String usuarioemail) {
+    public SolicitudQuejasReclamosPK(Integer idSolicitudquejasreclamos, String usuarioemail) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
         this.usuarioemail = usuarioemail;
     }
 
-    public int getIdSolicitudquejasreclamos() {
+    public Integer getIdSolicitudquejasreclamos() {
         return idSolicitudquejasreclamos;
     }
 
-    public void setIdSolicitudquejasreclamos(int idSolicitudquejasreclamos) {
+    public void setIdSolicitudquejasreclamos(Integer idSolicitudquejasreclamos) {
         this.idSolicitudquejasreclamos = idSolicitudquejasreclamos;
     }
 

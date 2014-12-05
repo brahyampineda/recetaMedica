@@ -2,29 +2,19 @@ package com.utp.receta_medica.ManagedBean;
 
 import com.utp.receta_medica.entidades.*;
 import com.utp.receta_medica.facade.TablasFacade;
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import org.primefaces.component.tabview.Tab;
-import org.primefaces.component.tabview.TabView;
 
 /**
  *
@@ -47,7 +37,8 @@ public class BeanAdministrador implements Serializable {
     private Tratamiento tratamientoActual;
     private Medico medicoGeneralActual;
     private Medico medicoEspecialistaActual;
-    private String leyActual;
+    private Ley leyActual;
+    private Articulo articuloActual;
     private GrupoApoyo grupoApoyoActual;
     private Laboratorio laboratorioActual;
     private Entidad entidadActual;
@@ -81,11 +72,48 @@ public class BeanAdministrador implements Serializable {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    //////////  Enfermedad
+    ////////////////////////////////////////////////////////////////////////////
+    public void preparaCrearEnfermedad() {
+        enfermedadActual = null;
+        getEnfermedadActual();
+    }
+
+    public void preparaEditarEnfermedad(Enfermedad obj) {
+        enfermedadActual = obj;
+    }
+
+    public void guardarEnfermedad() {
+        try {
+            crud.guardar(enfermedadActual);
+            notificaciones(1, "La enfermedad " + enfermedadActual.getNombre());
+            preparaCrearEnfermedad();
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            notificaciones(0, "La enfermedad " + enfermedadActual.getNombre());
+        }
+    }
+
+    public void eliminarEnfermedad(Enfermedad obj) {
+        try {
+            crud.eliminar(obj);
+            notificaciones(3, "La enfermedad " + enfermedadActual.getNombre());
+        } catch (Exception ex) {
+            if ("PersistenceException".equals(ex.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "La enfermedad no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "La enfermedad " + enfermedadActual.getNombre());
+            }
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
     //////////  Medicamento
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearMedicamento() {
-        medicamentoActual = new Medicamento();
-//        medicamentoActual.setLaboratorioCollection(new ArrayList<Laboratorio>());
+        medicamentoActual = null;
+        getMedicamentoActual();
     }
 
     public void preparaEditarMedicamento(Medicamento obj) {
@@ -107,9 +135,13 @@ public class BeanAdministrador implements Serializable {
         try {
             crud.eliminar(obj);
             notificaciones(3, "El medicamento " + medicamentoActual.getNombre());
-        } catch (Exception e) {
-            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El medicamento " + medicamentoActual.getNombre());
+        } catch (Exception ex) {
+            if ("PersistenceException".equals(ex.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "El medicamento no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "El medicamento " + medicamentoActual.getNombre());
+            }
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -117,7 +149,8 @@ public class BeanAdministrador implements Serializable {
     //////////  Tratamiento
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearTratamiento() {
-        tratamientoActual = new Tratamiento(new TratamientoPK());
+        tratamientoActual = null;
+        getTratamientoActual();
     }
 
     public void preparaEditarTratamiento(Tratamiento obj) {
@@ -140,38 +173,21 @@ public class BeanAdministrador implements Serializable {
             crud.eliminar(obj);
             notificaciones(3, "El tratamiento " + tratamientoActual.getNombre());
         } catch (Exception e) {
+            if ("PersistenceException".equals(e.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "El tratamiento no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "El tratamiento " + tratamientoActual.getNombre());
+            }
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El tratamiento " + tratamientoActual.getNombre());
         }
-    }
-    ////////////////////////////////////////////////////////////////////////////
-    //////////  Médico general
-    ////////////////////////////////////////////////////////////////////////////
-
-    public void preparaCrearMedicoGeneral() {
-
-    }
-
-    public void eliminarMedicoGeneral(Medico obj) {
-
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    //////////  Médico especialista
-    ////////////////////////////////////////////////////////////////////////////
-    public void preparaCrearMedicoEspecialista() {
-
-    }
-
-    public void eliminarMedicoEspecialista(Medico obj) {
-
     }
 
     ////////////////////////////////////////////////////////////////////////////
     //////////  Grupo de apoyo
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearGrupoApoyo() {
-        grupoApoyoActual = new GrupoApoyo(new GrupoApoyoPK());
+        grupoApoyoActual = null;
+        getGrupoApoyoActual();
     }
 
     public void preparaEditarGrupoApoyo(GrupoApoyo obj) {
@@ -195,8 +211,12 @@ public class BeanAdministrador implements Serializable {
             crud.eliminar(obj);
             notificaciones(3, "El grupo de apoyo " + grupoApoyoActual.getNombre());
         } catch (Exception e) {
+            if ("PersistenceException".equals(e.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "El grupo de apoyo no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "El grupo de apoyo " + grupoApoyoActual.getNombre());
+            }
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El grupo de apoyo " + grupoApoyoActual.getNombre());
         }
     }
 
@@ -204,7 +224,8 @@ public class BeanAdministrador implements Serializable {
     //////////  Entidad
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearEntidad() {
-        entidadActual = new Entidad();
+        entidadActual = null;
+        getEntidadActual();
     }
 
     public void preparaEditarEntidad(Entidad obj) {
@@ -227,8 +248,12 @@ public class BeanAdministrador implements Serializable {
             crud.eliminar(obj);
             notificaciones(3, "La entidad " + entidadActual.getNombre());
         } catch (Exception e) {
+            if ("PersistenceException".equals(e.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "La entidad no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "La entidad " + entidadActual.getNombre());
+            }
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "La entidad " + entidadActual.getNombre());
         }
     }
 
@@ -236,12 +261,11 @@ public class BeanAdministrador implements Serializable {
     //////////  Laboratorio
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearLaboratorio() {
-        laboratorioActual = new Laboratorio();
-        laboratorioActual.setMedicamentoCollection(new ArrayList<Medicamento>());
+        laboratorioActual = null;
+        getLaboratorioActual();
     }
 
     public void preparaEditarLaboratorio(Laboratorio obj) {
-        System.out.println("oeeeeeeeeee: " + obj.getNombre());
         laboratorioActual = obj;
     }
 
@@ -261,78 +285,106 @@ public class BeanAdministrador implements Serializable {
             crud.eliminar(obj);
             notificaciones(3, "El laboratorio " + laboratorioActual.getNombre());
         } catch (Exception e) {
+            if ("PersistenceException".equals(e.getCause().getCause().getClass().getSimpleName())) {
+                notificaciones(-1, "El laboratorio no se puede borrar porque se está usando.");
+            } else {
+                notificaciones(0, "El laboratorio " + laboratorioActual.getNombre());
+            }
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "El laboratorio " + laboratorioActual.getNombre());
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    //////////  Ley
+    //////////  Ley y artículo
     ////////////////////////////////////////////////////////////////////////////
     public void preparaCrearLey() {
-
+        leyActual = null;
+        getLeyActual();
     }
 
-    public void preparaEditarLey() {
-
+    public void preparaEditarLey(Ley obj) {
+        leyActual = obj;
     }
 
     public void guardarLey() {
-
-    }
-
-    public void eliminarLey() {
-
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    //////////  Enfermedad
-    ////////////////////////////////////////////////////////////////////////////
-    public void preparaCrearEnfermedad() {
-        enfermedadActual = new Enfermedad();
-    }
-
-    public void preparaEditarEnfermedad(Enfermedad obj) {
-        enfermedadActual = obj;
-    }
-
-    public void guardarEnfermedad() {
         try {
-            crud.guardar(enfermedadActual);
-            notificaciones(1, "La enfermedad " + enfermedadActual.getNombre());
-            preparaCrearEnfermedad();
+            crud.guardar(leyActual);
+            notificaciones(1, "La ley " + leyActual.getNombre());
+            preparaCrearLey();
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "La enfermedad " + enfermedadActual.getNombre());
+            notificaciones(0, "La ley " + leyActual.getNombre());
         }
     }
 
-    public void eliminarEnfermedad(Enfermedad obj) {
+    public void eliminarLey(Ley obj) {
         try {
             crud.eliminar(obj);
-            notificaciones(3, "La enfermedad " + enfermedadActual.getNombre());
+            notificaciones(3, "La ley " + obj.getNombre());
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
-            notificaciones(0, "La enfermedad " + enfermedadActual.getNombre());
+            notificaciones(0, "La ley " + obj.getNombre());
+        }
+    }
+
+    public void preparaCrearArticulo() {
+        articuloActual = null;
+        getArticuloActual();
+    }
+
+    public void preparaEditarArticulo(Articulo obj) {
+        articuloActual = obj;
+    }
+
+    public void agregarArticulo() {
+        try {
+            if (articuloActual.getDescripcion().equals("") || articuloActual.getNombre().equals("")) {
+                notificaciones(-1, "El nombre y la descripción son necesarias");
+            } else {
+                if (articuloActual.getLey() != null) {
+                    notificaciones(1, "El artículo " + articuloActual.getNombre() + " ha sido modificado correctamente");
+                } else {
+                    articuloActual.getArticuloPK().setLeycodigo(leyActual.getCodigo());
+                    articuloActual.setLey(leyActual);
+                    leyActual.getArticuloCollection().add(articuloActual);
+                    notificaciones(1, "El artículo " + articuloActual.getNombre() + " ha sido agregado correctamente");
+                }
+                preparaCrearArticulo();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            notificaciones(0, null);
+        }
+    }
+
+    public void eliminarArticulo(Articulo obj) {
+        try {
+            leyActual.getArticuloCollection().remove(obj);
+            notificaciones(3, "El artículo " + obj.getNombre());
+        } catch (Exception e) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
+            notificaciones(0, "El artículo " + obj.getNombre());
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
     //////////  Usuario
     ////////////////////////////////////////////////////////////////////////////
-    public void crearUsuario(Usuario user) {
-
-        crud.guardar(user);
-        System.out.println("USER " + user);
-    }
-
-    public String eliminarUsuario(Usuario user) {
+    public void eliminarUsuario(SolicitudQuejasReclamos sol, boolean confirmar) {
         try {
-            crud.eliminar(user);
+            if (confirmar) {
+                Usuario user = sol.getUsuario();
+                String nombre = user.getNombre() + " " + user.getApellidos();
+                crud.eliminar(user);
+                notificaciones(3, "El usuario " + nombre);
+                lstUsuarios = new ArrayList<>();
+            } else {
+                sol.setEstado("Resuelta");
+                crud.guardar(sol);
+            }
         } catch (Exception ex) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "index";
     }
 
     public void preparaConsultaUsuario() {
@@ -352,10 +404,41 @@ public class BeanAdministrador implements Serializable {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    //////////  Médico general y Especialista
+    ////////////////////////////////////////////////////////////////////////////
+    public void eliminarMedicoGeneral(Medico obj) {
+        try {
+            crud.eliminar(obj);
+            notificaciones(3, "El perfil Médico general del usuario " + obj.getUsuario().getNombre());
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void eliminarMedicoEspecialista(Medico obj) {
+        try {
+            crud.eliminar(obj);
+            notificaciones(3, "El perfil Médico especialista del usuario " + obj.getUsuario().getNombre());
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void eliminarPaciente(Paciente obj) {
+        try {
+            crud.eliminar(obj);
+            notificaciones(3, "El perfil paciente del usuario " + obj.getUsuario().getNombre());
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
     //////////  Solicitudes
     ////////////////////////////////////////////////////////////////////////////
     public void aceptarSolicitudRegistro(Registro registro) {
         try {
+            boolean auxMedicoGen = false;
             registro.setEstado("Aceptada");
             crud.guardar(registro);
 
@@ -369,14 +452,20 @@ public class BeanAdministrador implements Serializable {
                 nuevoMedicoG.setEsEspecialista(false);
                 nuevoMedicoG.setUsuario(registro.getUsuario());
                 registro.getUsuario().getMedicoCollection().add(nuevoMedicoG);
+                auxMedicoGen = true;
             }
             if (registro.getPerfil().contains("Medico especialista")) {
                 Medico nuevoMedicoE = new Medico(registro.getUsuario().getIdentificacion());
+                if (auxMedicoGen) {
+                    nuevoMedicoE.setIdentificacion(nuevoMedicoE.getIdentificacion() + "00");
+                }
                 nuevoMedicoE.setEsEspecialista(true);
                 nuevoMedicoE.setUsuario(registro.getUsuario());
                 registro.getUsuario().getMedicoCollection().add(nuevoMedicoE);
+                auxMedicoGen = false;
             }
             registro.getUsuario().setContrasena("RecetaMedica123");
+            registro.getUsuario().setFoto("/resources/imagenes/imagenes de perfil/sinImagen.png");
             crud.guardar(registro.getUsuario());
             beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), registro.getUsuario().getEmail(),
                     "Solicitud de registro aceptada", "Señ@r " + registro.getUsuario().getNombre() + ",\n\n"
@@ -385,7 +474,7 @@ public class BeanAdministrador implements Serializable {
                     + ".\nInicie sesión para cambiar la contraseña y terminar de rellenar los datos de su perfil."
                     + "\n\nAtt: Adminitrador");
             notificaciones(4, null);
-//            crud.eliminar(registro);
+            crud.eliminar(registro);
 
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
@@ -394,15 +483,12 @@ public class BeanAdministrador implements Serializable {
 
     public void rechazarSolicitudRegistro(Registro registro) {
         try {
-            registro.setEstado("Rechazada");
-            registro.getUsuario().setIdentificacion("0");
-            registro.getUsuario().setEmail("Usuario rechazado");
-            crud.guardar(registro);
-            crud.guardar(registro.getUsuario());
-//            crud.eliminar(registro.getUsuario());
-            beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), registro.getUsuario().getEmail(),
-                    "Solicitud de registro rechazada", "Señ@r " + registro.getUsuario().getNombre() + ",\n\n"
-                    + "Lamentamos informarle que su solicitud de registro ha sido rechazada." 
+            String email = registro.getUsuario().getEmail();
+            String nombreUsuario = registro.getUsuario().getNombre();
+            crud.eliminar(registro.getUsuario());
+            beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), email,
+                    "Solicitud de registro rechazada", "Señ@r " + nombreUsuario + ",\n\n"
+                    + "Lamentamos informarle que su solicitud de registro ha sido rechazada."
                     + "\n\nAtt: Adminitrador");
             notificaciones(4, null);
         } catch (Exception e) {
@@ -414,15 +500,18 @@ public class BeanAdministrador implements Serializable {
 
     public void preparaResponderSolicitud(SolicitudQuejasReclamos obj) {
         solicitudActual = obj;
+        respuestaSolicitud = "";
     }
 
     public void responderSolicitudGeneral() {
         try {
+            respuestaSolicitud = "";
+            solicitudActual.setEstado("Resuelta");
+            crud.guardar(solicitudActual);
+            solicitudActual = new SolicitudQuejasReclamos(new SolicitudQuejasReclamosPK());
             getBeanGeneral().enviarCorreo(getAdministrador().getUsuario().getEmail(), solicitudActual.getUsuario().getEmail(),
                     "Respuesta a la solicitud sobre: " + solicitudActual.getTitulo(), "Señ@r " + solicitudActual.getUsuario().getNombre() + ",\n\n"
                     + respuestaSolicitud);
-            respuestaSolicitud = "";
-//            crud.eliminar(solicitudActual);
             notificaciones(4, null);
         } catch (Exception e) {
             Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, e);
@@ -494,37 +583,16 @@ public class BeanAdministrador implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", mensaje));
     }
 
-    public String prepararAdministracion() {
-        System.out.println("11111");
-        try {
-            administrador = new Administrador();
-//            administrador.setAdministradorPK(new AdministradorPK("1", "1"));
-            administrador.setRegistroCollection(new ArrayList<Registro>());
-//            administrador.setSolicitudQuejasReclamosCollection(new ArrayList<SolicitudQuejasReclamos>());
-            System.out.println("AMIN " + administrador);
-            medicamentoActual = new Medicamento();
-            tratamientoActual = new Tratamiento();
-            administrador = crud.find(administrador);
-//            System.out.println("AMIN22 " + administrador.getUsuario().getIdUsuario());
-            for (Registro registro : administrador.getRegistroCollection()) {
-                System.out.println("REGISTRO " + registro.getUsuario().getNombre());
-            }
-
-        } catch (Exception ex) {
-            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "administrador";
-    }
-
+    ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
     ////////// Getters y Setters
     ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+//-------------------- Getters
+//------------------------------------------------------------------------------
     public TablasFacade getCrud() {
         return crud;
-    }
-
-    public void setCrud(TablasFacade crud) {
-        this.crud = crud;
     }
 
     public static BeanGeneral getBeanGeneral() {
@@ -532,78 +600,6 @@ public class BeanAdministrador implements Serializable {
             beanGeneral = new BeanGeneral();
         }
         return beanGeneral;
-    }
-
-    public static void setBeanGeneral(BeanGeneral beanGeneral) {
-        BeanAdministrador.beanGeneral = beanGeneral;
-    }
-
-    public Medico getMedicoGeneralActual() {
-        return medicoGeneralActual;
-    }
-
-    public void setMedicoGeneralActual(Medico medicoGeneralActual) {
-        this.medicoGeneralActual = medicoGeneralActual;
-    }
-
-    public Medico getMedicoEspecialistaActual() {
-        return medicoEspecialistaActual;
-    }
-
-    public void setMedicoEspecialistaActual(Medico medicoEspecialistaActual) {
-        this.medicoEspecialistaActual = medicoEspecialistaActual;
-    }
-
-    public String getLeyActual() {
-        return leyActual;
-    }
-
-    public void setLeyActual(String leyActual) {
-        this.leyActual = leyActual;
-    }
-
-    public Enfermedad getEnfermedadActual() {
-        if (enfermedadActual == null) {
-            enfermedadActual = new Enfermedad();
-        }
-        return enfermedadActual;
-    }
-
-    public void setEnfermedadActual(Enfermedad enfermedadActual) {
-        this.enfermedadActual = enfermedadActual;
-    }
-
-    public GrupoApoyo getGrupoApoyoActual() {
-        if (grupoApoyoActual == null) {
-            grupoApoyoActual = new GrupoApoyo(new GrupoApoyoPK());
-        }
-        return grupoApoyoActual;
-    }
-
-    public void setGrupoApoyoActual(GrupoApoyo grupoApoyoActual) {
-        this.grupoApoyoActual = grupoApoyoActual;
-    }
-
-    public Laboratorio getLaboratorioActual() {
-        if (laboratorioActual == null) {
-            laboratorioActual = new Laboratorio();
-        }
-        return laboratorioActual;
-    }
-
-    public void setLaboratorioActual(Laboratorio laboratorioActual) {
-        this.laboratorioActual = laboratorioActual;
-    }
-
-    public Entidad getEntidadActual() {
-        if (entidadActual == null) {
-            entidadActual = new Entidad();
-        }
-        return entidadActual;
-    }
-
-    public void setEntidadActual(Entidad entidadActual) {
-        this.entidadActual = entidadActual;
     }
 
     public Administrador getAdministrador() {
@@ -617,21 +613,7 @@ public class BeanAdministrador implements Serializable {
         return administrador;
     }
 
-    public void setAdministrador(Administrador administrador) {
-        this.administrador = administrador;
-    }
-
-    public SolicitudQuejasReclamos getSolicitudActual() {
-        if (solicitudActual == null) {
-            solicitudActual = new SolicitudQuejasReclamos(new SolicitudQuejasReclamosPK());
-        }
-        return solicitudActual;
-    }
-
-    public void setSolicitudActual(SolicitudQuejasReclamos sqr) {
-        this.solicitudActual = sqr;
-    }
-
+//....... Listas ...............................................................
     public List<SolicitudQuejasReclamos> getLstSolicitudesQR() {
         try {
             lstSolicitudesQR = crud.buscarTodos(new SolicitudQuejasReclamos());
@@ -641,19 +623,11 @@ public class BeanAdministrador implements Serializable {
         return lstSolicitudesQR;
     }
 
-    public void setLstSolicitudesQR(List<SolicitudQuejasReclamos> lstSolicitudesQR) {
-        this.lstSolicitudesQR = lstSolicitudesQR;
-    }
-
     public List<Usuario> getLstUsuarios() {
         if (lstUsuarios == null) {
             lstUsuarios = new ArrayList<>();
         }
         return lstUsuarios;
-    }
-
-    public void setLstUsuarios(List<Usuario> lstUsuarios) {
-        this.lstUsuarios = lstUsuarios;
     }
 
     public List<Registro> getLstRegistros() {
@@ -665,38 +639,116 @@ public class BeanAdministrador implements Serializable {
         return lstRegistros;
     }
 
-    public void setLstRegistros(List<Registro> lstRegistros) {
-        this.lstRegistros = lstRegistros;
-    }
-
+//..............................................................................
     public Medicamento getMedicamentoActual() {
         if (medicamentoActual == null) {
             medicamentoActual = new Medicamento();
+//            medicamentoActual.setLaboratorioCollection(new ArrayList<Laboratorio>());
+//            medicamentoActual.setMedicoCollection(new ArrayList<Medico>());
+//            medicamentoActual.setRecetaMedicaCollection(new ArrayList<RecetaMedica>());
         }
         return medicamentoActual;
     }
 
-    public void setMedicamentoActual(Medicamento medicamentoActual) {
-        this.medicamentoActual = medicamentoActual;
-    }
-
     public Tratamiento getTratamientoActual() {
         if (tratamientoActual == null) {
-            tratamientoActual = new Tratamiento();
+            tratamientoActual = new Tratamiento(new TratamientoPK());
+//            tratamientoActual.setEnfermedad(new Enfermedad());
+//            tratamientoActual.setMedicoCollection(new ArrayList<Medico>());
+//            tratamientoActual.setPacienteCollection(new ArrayList<Paciente>());
         }
         return tratamientoActual;
     }
 
-    public void setTratamientoActual(Tratamiento tratamientoActual) {
-        this.tratamientoActual = tratamientoActual;
+    public Medico getMedicoGeneralActual() {
+        if (medicoGeneralActual == null) {
+            medicoGeneralActual = new Medico();
+            medicoGeneralActual.setEsEspecialista(false);
+//            medicoGeneralActual.setConsultaCollection(new ArrayList<Consulta>());
+//            medicoGeneralActual.setEntidadCollection(new ArrayList<Entidad>());
+//            medicoGeneralActual.setMedicamentoCollection(new ArrayList<Medicamento>());
+//            medicoGeneralActual.setTratamientoCollection(new ArrayList<Tratamiento>());
+//            medicoGeneralActual.setUsuario(new Usuario());
+        }
+        return medicoGeneralActual;
+    }
+
+    public Medico getMedicoEspecialistaActual() {
+        if (medicoEspecialistaActual == null) {
+            medicoEspecialistaActual = new Medico();
+            medicoEspecialistaActual.setEsEspecialista(false);
+//            medicoEspecialistaActual.setConsultaCollection(new ArrayList<Consulta>());
+//            medicoEspecialistaActual.setEntidadCollection(new ArrayList<Entidad>());
+//            medicoEspecialistaActual.setMedicamentoCollection(new ArrayList<Medicamento>());
+//            medicoEspecialistaActual.setTratamientoCollection(new ArrayList<Tratamiento>());
+//            medicoEspecialstaActual.setUsuario(new Usuario());
+        }
+        return medicoEspecialistaActual;
+    }
+
+    public Ley getLeyActual() {
+        if (leyActual == null) {
+            leyActual = new Ley();
+            leyActual.setArticuloCollection(new ArrayList<Articulo>());
+        }
+        return leyActual;
+    }
+
+    public Articulo getArticuloActual() {
+        if (articuloActual == null) {
+            articuloActual = new Articulo(new ArticuloPK());
+        }
+        return articuloActual;
+    }
+
+    public GrupoApoyo getGrupoApoyoActual() {
+        if (grupoApoyoActual == null) {
+            grupoApoyoActual = new GrupoApoyo(new GrupoApoyoPK());
+            grupoApoyoActual.setConsultaCollection(new ArrayList<Consulta>());
+            grupoApoyoActual.setEnfermedad(new Enfermedad());
+            grupoApoyoActual.setEntidad(new Entidad());
+        }
+        return grupoApoyoActual;
+    }
+
+    public Laboratorio getLaboratorioActual() {
+        if (laboratorioActual == null) {
+            laboratorioActual = new Laboratorio();
+            laboratorioActual.setMedicamentoCollection(new ArrayList<Medicamento>());
+        }
+        return laboratorioActual;
+    }
+
+    public Entidad getEntidadActual() {
+        if (entidadActual == null) {
+            entidadActual = new Entidad();
+            entidadActual.setGrupoApoyoCollection(new ArrayList<GrupoApoyo>());
+            entidadActual.setMedicoCollection(new ArrayList<Medico>());
+        }
+        return entidadActual;
+    }
+
+    public Enfermedad getEnfermedadActual() {
+        if (enfermedadActual == null) {
+            enfermedadActual = new Enfermedad();
+            enfermedadActual.setGrupoApoyoCollection(new ArrayList<GrupoApoyo>());
+            enfermedadActual.setTratamientoCollection(new ArrayList<Tratamiento>());
+            enfermedadActual.setConsultaCollection(new ArrayList<Consulta>());
+        }
+        return enfermedadActual;
+    }
+
+    public SolicitudQuejasReclamos getSolicitudActual() {
+        if (solicitudActual == null) {
+            solicitudActual = new SolicitudQuejasReclamos(new SolicitudQuejasReclamosPK());
+            solicitudActual.setAdministrador(administrador);
+//            solicitudActual.setUsuario(new Usuario());
+        }
+        return solicitudActual;
     }
 
     public String getRespuestaSolicitud() {
         return respuestaSolicitud;
-    }
-
-    public void setRespuestaSolicitud(String respuestaSolicitud) {
-        this.respuestaSolicitud = respuestaSolicitud;
     }
 
     public Usuario getUsuarioFiltro() {
@@ -704,6 +756,83 @@ public class BeanAdministrador implements Serializable {
             usuarioFiltro = new Usuario();
         }
         return usuarioFiltro;
+    }
+
+//------------------------------------------------------------------------------
+//-------------------- Setters
+//------------------------------------------------------------------------------
+    public void setCrud(TablasFacade crud) {
+        this.crud = crud;
+    }
+
+    public static void setBeanGeneral(BeanGeneral beanGeneral) {
+        BeanAdministrador.beanGeneral = beanGeneral;
+    }
+
+    public void setAdministrador(Administrador administrador) {
+        this.administrador = administrador;
+    }
+//....... Listas ...............................................................
+
+    public void setLstSolicitudesQR(List<SolicitudQuejasReclamos> lstSolicitudesQR) {
+        this.lstSolicitudesQR = lstSolicitudesQR;
+    }
+
+    public void setLstUsuarios(List<Usuario> lstUsuarios) {
+        this.lstUsuarios = lstUsuarios;
+    }
+
+    public void setLstRegistros(List<Registro> lstRegistros) {
+        this.lstRegistros = lstRegistros;
+    }
+
+//..............................................................................
+    public void setMedicamentoActual(Medicamento medicamentoActual) {
+        this.medicamentoActual = medicamentoActual;
+    }
+
+    public void setTratamientoActual(Tratamiento tratamientoActual) {
+        this.tratamientoActual = tratamientoActual;
+    }
+
+    public void setMedicoGeneralActual(Medico medicoGeneralActual) {
+        this.medicoGeneralActual = medicoGeneralActual;
+    }
+
+    public void setMedicoEspecialistaActual(Medico medicoEspecialistaActual) {
+        this.medicoEspecialistaActual = medicoEspecialistaActual;
+    }
+
+    public void setLeyActual(Ley leyActual) {
+        this.leyActual = leyActual;
+    }
+
+    public void setArticuloActual(Articulo articuloActual) {
+        this.articuloActual = articuloActual;
+    }
+
+    public void setGrupoApoyoActual(GrupoApoyo grupoApoyoActual) {
+        this.grupoApoyoActual = grupoApoyoActual;
+    }
+
+    public void setLaboratorioActual(Laboratorio laboratorioActual) {
+        this.laboratorioActual = laboratorioActual;
+    }
+
+    public void setEntidadActual(Entidad entidadActual) {
+        this.entidadActual = entidadActual;
+    }
+
+    public void setEnfermedadActual(Enfermedad enfermedadActual) {
+        this.enfermedadActual = enfermedadActual;
+    }
+
+    public void setSolicitudActual(SolicitudQuejasReclamos solicitudActual) {
+        this.solicitudActual = solicitudActual;
+    }
+
+    public void setRespuestaSolicitud(String respuestaSolicitud) {
+        this.respuestaSolicitud = respuestaSolicitud;
     }
 
     public void setUsuarioFiltro(Usuario usuarioFiltro) {
@@ -1004,4 +1133,42 @@ public class BeanAdministrador implements Serializable {
 
     }
 
+    //==========================================================================
+    public Paciente getPaciente(Paciente id) {
+        try {
+            return getCrud().find(id);
+        } catch (Exception ex) {
+            Logger.getLogger(BeanAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @FacesConverter(value = "PacienteConverter", forClass = Paciente.class)
+    public static class PacienteConverter implements Converter {
+
+        @Override
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            BeanAdministrador controller = (BeanAdministrador) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "beanAdministrador");
+            return controller.getPaciente(new Paciente(value));
+        }
+
+        @Override
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof Paciente) {
+                Paciente o = (Paciente) object;
+                return o.getIdentificacion();
+            } else {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Paciente.class.getName()});
+                return null;
+            }
+        }
+
+    }
 }

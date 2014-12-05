@@ -38,7 +38,10 @@
                     <br/>
                     <p:dataTable id="tablaConsulta" value="#{beanAdministrador.lstUsuarios}" var="usuario"
                                  rendered="true" emptyMessage="No hay coincidencias.">
-                        <p:column headerText="Identificación" >
+                        <p:column headerText="Imagen" style="text-align: center">
+                            <p:graphicImage height="70em"  value="#{usuario.foto}" />
+                        </p:column>
+                        <p:column headerText="Identificación" style="text-align: right ; width: 9em">
                             <p:outputLabel value="#{usuario.identificacion}" />
                         </p:column>
                         <p:column headerText="Nombre" >
@@ -50,9 +53,11 @@
                         <p:column headerText="Email" >
                             <p:outputLabel value="#{usuario.email}" />
                         </p:column>
-                        <!--                        <p:column headerText="Perfil" >
-                                                    <p:outputLabel value="{}" />
-                                                </p:column> -->
+                        <p:column headerText="Perfiles" >
+                            <p:outputLabel value="#{((usuario.pacienteCollection.size() > 0)? 'Paciente ':'')}" />
+                            <p:outputLabel value="#{((usuario.medicoCollection.size() > 0)? 'Médico':'')}" />
+                                           
+                        </p:column>
                     </p:dataTable>
 
 
