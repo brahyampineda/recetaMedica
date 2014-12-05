@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+
+        <ui:define name="titulo">
+            Perfil de #{beanGeneral.administrador.usuario.nombre}
+        </ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <h:form id="formPerfil">
+                <p:panel id="panelPerfil">
+                    <p:panel header="DATOS DEL PERFIL">
+                        <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                     styleClass="stylePanelGrid">
+                            <p:outputLabel value="Identificación:" />
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.identificacion}" />
+
+                            <p:outputLabel value="Nombre:" />
+                            <p:outputLabel id="nombre" value="#{beanGeneral.administrador.usuario.nombre}" />
+                            
+                            <p:outputLabel value="Apellidos:" />
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.apellidos}" />
+                            
+                            <p:outputLabel value="Email:" />
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.email}" />
+                            
+                            <p:outputLabel value="Género:" />
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.genero}"/>
+                            
+                            <p:outputLabel value="Fecha de nacimiento:" />
+                            <p:outputLabel value="#{beanGeneral.administrador.usuario.fechaNacimiento}" rendered="#{!beanGeneral.editarPerfil}" >
+                                <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                            </p:outputLabel>
+                            
+                        </h:panelGrid>
+                    </p:panel>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

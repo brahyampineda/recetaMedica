@@ -1,0 +1,70 @@
+/* 
+    Created on : 25/10/2014, 04:12:42 PM
+    Author     : Brahyam
+*/
+
+#divCabecera, #divContenido, #divFooter, #divEnlaces, #divLogin {
+    padding: 2px;
+    margin: 0 auto;
+    width: 99%;
+    overflow: auto;
+}
+
+
+#divCabecera {
+/*    background: #c2dfef;
+    background-image: url(http://imagenesfotos.com/wp-content/2009/11/azules-14.jpg);*/
+
+}
+
+#divEnlaces {
+    /*background: red;*/
+    width: 75%;
+    float: left;
+}
+
+#divLogin {
+    /*background: yellow;*/
+    width: 22%;
+    float: right;
+}
+
+#divContenido {
+    margin: 5px;
+    clear: both;
+}
+
+#divFooter {
+    background: yellowgreen;
+    color: white;
+    float: bottom;
+}
+
+#btnInicio {
+    background-image: url("/resources/imagenes/logo.jpg");
+    width: 20%;
+    height: 20px;
+}
+
+.derechaNegrita {
+    text-align: right;
+    font-weight: bold;
+}
+
+.izquierda {
+    text-align: left;
+}
+
+.styleInputText1 {
+    width: 50%;
+}
+
+.styleInputText2 {
+    width: 95%;
+}
+
+.stylePanelGrid {
+    background-color: white;
+    margin: 0 auto;
+    width: 99%;
+}

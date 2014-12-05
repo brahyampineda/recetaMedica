@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "solicitud_quejas_reclamos")
@@ -29,9 +30,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudQuejasReclamos.findByIdSolicitudquejasreclamos", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.idSolicitudquejasreclamos = :idSolicitudquejasreclamos"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByTitulo", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.titulo = :titulo"),
     @NamedQuery(name = "SolicitudQuejasReclamos.findByDescripcion", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.descripcion = :descripcion"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findBySolicitudquejasreclamoscol", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudquejasreclamoscol = :solicitudquejasreclamoscol"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findByAdministradoridAdministrador", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.administradoridAdministrador = :administradoridAdministrador"),
-    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioidUsuario", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByEstado", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.estado = :estado"),
+    @NamedQuery(name = "SolicitudQuejasReclamos.findByUsuarioemail", query = "SELECT s FROM SolicitudQuejasReclamos s WHERE s.solicitudQuejasReclamosPK.usuarioemail = :usuarioemail")})
 public class SolicitudQuejasReclamos implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -42,15 +42,15 @@ public class SolicitudQuejasReclamos implements Serializable {
     @Size(max = 300)
     @Column(name = "descripcion")
     private String descripcion;
-    @Size(max = 45)
-    @Column(name = "Solicitud_quejas_reclamoscol")
-    private String solicitudquejasreclamoscol;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Usuario usuario;
-    @JoinColumn(name = "Administrador_idAdministrador", referencedColumnName = "idAdministrador", insertable = false, updatable = false)
+    @Size(max = 15)
+    @Column(name = "estado")
+    private String estado;
+    @JoinColumn(name = "Administrador_identificacion", referencedColumnName = "identificacion")
     @ManyToOne(optional = false)
     private Administrador administrador;
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Usuario usuario;
 
     public SolicitudQuejasReclamos() {
     }
@@ -59,8 +59,8 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.solicitudQuejasReclamosPK = solicitudQuejasReclamosPK;
     }
 
-    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String administradoridAdministrador, String usuarioidUsuario) {
-        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, administradoridAdministrador, usuarioidUsuario);
+    public SolicitudQuejasReclamos(int idSolicitudquejasreclamos, String usuarioemail) {
+        this.solicitudQuejasReclamosPK = new SolicitudQuejasReclamosPK(idSolicitudquejasreclamos, usuarioemail);
     }
 
     public SolicitudQuejasReclamosPK getSolicitudQuejasReclamosPK() {
@@ -87,20 +87,12 @@ public class SolicitudQuejasReclamos implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getSolicitudquejasreclamoscol() {
-        return solicitudquejasreclamoscol;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setSolicitudquejasreclamoscol(String solicitudquejasreclamoscol) {
-        this.solicitudquejasreclamoscol = solicitudquejasreclamoscol;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Administrador getAdministrador() {
@@ -109,6 +101,14 @@ public class SolicitudQuejasReclamos implements Serializable {
 
     public void setAdministrador(Administrador administrador) {
         this.administrador = administrador;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

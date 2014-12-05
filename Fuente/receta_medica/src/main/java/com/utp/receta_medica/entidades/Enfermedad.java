@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "enfermedad")
@@ -42,21 +43,21 @@ public class Enfermedad implements Serializable {
     @NotNull
     @Column(name = "idEnfermedad")
     private Integer idEnfermedad;
-    @Size(max = 45)
+    @Size(max = 150)
     @Column(name = "posologia")
     private String posologia;
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 45)
+    @Size(max = 300)
     @Column(name = "recomendaciones")
     private String recomendaciones;
-    @JoinTable(name = "paciente_has_enfermedad", joinColumns = {
-        @JoinColumn(name = "Enfermedad_idEnfermedad", referencedColumnName = "idEnfermedad")}, inverseJoinColumns = {
-        @JoinColumn(name = "Paciente_idPaciente", referencedColumnName = "idPaciente"),
-        @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
-    @ManyToMany
-    private Collection<Paciente> pacienteCollection;
+    @ManyToMany(mappedBy = "enfermedadCollection")
+    private Collection<Consulta> consultaCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
+    private Collection<Tratamiento> tratamientoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enfermedad")
+    private Collection<GrupoApoyo> grupoApoyoCollection;
 
     public Enfermedad() {
     }
@@ -98,12 +99,30 @@ public class Enfermedad implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Paciente> getPacienteCollection() {
-        return pacienteCollection;
+    public Collection<Consulta> getConsultaCollection() {
+        return consultaCollection;
     }
 
-    public void setPacienteCollection(Collection<Paciente> pacienteCollection) {
-        this.pacienteCollection = pacienteCollection;
+    public void setConsultaCollection(Collection<Consulta> consultaCollection) {
+        this.consultaCollection = consultaCollection;
+    }
+
+    @XmlTransient
+    public Collection<Tratamiento> getTratamientoCollection() {
+        return tratamientoCollection;
+    }
+
+    public void setTratamientoCollection(Collection<Tratamiento> tratamientoCollection) {
+        this.tratamientoCollection = tratamientoCollection;
+    }
+
+    @XmlTransient
+    public Collection<GrupoApoyo> getGrupoApoyoCollection() {
+        return grupoApoyoCollection;
+    }
+
+    public void setGrupoApoyoCollection(Collection<GrupoApoyo> grupoApoyoCollection) {
+        this.grupoApoyoCollection = grupoApoyoCollection;
     }
 
     @Override

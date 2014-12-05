@@ -1,0 +1,918 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <ui:composition template="/index.xhtml">
+
+        <ui:define name="titulo">Listas</ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/index.xhtml" title="Ir a inicio">
+                <p:graphicImage id="imgLogoV" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg" 
+                                rendered="#{beanGeneral.visitante}"/>
+            </a>
+            <a href="../faces/perfilAdmin.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoA" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.admin}"/>
+            </a>
+            <a href="../faces/perfilPaciente.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoP" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.paciente}"/>
+            </a>
+            <a href="../faces/perfilMedicoEspecialista.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoME" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.medicoEspecialista}"/>
+            </a>
+            <a href="../faces/perfilMedicoGeneral.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogoMG" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"
+                                rendered="#{beanGeneral.medicoGeneral}"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <p:tabView id="tabsListas" dynamic="true">
+
+                <p:tab title="Enfermedades">
+                    <h:form id="formEnfermedades">
+                        <p:dataTable id="tablaEnfermedades" value="#{beanGeneral.lstEnfermedades}" var="enfermedad" 
+                                     sortBy="#{enfermedad.nombre}"  emptyMessage="No hay enfermedades.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{enfermedad.nombre}" 
+                                      filterBy="#{enfermedad.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{enfermedad.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Recomendaciones" sortBy="#{enfermedad.recomendaciones}" 
+                                      filterBy="#{enfermedad.recomendaciones}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{enfermedad.recomendaciones}"/>
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEnfermedad(enfermedad)}"
+                                                 onclick="PF('dlgEdicionEnfermedad').show();"
+                                                 update=":tabsListas:formEnfermedades:editarEnfermedad"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarEnfermedad(enfermedad)}"
+                                                 update="tablaEnfermedades" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:panelGrid id="detalleEnfermedad" columns="4" styleClass="stylePanelGrid"
+                                             columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:outputLabel value="#{enfermedad.nombre}" />                                    
+                                    <p:outputLabel value="Recomendaciones:" />
+                                    <p:outputLabel value="#{enfermedad.recomendaciones}" />                                    
+                                    <p:outputLabel value="Posología:" />
+                                    <p:outputLabel value="#{enfermedad.posologia}" />                                    
+                                </p:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleEnfermedad" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar enfermedad" widgetVar="dlgEdicionEnfermedad"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarEnfermedad" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.enfermedadActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Recomedaciones:" />
+                                    <p:inputText value="#{beanAdministrador.enfermedadActual.recomendaciones}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Posología:" />
+                                    <p:inputText value="#{beanAdministrador.enfermedadActual.posologia}" styleClass="styleInputText2"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarEnfermedad()}" 
+                                                     update="tablaEnfermedades" onclick="dlgEdicionEnfermdad.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Medicamentos" id="tabMedicamentos" >
+                    <h:form id="formMedicamentos">
+                        <p:dataTable id="tablaMedicamentos" value="#{beanGeneral.lstMedicamentos}" var="medicamento"
+                                     sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos.">
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Código" sortBy="#{medicamento.idMedicamento}" 
+                                      filterBy="#{medicamento.idMedicamento}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medicamento.idMedicamento}" />
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{medicamento.nombre}" 
+                                      filterBy="#{medicamento.nombre}" filterMatchMode="contains">
+                                <p:outputLabel value="#{medicamento.nombre}" />
+                            </p:column>
+                            <p:column headerText="Composición" sortBy="#{medicamento.composicion}" 
+                                      filterBy="#{medicamento.composicion}" filterMatchMode="contains">
+                                <p:outputLabel value="#{medicamento.composicion}" />
+                            </p:column>
+                            <p:column headerText="Indicaciones" sortBy="#{medicamento.indicaciones}"
+                                      filterBy="#{medicamento.indicaciones}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medicamento.indicaciones}" />
+                            </p:column>
+                            <p:column headerText="Precio" sortBy="#{medicamento.precio}" 
+                                      filterBy="#{medicamento.precio}" filterMatchMode="contains"
+                                      style="text-align: right">
+                                <p:outputLabel value="$ #{medicamento.precio}"  />
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarMedicamento(medicamento)}"
+                                                 onclick="PF('dlgEdicionMedicamento').show();" 
+                                                 update=":tabsListas:formMedicamentos:editarMedicamento" />
+
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarMedicamento(medicamento)}"
+                                                 update="tablaMedicamentos" />
+                            </p:column>
+                            <p:rowExpansion >
+                                <p:outputPanel id="detalleMedicamento">
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+                                        <p:outputLabel value="Código: " />
+                                        <p:outputLabel value="#{medicamento.idMedicamento}" />
+
+                                        <p:outputLabel value="Nombre: " />
+                                        <p:outputLabel value="#{medicamento.nombre}" />
+
+                                        <p:outputLabel value="Composición: " />
+                                        <p:outputLabel value="#{medicamento.composicion}" />
+
+                                        <p:outputLabel value="Indicaciones: " />
+                                        <p:outputLabel value="#{medicamento.indicaciones}" />
+
+                                        <p:outputLabel value="Contraindicaciones: " />
+                                        <p:outputLabel value="#{medicamento.contraindicaciones}" />
+
+                                        <p:outputLabel value="Precauciones: " />
+                                        <p:outputLabel value="#{medicamento.precauciones}" />
+
+                                        <p:outputLabel value="Precio: " />
+                                        <p:outputLabel value="$ #{medicamento.precio}" />
+
+                                        <p:outputLabel value="Presentación: " />
+                                        <p:outputLabel value="#{medicamento.presentacion}" />
+
+                                        <p:outputLabel value="Dosis usual: " />
+                                        <p:outputLabel value="#{medicamento.dosisUsual}" />
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:dataTable id="tablaMedicamentos" value="#{medicamento.laboratorioCollection}" var="laboratorio"
+                                                 sortBy="#{laboratorio.nombre}" emptyMessage="No hay medicamentos.">
+                                        <f:facet name="header">Laboratorios que lo distribuyen</f:facet>
+
+                                        <p:column headerText="NIT" >
+                                            <p:outputLabel value="#{laboratorio.nit}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{laboratorio.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Correo" >
+                                            <p:outputLabel value="#{laboratorio.email}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleMedicamento" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                        <p:dialog header="Editar medicamento" widgetVar="dlgEdicionMedicamento"  
+                                  modal="true" width="45em" resizable="false" >
+                            <p:outputPanel id="editarMedicamento">
+                                <h:panelGrid id="panelEdicionMedicamento"
+                                             columns="2" columnClasses="derechaNegrita, izquierda" 
+                                             styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:"/>
+                                    <p:inputText value="#{beanAdministrador.medicamentoActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Precio:"/>
+                                    <p:inputText value="#{beanAdministrador.medicamentoActual.precio}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Composición:"/>
+                                    <p:inputTextarea value="#{beanAdministrador.medicamentoActual.composicion}" styleClass="styleInputText2"
+                                                     autoResize="false" rows="4"/>
+
+                                    <p:outputLabel value="Indicaciones:"/>
+                                    <p:inputTextarea value="#{beanAdministrador.medicamentoActual.indicaciones}" styleClass="styleInputText2"
+                                                     autoResize="false" rows="4"/>
+
+                                    <p:outputLabel value="Precauciones:"/>
+                                    <p:inputTextarea value="#{beanAdministrador.medicamentoActual.precauciones}" styleClass="styleInputText2"
+                                                     autoResize="false" rows="4"/>
+
+                                    <p:outputLabel value="Contraindicaciones:"/>
+                                    <p:inputTextarea value="#{beanAdministrador.medicamentoActual.contraindicaciones}" styleClass="styleInputText2"
+                                                     autoResize="false" rows="4"/>
+
+                                    <p:outputLabel value="Presentación:"/>
+                                    <p:inputText value="#{beanAdministrador.medicamentoActual.presentacion}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Dosis usual:"/>
+                                    <p:inputText value="#{beanAdministrador.medicamentoActual.dosisUsual}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Cantidad:"/>
+                                    <p:inputText value="#{beanAdministrador.medicamentoActual.cantidad}" styleClass="styleInputText2" />
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarMedicamento()}" 
+                                                     update="tablaMedicamentos" onclick="dlgEdicionMedicamento.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Tratamientos" id="tabTratamientos" >
+                    <h:form id="formTratamientos">
+                        <p:dataTable id="tablaTratamientos" value="#{beanGeneral.lstTratamientos}" var="trat" 
+                                     sortBy="#{trat.nombre}"  emptyMessage="No hay tratamientos.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+
+                            <p:column headerText="Nombre" sortBy="#{trat.nombre}"
+                                      filterBy="#{trat.nombre}" filterMatchMode="contains">
+                                <p:outputLabel value="#{trat.nombre}" />
+                            </p:column>
+                            <p:column headerText="Descripción" sortBy="#{trat.descripcion}"
+                                      filterBy="#{trat.descripcion}" filterMatchMode="contains">
+                                <p:outputLabel value="#{trat.descripcion}" />
+                            </p:column>                                        
+                            <p:column headerText="Enfermedad relacionada" filterBy="#{trat.enfermedad.nombre}"
+                                      sortBy="#{trat.enfermedad.nombre}" filterMatchMode="contains">
+                                <p:outputLabel value="#{trat.enfermedad.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarTratamiento(trat)}"
+                                                 onclick="PF('dlgEdicionTratamiento').show();"
+                                                 update=":tabsListas:formTratamientos:editarTratamiento"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarTratamiento(trat)}"
+                                                 update="tablaTratamientos" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:panelGrid id="detalleTratamiento" columns="4" styleClass="stylePanelGrid"
+                                             columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                    <p:outputLabel value="Nombre: " />
+                                    <p:outputLabel value="#{trat.nombre}" />
+
+                                    <p:outputLabel value="Descripción: " />
+                                    <p:outputLabel value="#{trat.descripcion}" />
+
+                                    <p:outputLabel value="Enfermedad relacionada: " />
+                                    <p:outputLabel value="#{trat.enfermedad.nombre}" />                                    
+                                </p:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleTratamiento" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                        <p:dialog header="Editar tratamiento" widgetVar="dlgEdicionTratamiento"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarTratamiento" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.tratamientoActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Descripción:" />
+                                    <p:inputText value="#{beanAdministrador.tratamientoActual.descripcion}" styleClass="styleInputText2"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarTratamiento()}" 
+                                                     update="tablaTratamientos" onclick="dlgEdicionTratamiento.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Médicos generales" id="tabMedicosGenerales" >
+                    <h:form id="formMedicosGenerales">
+                        <p:dataTable id="tablaMedicosGenerales" value="#{beanGeneral.lstMedicosGenerales}" var="medG" 
+                                     sortBy="#{medG.usuario.nombre}"  emptyMessage="No hay médicos generales.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Identificación" sortBy="#{medG.usuario.identificacion}" 
+                                      filterBy="#{medG.usuario.identificacion}" filterMatchMode="contains" 
+                                      >
+                                <p:outputLabel value="#{medG.usuario.identificacion}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{medG.usuario.nombre} #{medG.usuario.apellidos}" 
+                                      filterBy="#{medG.usuario.nombre} #{medG.usuario.apellidos}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medG.usuario.nombre} #{medG.usuario.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Género" sortBy="#{medG.usuario.genero}" 
+                                      filterBy="#{medG.usuario.genero}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medG.usuario.genero}"/>
+                            </p:column>
+                            <p:column headerText="Correo" sortBy="#{medG.usuario.email}" 
+                                      filterBy="#{medG.usuario.email}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medG.usuario.email}"/>
+                            </p:column>
+                            <p:column headerText="Tarifa" sortBy="#{medG.tarifa}" 
+                                      filterBy="#{medG.tarifa}" filterMatchMode="contains" 
+                                      style="text-align: right">
+                                <p:outputLabel value="$ #{medG.tarifa}"/>
+                            </p:column>
+                            <p:column headerText="Experiencia" sortBy="#{medG.anosExperiencia}" 
+                                      filterBy="#{medG.anosExperiencia}" filterMatchMode="contains" 
+                                      style="text-align: right">
+                                <p:outputLabel value="#{medG.anosExperiencia} años"/>
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:outputPanel id="detalleMedicoGeneral">
+                                    <br/>
+                                    <div align="center" >
+                                        <p:graphicImage height="100em"  value="#{medG.usuario.foto}" />
+                                    </div>
+                                    <br/>
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                        <p:outputLabel value="Identificación: " />
+                                        <p:outputLabel value="#{medG.usuario.identificacion}" />
+
+                                        <p:outputLabel value="Nombre: " />
+                                        <p:outputLabel value="#{medG.usuario.nombre} #{medG.usuario.apellidos}" />
+
+                                        <p:outputLabel value="Tarifa: " />
+                                        <p:outputLabel value="$ #{medG.tarifa}" />
+
+                                        <p:outputLabel value="Género: " />
+                                        <p:outputLabel value="$ #{medG.usuario.genero}" />
+
+                                        <p:outputLabel value="Correo: " />
+                                        <p:outputLabel value="#{medG.usuario.email}" />
+
+                                        <p:outputLabel value="Experiencia: " />
+                                        <p:outputLabel value="#{medG.anosExperiencia} años" />
+
+                                        <p:outputLabel value="Universidad: " />
+                                        <p:outputLabel value="#{medG.universidad}" />
+
+                                        <p:outputLabel value="Teléfono: " />
+                                        <p:outputLabel value="#{medG.usuario.telefonoContacto}" />
+
+                                        <p:outputLabel value="Fecha de nacimiento: " />
+                                        <p:outputLabel value="#{medG.usuario.fechaNacimiento}" />
+
+                                    </p:panelGrid>
+                                    <p:dataTable id="tablaMedicamentosMedicoGeneral" value="#{medG.medicamentoCollection}" var="medicamento"
+                                                 sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos." >
+                                        <f:facet name="header" >Medicamentos que conoce</f:facet>
+
+                                        <p:column headerText="Código" >
+                                            <p:outputLabel value="#{medicamento.idMedicamento}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{medicamento.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Composición" >
+                                            <p:outputLabel value="#{medicamento.composicion}" />
+                                        </p:column>
+                                        <p:column headerText="Indicaciones" >
+                                            <p:outputLabel value="#{medicamento.indicaciones}" />
+                                        </p:column>
+                                        <p:column headerText="Precio" style="text-align: right">
+                                            <p:outputLabel value="$ #{medicamento.precio}"  />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleMedicoGeneral" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Médicos especialistas" >
+                    <h:form id="formMedicosEspecialistas">
+                        <p:dataTable id="tablaMedicosEspecialistas" value="#{beanGeneral.lstMedicosEspecialistas}" var="medE" 
+                                     sortBy="#{medE.usuario.nombre}"  emptyMessage="No hay médicos especialistas.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Identificación" sortBy="#{medE.usuario.identificacion}" 
+                                      filterBy="#{medE.usuario.identificacion}" filterMatchMode="contains" 
+                                      >
+                                <p:outputLabel value="#{medE.usuario.identificacion}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{medE.usuario.nombre} #{medE.usuario.apellidos}" 
+                                      filterBy="#{medE.usuario.nombre} #{medE.usuario.apellidos}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medE.usuario.nombre} #{medE.usuario.apellidos}"/>
+                            </p:column>
+                            <p:column headerText="Género" sortBy="#{medE.usuario.genero}" 
+                                      filterBy="#{medE.usuario.genero}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medE.usuario.genero}"/>
+                            </p:column>
+                            <p:column headerText="Correo" sortBy="#{medE.usuario.email}" 
+                                      filterBy="#{medE.usuario.email}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medE.usuario.email}"/>
+                            </p:column>
+                            <p:column headerText="Tarifa" sortBy="#{medE.tarifa}" 
+                                      filterBy="#{medE.tarifa}" filterMatchMode="contains" 
+                                      style="text-align: right">
+                                <p:outputLabel value="$ #{medE.tarifa}"/>
+                            </p:column>
+                            <p:column headerText="Especialidad" sortBy="#{medE.especialidad}" 
+                                      filterBy="#{medE.especialidad}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{medE.especialidad}"/>
+                            </p:column>
+                            <p:column headerText="Experiencia" sortBy="#{medE.anosExperiencia}" 
+                                      filterBy="#{medE.anosExperiencia}" filterMatchMode="contains" 
+                                      style="text-align: right">
+                                <p:outputLabel value="#{medE.anosExperiencia} años"/>
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:outputPanel id="detalleMedicoEspecialista">
+                                    <br/>
+                                    <div align="center" >
+                                        <p:graphicImage height="100em"  value="#{medE.usuario.foto}" />
+                                    </div>
+                                    <br/>
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+                                        <p:outputLabel value="Identificación: " />
+                                        <p:outputLabel value="#{medE.usuario.identificacion}" />
+
+                                        <p:outputLabel value="Nombre: " />
+                                        <p:outputLabel value="#{medE.usuario.nombre} #{medE.usuario.apellidos}" />
+
+                                        <p:outputLabel value="Tarifa: " />
+                                        <p:outputLabel value="$ #{medE.tarifa}" />
+
+                                        <p:outputLabel value="Género: " />
+                                        <p:outputLabel value="#{medE.usuario.genero}" />
+
+                                        <p:outputLabel value="Correo: " />
+                                        <p:outputLabel value="#{medE.usuario.email}" />
+
+                                        <p:outputLabel value="Especialidad: " />
+                                        <p:outputLabel value="#{medE.especialidad}" />
+
+                                        <p:outputLabel value="Experiencia: " />
+                                        <p:outputLabel value="#{medE.anosExperiencia} años" />
+
+                                        <p:outputLabel value="Universidad: " />
+                                        <p:outputLabel value="#{medE.universidad}" />
+
+                                        <p:outputLabel value="Teléfono: " />
+                                        <p:outputLabel value="#{medE.usuario.telefonoContacto}" />
+
+                                        <p:outputLabel value="Fecha de nacimiento: " />
+                                        <p:outputLabel value="#{medE.usuario.fechaNacimiento}" />
+
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:dataTable id="tablaMedicamentosMedicoEspecialista" value="#{medE.medicamentoCollection}" var="medicamento"
+                                                 sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos." >
+                                        <f:facet name="header" >Medicamentos que conoce</f:facet>
+
+                                        <p:column headerText="Código" >
+                                            <p:outputLabel value="#{medicamento.idMedicamento}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{medicamento.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Composición" >
+                                            <p:outputLabel value="#{medicamento.composicion}" />
+                                        </p:column>
+                                        <p:column headerText="Indicaciones" >
+                                            <p:outputLabel value="#{medicamento.indicaciones}" />
+                                        </p:column>
+                                        <p:column headerText="Precio" style="text-align: right">
+                                            <p:outputLabel value="$ #{medicamento.precio}"  />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleMedicoEspecialista" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Grupos de apoyo">
+                    <h:form id="formGruposApoyo">
+                        <p:dataTable id="tablaGruposApoyo" value="#{beanGeneral.lstGruposApoyo}" var="gruposApoyo" 
+                                     sortBy="#{gruposApoyo.nombre}"  emptyMessage="No hay Grupos de apoyo.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+
+                            <p:column headerText="Nombre" sortBy="#{gruposApoyo.nombre}" 
+                                      filterBy="#{gruposApoyo.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{gruposApoyo.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Enfermedad tratada" sortBy="#{gruposApoyo.enfermedad.nombre}" 
+                                      filterBy="#{gruposApoyo.enfermedad.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{gruposApoyo.enfermedad.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Profesional encargado" sortBy="#{gruposApoyo.nombreProfesional}" 
+                                      filterBy="#{gruposApoyo.nombreProfesional}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{gruposApoyo.nombreProfesional}"/>
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarGrupoApoyo(gruposApoyo)}"
+                                                 onclick="PF('dlgEdicionGrupoApoyo').show();"
+                                                 update=":tabsListas:formGruposApoyo:editarGrupoApoyo"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarGrupoApoyo(gruposApoyo)}"
+                                                 update="tablaGruposApoyo" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:panelGrid id="detalleGruposApoyo" columns="4" styleClass="stylePanelGrid"
+                                             columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:outputLabel value="#{gruposApoyo.nombre}" />
+
+                                    <p:outputLabel value="Enfermedad tratada:" />
+                                    <p:outputLabel value="#{gruposApoyo.enfermedad.nombre}" />
+
+                                    <p:outputLabel value="Profesional encargado:" />
+                                    <p:outputLabel value="#{gruposApoyo.nombreProfesional}" />
+
+                                    <p:outputLabel value="Entidad perteneciente:" />
+                                    <p:outputLabel value="#{gruposApoyo.entidad.nombre}" />
+
+                                </p:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleGruposApoyo" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar Grupo de apoyo" widgetVar="dlgEdicionGrupoApoyo"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarGrupoApoyo" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.grupoApoyoActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Profesional encargado:" />
+                                    <p:inputText value="#{beanAdministrador.grupoApoyoActual.nombreProfesional}" styleClass="styleInputText2"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarGrupoApoyo()}" 
+                                                     update="tablaGruposApoyo" onclick="dlgEdicionGrupoApoyo.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Entidades">
+                    <h:form id="formEntidades">
+                        <p:dataTable id="tablaEntidades" value="#{beanGeneral.lstEntidades}" var="entidad" 
+                                     sortBy="#{entidad.nombre}"  emptyMessage="No hay entidades.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="NIT" sortBy="#{entidad.nit}" 
+                                      filterBy="#{entidad.nit}" filterMatchMode="contains" 
+                                      style="width: 15%">
+                                <p:outputLabel value="#{entidad.nit}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{entidad.nombre}" 
+                                      filterBy="#{entidad.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{entidad.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Email" sortBy="#{entidad.email}" 
+                                      filterBy="#{entidad.email}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{entidad.email}"/>
+                            </p:column>
+                            <p:column headerText="Tipo" sortBy="#{entidad.esEps}" 
+                                      filterBy="#{entidad.esEps}" filterMatchMode="contains" 
+                                      style="width: 15%">
+                                <p:outputLabel value="#{(entidad.esEps == true)? 'EPS' : 'IPS'}" />
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarEntidad(entidad)}"
+                                                 onclick="PF('dlgEdicionEntidad').show();"
+                                                 update=":tabsListas:formEntidades:editarEntidad"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarEntidad(entidad)}"
+                                                 update="tablaEntidades" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:panelGrid id="detalleEntidad" columns="4" styleClass="stylePanelGrid"
+                                             columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                    <p:outputLabel value="NIT:" />
+                                    <p:outputLabel value="#{entidad.nit}" />
+
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:outputLabel value="#{entidad.nombre}" />
+
+                                    <p:outputLabel value="Email:" />
+                                    <p:outputLabel value="#{entidad.email}" />
+
+                                    <p:outputLabel value="Tipo:" />
+                                    <p:outputLabel value="#{(entidad.esEps == true)? 'EPS' : 'IPS'}" />
+
+                                    <p:outputLabel value="URL:" />
+                                    <p:outputLabel value="#{entidad.url}" />
+
+                                </p:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleEntidad" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar entidad" widgetVar="dlgEdicionEntidad"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarEntidad" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.entidadActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Email:" />
+                                    <p:inputText value="#{beanAdministrador.entidadActual.email}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Tipo:" />
+                                    <p:selectOneMenu value="#{beanAdministrador.entidadActual.esEps}" >
+                                        <f:selectItem itemLabel="EPS" itemValue="true" />
+                                        <f:selectItem itemLabel="IPS" itemValue="false" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="URL:" />
+                                    <p:inputText value="#{beanAdministrador.entidadActual.url}" styleClass="styleInputText2"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarEntidad()}" 
+                                                     update="tablaEntidades" onclick="dlgEdicionEntidad.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Laboratorios">
+                    <h:form id="formLaboratorios">
+                        <p:dataTable id="tablaLaboratorios" value="#{beanGeneral.lstLaboratorios}" var="lab" 
+                                     sortBy="#{lab.nombre}"  emptyMessage="No hay Laboratorios.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="NIT" sortBy="#{lab.nit}" 
+                                      filterBy="#{lab.nit}" filterMatchMode="contains" 
+                                      style="width: 15%">
+                                <p:outputLabel value="#{lab.nit}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{lab.nombre}" 
+                                      filterBy="#{lab.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{lab.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Email" sortBy="#{lab.email}" 
+                                      filterBy="#{lab.email}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{lab.email}"/>
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarLaboratorio(lab)}"
+                                                 onclick="PF('dlgEdicionLaboratorio').show();"
+                                                 update=":tabsListas:formLaboratorios:editarLaboratorio"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarLaboratorio(lab)}"
+                                                 update="tablaLaboratorios" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <p:panel id="detalleLaboratorio" >
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                        <p:outputLabel value="NIT:" />
+                                        <p:outputLabel value="#{lab.nit}" />                                    
+
+                                        <p:outputLabel value="Nombre:" />
+                                        <p:outputLabel value="#{lab.nombre}" />                                    
+
+                                        <p:outputLabel value="Email:" />
+                                        <p:outputLabel value="#{lab.email}" />                                    
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:dataTable value="#{lab.medicamentoCollection}" var="medicamento"
+                                                 sortBy="#{medicamento.nombre}" emptyMessage="No hay medicamentos.">
+                                        <p:column headerText="Código" >
+                                            <p:outputLabel value="#{medicamento.idMedicamento}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{medicamento.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Composición" >
+                                            <p:outputLabel value="#{medicamento.composicion}" />
+                                        </p:column>
+                                        <p:column headerText="Indicaciones">
+                                            <p:outputLabel value="#{medicamento.indicaciones}" />
+                                        </p:column>
+                                        <p:column headerText="Precio" style="text-align: right ">
+                                            <p:outputLabel value="$ #{medicamento.precio}"  />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleLaboratorio" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar Laboratorio" widgetVar="dlgEdicionLaboratorio"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarLaboratorio" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.laboratorioActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Email:" />
+                                    <p:inputText value="#{beanAdministrador.laboratorioActual.email}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Banco:" />
+                                    <p:inputText value="#{beanAdministrador.laboratorioActual.banco}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Tipo de cuenta:" />
+                                    <p:inputText value="#{beanAdministrador.laboratorioActual.tipoCuenta}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Número de cuenta:" />
+                                    <p:inputText value="#{beanAdministrador.laboratorioActual.numeroCuenta}" styleClass="styleInputText2"/>
+
+                                    <p:spacer />
+                                    <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarLaboratorio()}" 
+                                                     update="tablaLaboratorios" onclick="dlgEdicionLaboratorio.hide()" />
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Leyes">
+                    <h:form id="formLeyes">
+                        <p:dataTable id="tablaLeyes" value="#{beanGeneral.lstLeyes}" var="ley" 
+                                     sortBy="#{ley.codigo}"  emptyMessage="No hay leyes.">
+
+                            <p:column style="width: 1em">
+                                <p:rowToggler  />
+                            </p:column>
+                            <p:column headerText="Código" sortBy="#{ley.codigo}" style="width: 8em"
+                                      filterBy="#{ley.codigo}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.codigo}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{ley.nombre}" 
+                                      filterBy="#{ley.nombre}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Fecha" sortBy="#{ley.fecha}" 
+                                      filterBy="#{ley.fecha}" filterMatchMode="contains" >
+                                <p:outputLabel value="#{ley.fecha}" >
+                                    <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Edición" rendered="#{beanGeneral.admin}" style="width: 5em">
+                                <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarLey(ley)}"
+                                                 onclick="PF('dlgEdicionLey').show();"
+                                                 update=":tabsListas:formLeyes:editarLey"/>
+                                <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarLey(ley)}"
+                                                 update="tablaLeyes" />
+                            </p:column>
+
+                            <p:rowExpansion >
+                                <h:panelGrid id="detalleLey" >
+                                    <p:panelGrid columns="4" styleClass="stylePanelGrid"
+                                                 columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" >
+
+                                        <p:outputLabel value="Código:" />
+                                        <p:outputLabel value="#{ley.codigo}" />
+
+                                        <p:outputLabel value="Nombre:" />
+                                        <p:outputLabel value="#{ley.nombre}" />
+
+                                        <p:outputLabel value="Fecha:" />
+                                        <p:outputLabel value="#{ley.fecha}" >
+                                            <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                        </p:outputLabel>
+
+                                        <p:outputLabel value="Preámbulo:" />
+                                        <p:outputLabel value="#{ley.preambulo}" />
+
+                                    </p:panelGrid>
+                                    <p:dataTable value="#{ley.articuloCollection}" var="articulo" emptyMessage="No hay artículos." 
+                                                 sortBy="#{articulo.articuloPK.idArticulo}">
+                                        <p:column headerText="# artículo" style="width: 6em" >
+                                            <p:outputLabel value="#{articulo.articuloPK.idArticulo}" />
+                                        </p:column>
+                                        <p:column headerText="Capítulo" >
+                                            <p:outputLabel value="#{articulo.nombreCapitulo}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre" >
+                                            <p:outputLabel value="#{articulo.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Descripción" >
+                                            <p:outputLabel value="#{articulo.descripcion}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <br />
+                                <p:commandButton type="button" icon="ui-icon-print" style="float: right">
+                                    <p:printer target="detalleLey" />
+                                </p:commandButton>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                        <p:dialog header="Editar Ley" widgetVar="dlgEdicionLey"  
+                                  modal="true" width="45em" resizable="false">
+                            <p:outputPanel id="editarLey" >
+                                <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{beanAdministrador.leyActual.nombre}" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Fecha:" />
+                                    <p:calendar value="#{beanAdministrador.leyActual.fecha}" style="width: 97%"/>
+
+                                    <p:outputLabel value="Preámbulo:" />
+                                    <p:inputText value="#{beanAdministrador.leyActual.preambulo}" styleClass="styleInputText2"/>
+
+                                </h:panelGrid>
+                                <br/>
+                                <p:dataTable id="tablaArticulos" value="#{beanAdministrador.leyActual.articuloCollection}" var="articulo" emptyMessage="No hay artículos."
+                                             sortBy="#{articulo.articuloPK.idArticulo}" >
+                                    <p:column headerText="Capítulo" >
+                                        <p:outputLabel value="#{articulo.nombreCapitulo}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" >
+                                        <p:outputLabel value="#{articulo.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Descripción" >
+                                        <p:outputLabel value="#{articulo.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Edición" style="width: 5em">
+                                        <p:commandButton icon="ui-icon-pencil" action="#{beanAdministrador.preparaEditarArticulo(articulo)}"
+                                                         update=":tabsListas:formLeyes:panelArticulo"/>
+                                        <p:commandButton icon="ui-icon-trash" action="#{beanAdministrador.eliminarArticulo(articulo)}"
+                                                         update=":tabsListas:formLeyes:tablaArticulos" />
+                                    </p:column>
+                                </p:dataTable>
+                                <br/>
+                                <p:panel id="panelArticulo" header="Artículo">
+                                    <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda"
+                                                 styleClass="stylePanelGrid" >
+                                        <p:outputLabel value="Nombre del capítulo:" />
+                                        <p:inputText value="#{beanAdministrador.articuloActual.nombreCapitulo}" maxlength="45"/>
+
+                                        <p:outputLabel value="Nombre:" />
+                                        <p:inputText value="#{beanAdministrador.articuloActual.nombre}" maxlength="45"/>
+
+                                        <p:outputLabel value="Descripción:" />
+                                        <p:inputTextarea value="#{beanAdministrador.articuloActual.descripcion}" rows="5" 
+                                                         maxlength="1500" autoResize="false"/>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Agregar artículo" icon="ui-icon-plus" action="#{beanAdministrador.agregarArticulo()}"
+                                                     update="panelArticulo tablaArticulos" />
+                                </p:panel>
+                                <br/>
+                                <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanAdministrador.guardarLey()}" 
+                                                 update="tablaLeyes" onclick="dlgEdicionLey.hide()" />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </ui:define>
+
+    </ui:composition>
+</html>

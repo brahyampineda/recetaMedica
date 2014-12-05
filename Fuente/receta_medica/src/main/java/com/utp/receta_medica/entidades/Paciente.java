@@ -3,152 +3,90 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "paciente")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Paciente.findAll", query = "SELECT p FROM Paciente p"),
-    @NamedQuery(name = "Paciente.findByIdPaciente", query = "SELECT p FROM Paciente p WHERE p.pacientePK.idPaciente = :idPaciente"),
-    @NamedQuery(name = "Paciente.findByEstrato", query = "SELECT p FROM Paciente p WHERE p.estrato = :estrato"),
-    @NamedQuery(name = "Paciente.findByGenero", query = "SELECT p FROM Paciente p WHERE p.genero = :genero"),
-    @NamedQuery(name = "Paciente.findByPeso", query = "SELECT p FROM Paciente p WHERE p.peso = :peso"),
+    @NamedQuery(name = "Paciente.findByIdentificacion", query = "SELECT p FROM Paciente p WHERE p.identificacion = :identificacion"),
     @NamedQuery(name = "Paciente.findByTieneSisben", query = "SELECT p FROM Paciente p WHERE p.tieneSisben = :tieneSisben"),
-    @NamedQuery(name = "Paciente.findByAltura", query = "SELECT p FROM Paciente p WHERE p.altura = :altura"),
-    @NamedQuery(name = "Paciente.findByPracticaDeporte", query = "SELECT p FROM Paciente p WHERE p.practicaDeporte = :practicaDeporte"),
     @NamedQuery(name = "Paciente.findByDireccion", query = "SELECT p FROM Paciente p WHERE p.direccion = :direccion"),
-    @NamedQuery(name = "Paciente.findByNombreContacto", query = "SELECT p FROM Paciente p WHERE p.nombreContacto = :nombreContacto"),
-    @NamedQuery(name = "Paciente.findByTelefonoContacto", query = "SELECT p FROM Paciente p WHERE p.telefonoContacto = :telefonoContacto"),
-    @NamedQuery(name = "Paciente.findByUsuarioidUsuario", query = "SELECT p FROM Paciente p WHERE p.pacientePK.usuarioidUsuario = :usuarioidUsuario")})
+    @NamedQuery(name = "Paciente.findByDosisReceta", query = "SELECT p FROM Paciente p WHERE p.dosisReceta = :dosisReceta")})
 public class Paciente implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected PacientePK pacientePK;
-    @Size(max = 1)
-    @Column(name = "estrato")
-    private String estrato;
-    @Size(max = 45)
-    @Column(name = "genero")
-    private String genero;
-    @Size(max = 45)
-    @Column(name = "peso")
-    private String peso;
-    @Size(max = 1)
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "identificacion")
+    private String identificacion;
     @Column(name = "tiene_sisben")
-    private String tieneSisben;
-    @Size(max = 45)
-    @Column(name = "altura")
-    private String altura;
-    @Size(max = 1)
-    @Column(name = "practica_deporte")
-    private String practicaDeporte;
-    @Size(max = 45)
+    private Boolean tieneSisben;
+    @Size(max = 100)
     @Column(name = "direccion")
     private String direccion;
-    @Size(max = 45)
-    @Column(name = "nombre_contacto")
-    private String nombreContacto;
-    @Size(max = 45)
-    @Column(name = "telefono_contacto")
-    private String telefonoContacto;
+    @Column(name = "dosis_receta")
+    private int dosisReceta;
     @JoinTable(name = "paciente_has_tratamiento", joinColumns = {
-        @JoinColumn(name = "Paciente_idPaciente", referencedColumnName = "idPaciente"),
-        @JoinColumn(name = "Paciente_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")}, inverseJoinColumns = {
-        @JoinColumn(name = "Tratamiento_idTratamiento", referencedColumnName = "idTratamiento")})
+        @JoinColumn(name = "Paciente_identificacion", referencedColumnName = "identificacion")}, inverseJoinColumns = {
+        @JoinColumn(name = "Tratamiento_idTratamiento", referencedColumnName = "idTratamiento"),
+        @JoinColumn(name = "Tratamiento_Enfermedad_idEnfermedad1", referencedColumnName = "Enfermedad_idEnfermedad1")})
     @ManyToMany
     private Collection<Tratamiento> tratamientoCollection;
-    @ManyToMany(mappedBy = "pacienteCollection")
-    private Collection<Enfermedad> enfermedadCollection;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "Usuario_email", referencedColumnName = "email")
     @ManyToOne(optional = false)
     private Usuario usuario;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
+    private Collection<Consulta> consultaCollection;
 
     public Paciente() {
     }
 
-    public Paciente(PacientePK pacientePK) {
-        this.pacientePK = pacientePK;
+    public Paciente(String identificacion) {
+        this.identificacion = identificacion;
     }
 
-    public Paciente(int idPaciente, String usuarioidUsuario) {
-        this.pacientePK = new PacientePK(idPaciente, usuarioidUsuario);
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public PacientePK getPacientePK() {
-        return pacientePK;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 
-    public void setPacientePK(PacientePK pacientePK) {
-        this.pacientePK = pacientePK;
-    }
-
-    public String getEstrato() {
-        return estrato;
-    }
-
-    public void setEstrato(String estrato) {
-        this.estrato = estrato;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public String getPeso() {
-        return peso;
-    }
-
-    public void setPeso(String peso) {
-        this.peso = peso;
-    }
-
-    public String getTieneSisben() {
+    public Boolean getTieneSisben() {
         return tieneSisben;
     }
 
-    public void setTieneSisben(String tieneSisben) {
+    public void setTieneSisben(Boolean tieneSisben) {
         this.tieneSisben = tieneSisben;
-    }
-
-    public String getAltura() {
-        return altura;
-    }
-
-    public void setAltura(String altura) {
-        this.altura = altura;
-    }
-
-    public String getPracticaDeporte() {
-        return practicaDeporte;
-    }
-
-    public void setPracticaDeporte(String practicaDeporte) {
-        this.practicaDeporte = practicaDeporte;
     }
 
     public String getDireccion() {
@@ -159,22 +97,6 @@ public class Paciente implements Serializable {
         this.direccion = direccion;
     }
 
-    public String getNombreContacto() {
-        return nombreContacto;
-    }
-
-    public void setNombreContacto(String nombreContacto) {
-        this.nombreContacto = nombreContacto;
-    }
-
-    public String getTelefonoContacto() {
-        return telefonoContacto;
-    }
-
-    public void setTelefonoContacto(String telefonoContacto) {
-        this.telefonoContacto = telefonoContacto;
-    }
-
     @XmlTransient
     public Collection<Tratamiento> getTratamientoCollection() {
         return tratamientoCollection;
@@ -183,14 +105,13 @@ public class Paciente implements Serializable {
     public void setTratamientoCollection(Collection<Tratamiento> tratamientoCollection) {
         this.tratamientoCollection = tratamientoCollection;
     }
-
-    @XmlTransient
-    public Collection<Enfermedad> getEnfermedadCollection() {
-        return enfermedadCollection;
+    
+    public int getDosisReceta() {
+        return dosisReceta;
     }
 
-    public void setEnfermedadCollection(Collection<Enfermedad> enfermedadCollection) {
-        this.enfermedadCollection = enfermedadCollection;
+    public void setDosisReceta(int dosisReceta) {
+        this.dosisReceta = dosisReceta;
     }
 
     public Usuario getUsuario() {
@@ -201,10 +122,19 @@ public class Paciente implements Serializable {
         this.usuario = usuario;
     }
 
+    @XmlTransient
+    public Collection<Consulta> getConsultaCollection() {
+        return consultaCollection;
+    }
+
+    public void setConsultaCollection(Collection<Consulta> consultaCollection) {
+        this.consultaCollection = consultaCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (pacientePK != null ? pacientePK.hashCode() : 0);
+        hash += (identificacion != null ? identificacion.hashCode() : 0);
         return hash;
     }
 
@@ -215,7 +145,7 @@ public class Paciente implements Serializable {
             return false;
         }
         Paciente other = (Paciente) object;
-        if ((this.pacientePK == null && other.pacientePK != null) || (this.pacientePK != null && !this.pacientePK.equals(other.pacientePK))) {
+        if ((this.identificacion == null && other.identificacion != null) || (this.identificacion != null && !this.identificacion.equals(other.identificacion))) {
             return false;
         }
         return true;
@@ -223,7 +153,7 @@ public class Paciente implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Paciente[ pacientePK=" + pacientePK + " ]";
+        return "com.utp.receta_medica.entidades.Paciente[ identificacion=" + identificacion + " ]";
     }
     
 }

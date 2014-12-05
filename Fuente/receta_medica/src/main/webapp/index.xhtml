@@ -1,35 +1,286 @@
-<!--<?xml version="1.0" encoding="UTF-8"?>
-
-To change this template, choose Tools | Templates
-and open the template in the editor.-->
-
-<!DOCTYPE html>
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
 
-        <head>
-            <title>TODO supply a title</title>
-        </head>
-        <body>
-    <div>TODO write content</div>
-    <ui:composition template="template.xhtml" >
-        
-            <ui:define name="content">
-                <h:form>
-                    <p:panel>
-                        <p:commandButton value="Administrador" action="#{beanAdministrador.prepararAdministracion()}"/>
-                        <!--<p:commandButton action="{beanAdministrador.crearUsuario()}"/>-->
-                        <p:button value="Solicitudes, quejas y reclamos" outcome="solicitudes_quejas_reclamos"/>
-                    </p:panel>   
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="./resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <link href="./resources/css/cssPlantilla.css" rel="stylesheet" type="text/css" />
+        <title>..:: <ui:insert name="titulo">Tu receta Médica</ui:insert> ::..</title>
+    </h:head>
+
+    <h:body>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="/imagenes/iconos/ajaxloadingbar.gif" style="width: 4em" />
+        </p:dialog>
+        <div id="divCabecera">
+            <div id="divEnlaces">
+                <div id="divImagenes" style="float: left ; width: 95%">
+                    <ui:insert name="imgindex">
+                        <a href="../faces/index.xhtml" title="Ir a inicio">
+                            <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                            value="/resources/imagenes/iconos/logo-web.jpg"/>
+                        </a>
+                    </ui:insert>
+                    <a href="http://www.minsalud.gov.co/" title="Ir al portal del Ministerio de salud">
+                        <p:graphicImage id="imgMinSalud" height="60em" style="margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/logo-minsalud.png" />
+                    </a>
+                    <a href="http://www.utp.edu.co" title="Ir al portal de la Universidad Tecnológica de Pereira">
+                        <p:graphicImage id="imgUTP" height="60em" style="margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/logo-utp2.jpg"/>
+                    </a>
+                    <h1 style="margin-top: 0.5em ; float: right ; color: white; padding-right: 2%">TU RECETA MÉDICA</h1>
+                </div>
+                <div id="divIdioma" style="float: right ; width: 5%">
+                    <p:outputLabel value="Idioma" style="float: right; color: white"/>
+                    <a href=""
+                       title="Inglés">
+                        <p:graphicImage id="imgIngles" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/usa.jpg"/>
+                    </a>
+                    <a href=""
+                       title="Alemán">
+                        <p:graphicImage id="imgAleman" width="30px" height="15px" style="float: right ; margin: 5px 2px"
+                                        value="/resources/imagenes/iconos/alemania.gif"/>
+                    </a>
+                </div>
+            </div>
+            <div id="divLogin" align="right">
+                <h:form id="formBtnLogin">
+                    <p:panel style="width: 100%; text-align: center" rendered="#{beanGeneral.visitante}" >
+                        <h:panelGrid columns="1" styleClass="stylePanelGrid">
+                            <p:commandButton value="Iniciar sesión" style="width: 80%"
+                                             action="#{beanGeneral.preparaInicioDeSesion()}"
+                                             onclick="PF('dlgLogin').show();" 
+                                             update=":formInicioSesion:panelInicioSesion" />
+                            <p:commandButton value="Registrarse" style="width: 80%"
+                                             action="#{beanGeneral.prepararRegistroUsuario()}"
+                                             onclick="PF('dlgRegistro').show();"
+                                             update=":formRegistroUsuario:panelRegistroUsuario"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel style="width: 100%" rendered="#{!beanGeneral.visitante}" >
+                        <p:graphicImage width="70em" height="70em"  value="#{beanGeneral.loggedUser.foto}" style="float: left"/>
+                        <p:outputLabel value="Bienvenido, #{beanGeneral.loggedUser.nombre}" style="font-weight: bold"/>
+                        <br/>
+                        <p:outputLabel value="Perfil: #{beanGeneral.perfilActual}" style="font-weight: bold"/>
+                        <h:panelGrid columns="2" styleClass="stylePanelGrid">
+                            <p:commandButton value="Ir a" action="#{beanGeneral.accederAperfil()}" immediate="true" 
+                                             ajax="false" styleClass="styleInputText2" rendered="#{!beanGeneral.admin}"/>
+                            <p:selectOneMenu value="#{beanGeneral.perfilActual}" rendered="#{!beanGeneral.admin}">
+                                <f:selectItems itemLabel="#{perfil}" itemValue="#{perfil}"
+                                               value="#{beanGeneral.lstPerfiles}" var="perfil" />
+                                <p:ajax event="change" listener="#{beanGeneral.cambioPerfil}" />
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salir" action="#{beanGeneral.doLogout()}" immediate="true"
+                                             ajax="false" styleClass="styleInputText2"/>
+                        </h:panelGrid>
+                    </p:panel>
                 </h:form>
-            </ui:define>   
-        
-    </ui:composition>
-    </body>
+                <p:dialog header="INICIO DE SESIÓN" widgetVar="dlgLogin" 
+                          modal="true" width="40em" resizable="false">
+                    <h:form id="formInicioSesion">
+                        <h:panelGrid id="panelInicioSesion" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                            <p:outputLabel value="Identificación:"/>
+                            <p:inputText  value="#{beanGeneral.username}" style="width: 80%"
+                                          validatorMessage="No es una identificación válida.">
+                                <f:validateRegex pattern="[0-9]{1,20}" />
+                            </p:inputText>
+                            <p:outputLabel value="Contraseña:"/>
+                            <p:password value="#{beanGeneral.password}" style="width: 80%"/>
+                            <p:spacer />
+                            <p:commandLink value="Olvidó su contraseña" immediate="true"
+                                           onclick="PF('dlgPassword').show();"/>
+                        </h:panelGrid>
+                        <div align="center">
+                            <p:commandButton value="Iniciar sesión" action="#{beanGeneral.doLogin()}" ajax="false"/>
+                        </div>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Restablecer contraseña" widgetVar="dlgPassword" 
+                          width="40%" resizable="false" modal="true">
+                    <h:form>
+                        <h:panelGrid id="panelRestablecerPass" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid" >
+                            <p:outputLabel value="Email:" />
+                            <p:inputText value="#{beanGeneral.emailRestablecerContraseña}" styleClass="styleInputText2" 
+                                         required="true" requiredMessage="Campo requerido"
+                                         validatorMessage="El formato del email no es correcto: ejemplo@ejemplo.com">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </p:inputText>
+                        </h:panelGrid>
+                        <br/>
+                        <div align="center">
+                            <p:commandButton value="Restablecer" action="#{beanGeneral.enviarCorreoRestablecerContraseña()}"
+                                             update="panelRestablecerPass"/>
+                        </div>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="REGISTRO DE NUEVO USUARIO" widgetVar="dlgRegistro" 
+                          modal="true" width="40em" resizable="false">
+                    <h:form id="formRegistroUsuario">
+                        <h:panelGrid id="panelRegistroUsuario" columns="2" columnClasses="derechaNegrita, izquierda" styleClass="stylePanelGrid">
+                            <p:outputLabel value="Nombre:"/>
+                            <p:inputText value="#{beanGeneral.usuarioActual.nombre}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba su nombre"
+                                         validatorMessage="El nombre sólo debe tener letras">
+                                <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Apellidos:"/>
+                            <p:inputText value="#{beanGeneral.usuarioActual.apellidos}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba sus apellidos"
+                                         validatorMessage="El apellido sólo debe tener letras">
+                                <f:validateRegex pattern="[a-zA-Z\s]{1,45}" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Género:" />
+                            <p:selectOneMenu value="#{beanGeneral.usuarioActual.genero}"
+                                             styleClass="styleInputText2">
+                                <f:selectItem noSelectionOption="true" />
+                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Número de identificacion:"></p:outputLabel>
+                            <p:inputText value="#{beanGeneral.usuarioActual.identificacion}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Escriba su identificación"
+                                         validatorMessage="La identificación sólo debe tener números">
+                                <f:validateRegex pattern="\d{1,20}" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Correo electrónico:"/>
+                            <p:inputText value="#{beanGeneral.usuarioActual.email}" styleClass="styleInputText2"
+                                         required="true" requiredMessage="Debe especificar su correo" placeholder="correo@ejemplo.com"
+                                         validatorMessage="No es un correo válido.">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Perfiles:"/>
+                            <h:panelGrid columns="2">
+                                <p:selectManyCheckbox value="#{beanGeneral.perfiles}" styleClass="styleInputText2"
+                                                      required="true" requiredMessage="Debe seleccionar por lo menos un perfil.">
+                                    <f:selectItem itemLabel="Médico general" itemValue="Medico general" />
+                                    <f:selectItem itemLabel="Médico especialista" itemValue="Medico especialista" />
+                                    <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
+                                </p:selectManyCheckbox>
+                            </h:panelGrid>
+                            <p:spacer />
+                            <p:commandButton value="Solicitar registro" action="#{beanGeneral.solicitarRegistroUsuario()}"
+                                             update="panelRegistroUsuario" />
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </div>
+        </div>
+        <div id="divContenido" >
+            <p:growl id="notificaciones" autoUpdate="true" showDetail="true"/>
+            <h:form>
+                <p:tabMenu activeIndex="#{param.i}" >
+                    <p:menuitem value="Inicio" outcome="/index" rendered="#{beanGeneral.visitante}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.visitante}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Contacto" outcome="/contacto" rendered="#{beanGeneral.visitante}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+
+                    <p:menuitem value="Perfil" outcome="/perfilAdmin" rendered="#{beanGeneral.admin}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.admin}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Solicitudes" outcome="/solicitudes" rendered="#{beanGeneral.admin}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Agregar contenido" outcome="/agregarContenido" rendered="#{beanGeneral.admin}" 
+                                action="#{beanAdministrador.preparaAgregarContenido()}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultar usuarios" outcome="/consultarUsuarios" rendered="#{beanGeneral.admin}"
+                                action="#{beanAdministrador.preparaConsultaUsuario()}">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.medicoEspecialista}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}" 
+                                action="#{beanGeneral.preparaCrearConsultaMedica()}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoEspecialista" rendered="#{beanGeneral.medicoEspecialista}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+
+
+                    <p:menuitem value="Perfil" outcome="/perfilMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.medicoGeneral}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesMedicoGeneral" rendered="#{beanGeneral.medicoGeneral}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+
+
+
+                    <p:menuitem value="Perfil" outcome="/perfilPaciente" rendered="#{beanGeneral.paciente}">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Listas" outcome="/listas" rendered="#{beanGeneral.paciente}">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Consultas" outcome="/consultasPaciente" rendered="#{beanGeneral.paciente}">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Realizar solicitud" outcome="/solicitudesPaciente" rendered="#{beanGeneral.paciente}">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+
+                </p:tabMenu>
+            </h:form>
+
+            <ui:insert name="contenido" >
+                <p:panel  style="width: 99.5%">
+                    <p>
+                        Esta página web te ayuda a estar al tanto de lo que pasa con tus recetas médicas, además de poder ver las listas de 
+                        médicos que hay disponibles, incluso listas de medicamentos POS, tratamientos y leyes que rigen la salud en Colombia.
+                    </p>
+                    <p>
+                        Puede generar recordatorios para estar al tanto de los horarios para tomar tus medicamentos y también para saber en que
+                        momento se te están acabando las dosis y así poder comprar tus medicamentos en linea desde está página.
+                    </p>
+                    <div align="center">
+                        <p:graphicImage id="imgLogoInicio" height="200px" style="margin: 5px 2px ; padding: 2em "
+                                        value="/resources/imagenes/iconos/logo-grande.jpg"/> 
+                    </div>
+                </p:panel>
+            </ui:insert>
+        </div>
+        <div >
+            <p:panel id="divFooter" >
+                <p:outputLabel value="Copyright© 2014 Pereira, Colombia By BPC, ESR, JHRM, SBO" style="float: right; font-weight: bold"/>
+            </p:panel>
+        </div>
+    </h:body>
 
 </html>
-
-

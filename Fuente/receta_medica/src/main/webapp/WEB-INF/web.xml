@@ -4,7 +4,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>    
-    <filter>
+    <!--    <filter>
         <filter-name>LoginFilter</filter-name>
         <filter-class>com.utp.receta_medica.facade.LoginFilter</filter-class>
     </filter>
@@ -12,16 +12,17 @@
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/faces/index.xhtml</url-pattern>
         <url-pattern>/faces/administrador.xhtml</url-pattern>
+        <url-pattern>/faces/paciente.xhtml</url-pattern>
+        <url-pattern>/faces/medicoGeneral.xhtml</url-pattern>
+        <url-pattern>/faces/medicoEspecialista.xhtml</url-pattern>
         <url-pattern>/faces/agregar_medicamento.xhtml</url-pattern>
         <url-pattern>/faces/registro.xhtml</url-pattern>
-        <url-pattern>/faces/registro2.xhtml</url-pattern>
         <url-pattern>/faces/solicitudes_quejas_reclamos.xhtml</url-pattern>
-        <!--<url-pattern>/faces/Configuracion/*</url-pattern>-->
-    </filter-mapping>
-    <!--    <context-param>  
+    </filter-mapping>-->
+    <context-param>  
         <param-name>primefaces.THEME</param-name>  
         <param-value>start</param-value>  
-    </context-param> -->
+    </context-param> 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -39,4 +40,12 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
 </web-app>

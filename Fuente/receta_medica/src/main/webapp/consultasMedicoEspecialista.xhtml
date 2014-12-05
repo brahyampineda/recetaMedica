@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./index.xhtml">
+
+        <ui:define name="titulo">
+            Consultas
+        </ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/perfilMedicoEspecialista.xhtml" title="Ir a inicio">
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <p:tabView id="tabsConsultas">
+                <p:tab title="Nueva consulta" >
+                    <h:form id="formNueva" >
+                        <p:panel header="Nueva Consulta">
+                            <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                         style="width: 100% ; margin: 0 auto">
+
+                                <p:outputLabel value="Médico: " styleClass="styleInputText2" />
+                                <p:outputLabel value="#{beanGeneral.loggedUser.nombre} #{beanGeneral.loggedUser.apellidos}" styleClass="styleInputText2" />
+
+                                <p:spacer />
+                                <p:spacer />
+
+                                <p:outputLabel value="Paciente:" styleClass="styleInputText2"/>
+                                <p:selectOneMenu value="#{beanGeneral.consultaMedicaActual.paciente}" style="width: 95%"
+                                                 required="true" requiredMessage="Debe seleccionar un paciente"
+                                                 converter="PacienteConverter">
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{beanGeneral.lstPacientes}" var="paciente"
+                                                   itemLabel="#{paciente.usuario.identificacion}, #{paciente.usuario.nombre} #{paciente.usuario.apellidos}" 
+                                                   itemValue="#{paciente}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Peso (Kg):" styleClass="styleInputText2"/>
+                                <p:inputText value="#{beanGeneral.consultaMedicaActual.peso}" styleClass="styleInputText2"
+                                             validatorMessage="El formato del peso es incorrecta." type="number"
+                                             required="true" requiredMessage="El peso es necesario." >
+                                    <!--<f:validateRegex pattern="\d{1,3}(\.\d{1,2})?"/>-->
+                                </p:inputText>
+
+                                <p:outputLabel value="Estatura (cm):" styleClass="styleInputText2"/>
+                                <p:inputText value="#{beanGeneral.consultaMedicaActual.altura}" styleClass="styleInputText2" type="number"
+                                             validatorMessage="El formato de la estatura es incorrecta."
+                                             required="true" requiredMessage="La estatura es necesario">
+                                    <!--<f:validateRegex pattern="\d{1,3}"/>-->
+                                </p:inputText>
+
+                                <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
+                                <p:panel >
+                                    <p:selectManyCheckbox value="#{beanGeneral.deportesConsulta}"  styleClass="styleInputText2" 
+                                                          columns="3" layout="grid">
+                                        <f:selectItem itemValue="Fútbol" itemLabel="Fútbol" />
+                                        <f:selectItem itemValue="Baloncesto" itemLabel="Baloncesto" />
+                                        <f:selectItem itemValue="Tenis" itemLabel="Tenis" />
+                                        <f:selectItem itemValue="Natación" itemLabel="Natación" />
+                                        <f:selectItem itemValue="Atletismo" itemLabel="Atletismo" />
+                                        <f:selectItem itemValue="Otro" itemLabel="Otro" />
+                                    </p:selectManyCheckbox>
+                                </p:panel>
+
+                                <p:outputLabel value="Enfermedades detectadas:" styleClass="styleInputText2"/>
+                                <p:selectCheckboxMenu value="#{beanGeneral.consultaMedicaActual.enfermedadCollection}" label="Enfermedades"
+                                                      filter="true" filterMatchMode="contains" converter="EnfermedadConverter"
+                                                      style="width: 97%" >
+                                    <f:selectItems itemLabel="#{enfermedad.nombre}" itemValue="#{enfermedad}"
+                                                   value="#{beanGeneral.lstEnfermedades}" var="enfermedad"/>
+                                </p:selectCheckboxMenu>
+
+                                <p:outputLabel value="Grupos de apoyo del paciente:" styleClass="styleInputText2" />
+                                <p:selectCheckboxMenu value="#{beanGeneral.consultaMedicaActual.grupoApoyoCollection}" label="Grupos de apoyo"
+                                                      filter="true" filterMatchMode="contains" converter="GrupoApoyoConverter"
+                                                      style="width: 97%">
+                                    <f:selectItems itemLabel="#{grupAp.nombre}" itemValue="#{grupAp}"
+                                                   value="#{beanGeneral.lstGruposApoyo}" var="grupAp"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGrid>
+                            <br/>
+                            <p:dataTable id="tablaRecetas" value="#{beanGeneral.consultaMedicaActual.recetaMedicaCollection}" var="receta"
+                                         emptyMessage="No hay recetas." >
+                                <f:facet name="header" >Recetas</f:facet>
+                                <p:column headerText="Medicamento" >
+                                    <p:outputLabel value="#{receta.medicamento.nombre}" />
+                                </p:column>
+                                <p:column headerText="Dosis" >
+                                    <p:outputLabel value="#{receta.dosis}" />
+                                </p:column>
+                                <p:column headerText="Periodicidad (por día)" >
+                                    <p:outputLabel value="#{receta.periodicidad}" />
+                                </p:column>
+                                <p:column headerText="Fecha Inicio" >
+                                    <p:outputLabel value="#{receta.fechaInicio}" >
+                                        <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Edición" style="width: 5em">
+                                    <p:commandButton icon="ui-icon-pencil" action="#{beanGeneral.preparaEditarRecetaMedica(receta)}"
+                                                     onclick="PF('dlgAgregarReceta').show();"
+                                                     update=":tabsConsultas:formNueva:panelAgregarReceta"/>
+                                    <p:commandButton icon="ui-icon-trash" action="#{beanGeneral.borrarRecetaMedica(receta)}"
+                                                     update=":tabsConsultas:formNueva:tablaRecetas" />
+                                </p:column>
+                            </p:dataTable>
+                            <br/>
+                            <p:commandButton value="Agregar Receta" onclick="PF('dlgAgregarReceta').show();" 
+                                             immediate="true" action="#{beanGeneral.preparaCrearRecetaMedica()}"
+                                             update=":tabsConsultas:formNueva:panelAgregarReceta" />
+
+                            <p:dialog header="Agregar Receta" widgetVar="dlgAgregarReceta"  
+                                      modal="true" width="60em" resizable="false">
+                                <p:outputPanel id="panelAgregarReceta" >
+                                    <h:panelGrid columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                                 styleClass="stylePanelGrid">
+
+                                        <p:outputLabel value="Medicamento:" styleClass="styleInputText2" />
+                                        <p:selectOneMenu value="#{beanGeneral.recetaMedicaActual.medicamento}" style="width: 97%" filter="true"
+                                                         converter="MedicamentoConverter">
+                                            <f:selectItem noSelectionOption="true" />
+                                            <f:selectItems itemLabel="#{medicamento.nombre}" itemValue="#{medicamento}"
+                                                           value="#{beanGeneral.lstMedicamentos}" var="medicamento" />
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel value="Dosis:" styleClass="styleInputText2" />
+                                        <p:inputText value="#{beanGeneral.recetaMedicaActual.dosis}" styleClass="styleInputText2"
+                                                     validatorMessage="La dosis es un número." type="number"/>
+
+                                        <p:outputLabel value="Periodicidad (por día):" styleClass="styleInputText2" />
+                                        <p:inputText value="#{beanGeneral.recetaMedicaActual.periodicidad}" styleClass="styleInputText2"
+                                                     validatorMessage="La periodicidad es un número." type="number"/>
+
+
+                                        <p:outputLabel value="Fecha de inicio:" styleClass="styleInputText2" />
+                                        <p:calendar value="#{beanGeneral.recetaMedicaActual.fechaInicio}" style="width: 100%"/>
+
+                                    </h:panelGrid>
+                                    <div align="center" >
+                                        <p:commandButton value="Guardar" icon="ui-icon-disk" action="#{beanGeneral.guardarRecetaMedica()}" 
+                                                         update=":tabsConsultas:formNueva:tablaRecetas :tabsConsultas:formNueva:panelAgregarReceta" />
+                                    </div>
+                                </p:outputPanel>
+                            </p:dialog>
+                            <br/>
+                            <div align="center" >
+                                <p:commandButton value="Guardar" action="#{beanGeneral.guardarConsultaMedica()}"
+                                                 icon="ui-icon-disk" update=":tabsConsultas:formNueva"/>
+                            </div>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="Historial" >
+                    <h:form id="formHistorial" >
+                        <p:panel >
+                            <div align="center">
+                                <p:outputLabel value="Identificación paciente: " style="font-weight: bold"/>
+                                <p:inputText value="#{beanGeneral.identificacionPacienteConsultas}" style="width: 20%" />
+                                <p:spacer width="2%" />
+                                <p:commandButton value="Buscar" icon="ui-icon-search" action="#{beanGeneral.buscarConsultasPaciente()}"
+                                                 update="tablaConsultas panelResultadoConsulta"/>
+                            </div>
+                        </p:panel>
+                        <br/>
+                        <p:panel id="panelResultadoConsulta" >
+                            <h:panelGrid columns="2" columnClasses="derechaNegrita, izquierda" style="margin-left: 43%">
+                                <p:outputLabel value="Identificación:" />
+                                <p:outputLabel value="#{beanGeneral.pacienteConsulta.usuario.identificacion}" />
+                                <p:outputLabel value="Nombre:" />
+                                <p:outputLabel value="#{beanGeneral.pacienteConsulta.usuario.nombre}" />
+
+                                <p:outputLabel value="Apellidos:" />
+                                <p:outputLabel value="#{beanGeneral.pacienteConsulta.usuario.apellidos}" />
+                            </h:panelGrid>
+                            <p:dataTable id="tablaConsultas" value="#{beanGeneral.lstConsultasPorMedico}" var="consulta"
+                                         emptyMessage="No hay consultas realizadas a este paciente.">
+
+                                <p:column style="width: 1em" >
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column headerText="Peso" >
+                                    <p:outputLabel value="#{consulta.peso}" />
+                                </p:column>
+                                <p:column headerText="Estatura" >
+                                    <p:outputLabel value="#{consulta.altura}" />
+                                </p:column>
+                                <p:column headerText="Deportes" >
+                                    <p:outputLabel value="#{consulta.deportes}" />
+                                </p:column>
+
+                                <p:rowExpansion>
+                                    <p:panel id="panelDetalle" header="Consulta">
+                                        <h:panelGrid id="detalleConsulta" rendered="true" 
+                                                     columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                                     styleClass="stylePanelGrid">
+
+                                            <p:outputLabel value="Médico: " styleClass="styleInputText2" />
+                                            <p:outputLabel value="#{consulta.medico.usuario.nombre} #{consulta.medico.usuario.apellidos}" 
+                                                           styleClass="styleInputText2" />
+
+                                            <p:outputLabel value="Paciente:" styleClass="styleInputText2"/>
+                                            <p:outputLabel value="#{consulta.paciente.usuario.identificacion}, #{consulta.paciente.usuario.nombre} #{consulta.paciente.usuario.apellidos}" 
+                                                           styleClass="styleInputText2"/>
+
+                                            <p:outputLabel value="Peso (Kg):" styleClass="styleInputText2"/>
+                                            <p:outputLabel value="#{consulta.peso}" styleClass="styleInputText2"/>
+
+                                            <p:outputLabel value="Estatura (cm):" styleClass="styleInputText2"/>
+                                            <p:outputLabel value="#{consulta.altura}" styleClass="styleInputText2"/>
+
+                                            <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
+                                            <p:outputLabel value="#{consulta.deportes}" styleClass="styleInputText2"/>
+
+                                        </h:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="2" styleClass="stylePanelGrid">
+                                            <p:dataList value="#{consulta.enfermedadCollection}" var="enfermedad" type="ordered"
+                                                        emptyMessage="No se detectó enfermedades.">
+                                                <f:facet name="header">Enfermedades identificadas</f:facet>
+                                                    #{enfermedad.nombre}
+                                            </p:dataList>
+                                            <p:dataList value="#{consulta.grupoApoyoCollection}" var="grupoApoyo" type="ordered"
+                                                        emptyMessage="No pertenece a ningún grupo de apoyo.">
+                                                <f:facet name="header">Grupos de apoyo del paciente</f:facet>
+                                                    #{grupoApoyo.nombre}
+                                            </p:dataList>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:dataTable id="tablaRecetas" value="#{consulta.recetaMedicaCollection}" var="receta"
+                                                     emptyMessage="No hay recetas." >
+                                            <f:facet name="header" >Recetas</f:facet>
+                                            <p:column headerText="Medicamento" >
+                                                <p:outputLabel value="#{receta.medicamento.nombre}" />
+                                            </p:column>
+                                            <p:column headerText="Dosis" >
+                                                <p:outputLabel value="#{receta.dosis}" />
+                                            </p:column>
+                                            <p:column headerText="Periodicidad (por día)" >
+                                                <p:outputLabel value="#{receta.periodicidad}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha Inicio" >
+                                                <p:outputLabel value="#{receta.fechaInicio}" >
+                                                    <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                                </p:outputLabel>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </p:panel>
+                                    <br/>
+                                    <div align="right" >
+                                        <p:commandButton value="Imprimir" icon="ui-icon-print">
+                                            <p:printer target="panelDetalle" />
+                                        </p:commandButton>
+                                    </div>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </ui:define>
+
+    </ui:composition>
+</html>

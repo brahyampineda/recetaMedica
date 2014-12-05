@@ -3,64 +3,72 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "tratamiento")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Tratamiento.findAll", query = "SELECT t FROM Tratamiento t"),
-    @NamedQuery(name = "Tratamiento.findByIdTratamiento", query = "SELECT t FROM Tratamiento t WHERE t.idTratamiento = :idTratamiento"),
-    @NamedQuery(name = "Tratamiento.findByNombre", query = "SELECT t FROM Tratamiento t WHERE t.nombre = :nombre")})
+    @NamedQuery(name = "Tratamiento.findByIdTratamiento", query = "SELECT t FROM Tratamiento t WHERE t.tratamientoPK.idTratamiento = :idTratamiento"),
+    @NamedQuery(name = "Tratamiento.findByNombre", query = "SELECT t FROM Tratamiento t WHERE t.nombre = :nombre"),
+    @NamedQuery(name = "Tratamiento.findByDescripcion", query = "SELECT t FROM Tratamiento t WHERE t.descripcion = :descripcion"),
+    @NamedQuery(name = "Tratamiento.findByEnfermedadidEnfermedad1", query = "SELECT t FROM Tratamiento t WHERE t.tratamientoPK.enfermedadidEnfermedad1 = :enfermedadidEnfermedad1")})
 public class Tratamiento implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "idTratamiento")
-    private Integer idTratamiento;
+    @EmbeddedId
+    protected TratamientoPK tratamientoPK;
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @ManyToMany(mappedBy = "tratamientoCollection")
-    private Collection<MedicoEspecialista> medicoEspecialistaCollection;
+    @Size(max = 300)
+    @Column(name = "descripcion")
+    private String descripcion;
     @ManyToMany(mappedBy = "tratamientoCollection")
     private Collection<Paciente> pacienteCollection;
     @ManyToMany(mappedBy = "tratamientoCollection")
-    private Collection<MedicoGeneral> medicoGeneralCollection;
+    private Collection<Medico> medicoCollection;
+    @JoinColumn(name = "Enfermedad_idEnfermedad1", referencedColumnName = "idEnfermedad", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Enfermedad enfermedad;
 
     public Tratamiento() {
     }
 
-    public Tratamiento(Integer idTratamiento) {
-        this.idTratamiento = idTratamiento;
+    public Tratamiento(TratamientoPK tratamientoPK) {
+        this.tratamientoPK = tratamientoPK;
     }
 
-    public Integer getIdTratamiento() {
-        return idTratamiento;
+    public Tratamiento(int idTratamiento, int enfermedadidEnfermedad1) {
+        this.tratamientoPK = new TratamientoPK(idTratamiento, enfermedadidEnfermedad1);
     }
 
-    public void setIdTratamiento(Integer idTratamiento) {
-        this.idTratamiento = idTratamiento;
+    public TratamientoPK getTratamientoPK() {
+        return tratamientoPK;
+    }
+
+    public void setTratamientoPK(TratamientoPK tratamientoPK) {
+        this.tratamientoPK = tratamientoPK;
     }
 
     public String getNombre() {
@@ -71,13 +79,12 @@ public class Tratamiento implements Serializable {
         this.nombre = nombre;
     }
 
-    @XmlTransient
-    public Collection<MedicoEspecialista> getMedicoEspecialistaCollection() {
-        return medicoEspecialistaCollection;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setMedicoEspecialistaCollection(Collection<MedicoEspecialista> medicoEspecialistaCollection) {
-        this.medicoEspecialistaCollection = medicoEspecialistaCollection;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @XmlTransient
@@ -90,18 +97,26 @@ public class Tratamiento implements Serializable {
     }
 
     @XmlTransient
-    public Collection<MedicoGeneral> getMedicoGeneralCollection() {
-        return medicoGeneralCollection;
+    public Collection<Medico> getMedicoCollection() {
+        return medicoCollection;
     }
 
-    public void setMedicoGeneralCollection(Collection<MedicoGeneral> medicoGeneralCollection) {
-        this.medicoGeneralCollection = medicoGeneralCollection;
+    public void setMedicoCollection(Collection<Medico> medicoCollection) {
+        this.medicoCollection = medicoCollection;
+    }
+
+    public Enfermedad getEnfermedad() {
+        return enfermedad;
+    }
+
+    public void setEnfermedad(Enfermedad enfermedad) {
+        this.enfermedad = enfermedad;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTratamiento != null ? idTratamiento.hashCode() : 0);
+        hash += (tratamientoPK != null ? tratamientoPK.hashCode() : 0);
         return hash;
     }
 
@@ -112,7 +127,7 @@ public class Tratamiento implements Serializable {
             return false;
         }
         Tratamiento other = (Tratamiento) object;
-        if ((this.idTratamiento == null && other.idTratamiento != null) || (this.idTratamiento != null && !this.idTratamiento.equals(other.idTratamiento))) {
+        if ((this.tratamientoPK == null && other.tratamientoPK != null) || (this.tratamientoPK != null && !this.tratamientoPK.equals(other.tratamientoPK))) {
             return false;
         }
         return true;
@@ -120,7 +135,7 @@ public class Tratamiento implements Serializable {
 
     @Override
     public String toString() {
-        return "com.utp.receta_medica.entidades.Tratamiento[ idTratamiento=" + idTratamiento + " ]";
+        return "com.utp.receta_medica.entidades.Tratamiento[ tratamientoPK=" + tratamientoPK + " ]";
     }
     
 }

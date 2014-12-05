@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./index.xhtml">
+
+        <ui:define name="titulo">
+            Consultas
+        </ui:define>
+
+        <ui:define name="imgindex">
+            <a href="../faces/perfilPaciente.xhtml" title="Ir a perfil">
+                <p:graphicImage id="imgLogo" height="60em" style="margin: 5px 2px"
+                                value="/resources/imagenes/iconos/logo-web.jpg"/>
+            </a>
+        </ui:define>
+
+        <ui:define name="contenido">
+            <h:form id="formConsulta" >
+                <p:panel>
+                    <p:dataTable id="tablaHistorial" value="#{beanGeneral.pacienteActual.consultaCollection}" var="consulta"
+                                 emptyMessage="No hay consultas." >
+                        <p:column style="width: 1em">
+                            <p:rowToggler  />
+                        </p:column>
+                        <p:column headerText="Médico" >
+                            <p:outputLabel value="#{consulta.medico.usuario.nombre} #{consulta.medico.usuario.apellidos}" />
+                        </p:column>
+                        <p:column headerText="Peso" >
+                            <p:outputLabel value="#{consulta.peso} kg" />
+                        </p:column>
+                        <p:column headerText="Estatura" >
+                            <p:outputLabel value="#{consulta.altura} cm" />
+                        </p:column>
+                        <p:column headerText="Deportes que practica" >
+                            <p:outputLabel value="#{consulta.deportes}" />
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:panel id="panelHistorial" header="Consulta">
+                                <h:panelGrid id="detalleConsulta" rendered="true" 
+                                             columns="4" columnClasses="derechaNegrita, izquierda, derechaNegrita, izquierda" 
+                                             styleClass="stylePanelGrid">
+
+                                    <p:outputLabel value="Médico: " styleClass="styleInputText2" />
+                                    <p:outputLabel value="#{consulta.medico.usuario.nombre} #{consulta.medico.usuario.apellidos}" styleClass="styleInputText2" />
+
+                                    <p:outputLabel value="Peso:" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.peso} kg" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Estatura:" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.altura} cm" styleClass="styleInputText2"/>
+
+                                    <p:outputLabel value="Deportes que practica:" styleClass="styleInputText2"/>
+                                    <p:outputLabel value="#{consulta.deportes}" styleClass="styleInputText2"/>
+
+                                </h:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="2" >
+                                    <p:dataList value="#{consulta.enfermedadCollection}" var="enfermedad" type="ordered"
+                                                emptyMessage="No se detectó enfermedades.">
+                                        <f:facet name="header">Enfermedades identificadas</f:facet>
+                                            #{enfermedad.nombre}
+                                    </p:dataList>
+                                    <p:dataList value="#{consulta.grupoApoyoCollection}" var="grupoApoyo" type="ordered"
+                                                emptyMessage="No pertenece a ningún grupo de apoyo.">
+                                        <f:facet name="header">Grupos de apoyo del paciente</f:facet>
+                                            #{grupoApoyo.nombre}
+                                    </p:dataList>
+                                </p:panelGrid>
+                                <br/>
+                                <p:dataTable id="tablaRecetas" emptyMessage="No hay recetas." 
+                                             value="#{consulta.recetaMedicaCollection}" var="receta">
+                                    <f:facet name="header" >Recetas</f:facet>
+                                    <p:column headerText="Medicamento" >
+                                        <p:outputLabel value="#{receta.medicamento.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Dosis" >
+                                        <p:outputLabel value="#{receta.dosis}" />
+                                    </p:column>
+                                    <p:column headerText="Periodicidad (por día)" >
+                                        <p:outputLabel value="#{receta.periodicidad}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha Inicio" >
+                                        <p:outputLabel value="#{receta.fechaInicio}" >
+                                            <f:convertDateTime type="both" pattern="d MMM yyyy" timeZone="America/Bogota"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                            <br/>
+                            <div align="right" >
+                                <p:commandButton value="Imprimir" icon="ui-icon-print">
+                                    <p:printer target="panelHistorial" />
+                                </p:commandButton>
+                            </div>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
+</html>

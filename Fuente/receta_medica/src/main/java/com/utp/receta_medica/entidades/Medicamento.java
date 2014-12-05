@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.utp.receta_medica.entidades;
 
 import java.io.Serializable;
@@ -16,7 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author JorgeRivera
+ * @author Brahyam
  */
 @Entity
 @Table(name = "medicamento")
@@ -40,7 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Medicamento.findByContraindicaciones", query = "SELECT m FROM Medicamento m WHERE m.contraindicaciones = :contraindicaciones"),
     @NamedQuery(name = "Medicamento.findByPresentacion", query = "SELECT m FROM Medicamento m WHERE m.presentacion = :presentacion"),
     @NamedQuery(name = "Medicamento.findByDosisUsual", query = "SELECT m FROM Medicamento m WHERE m.dosisUsual = :dosisUsual"),
-    @NamedQuery(name = "Medicamento.findByCantidad", query = "SELECT m FROM Medicamento m WHERE m.cantidad = :cantidad")})
+    @NamedQuery(name = "Medicamento.findByCantidad", query = "SELECT m FROM Medicamento m WHERE m.cantidad = :cantidad"),
+    @NamedQuery(name = "Medicamento.findByEsPos", query = "SELECT m FROM Medicamento m WHERE m.esPos = :esPos")})
 public class Medicamento implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,40 +55,40 @@ public class Medicamento implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
+    @Min(value=0)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
-    private Integer precio;
-    @Size(max = 45)
+    private Float precio;
+    @Size(max = 300)
     @Column(name = "composicion")
     private String composicion;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "indicaciones")
     private String indicaciones;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "precauciones")
     private String precauciones;
-    @Size(max = 200)
+    @Size(max = 300)
     @Column(name = "contraindicaciones")
     private String contraindicaciones;
-    @Size(max = 45)
     @Column(name = "presentacion")
-    private String presentacion;
-    @Size(max = 45)
+    private Integer presentacion;
     @Column(name = "dosis_usual")
-    private String dosisUsual;
+    private Integer dosisUsual;
     @Column(name = "cantidad")
     private Integer cantidad;
-    @JoinTable(name = "medico_especialista_has_medicamento", joinColumns = {
+    @Column(name = "es_pos")
+    private Boolean esPos;
+    @JoinTable(name = "medico_has_medicamento", joinColumns = {
         @JoinColumn(name = "Medicamento_idMedicamento", referencedColumnName = "idMedicamento")}, inverseJoinColumns = {
-        @JoinColumn(name = "Medico_especialista_idMedico_especialista", referencedColumnName = "idMedico_especialista"),
-        @JoinColumn(name = "Medico_especialista_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
+        @JoinColumn(name = "Medico_identificacion", referencedColumnName = "identificacion")})
     @ManyToMany
-    private Collection<MedicoEspecialista> medicoEspecialistaCollection;
-    @JoinTable(name = "medico_general_has_medicamento", joinColumns = {
-        @JoinColumn(name = "Medicamento_idMedicamento", referencedColumnName = "idMedicamento")}, inverseJoinColumns = {
-        @JoinColumn(name = "Medico_general_idMedico_general", referencedColumnName = "idMedico_general"),
-        @JoinColumn(name = "Medico_general_Usuario_idUsuario", referencedColumnName = "Usuario_idUsuario")})
-    @ManyToMany
-    private Collection<MedicoGeneral> medicoGeneralCollection;
+    private Collection<Medico> medicoCollection;
+    @ManyToMany(mappedBy = "medicamentoCollection")
+    private Collection<Laboratorio> laboratorioCollection;
+    @OneToMany(mappedBy = "medicamento")
+    private Collection<RecetaMedica> recetaMedicaCollection;
+    @OneToMany(mappedBy = "medicamento")
+    private Collection<CantidadMedicamento> cantidadMedicamentoCollection;
 
     public Medicamento() {
     }
@@ -109,11 +113,11 @@ public class Medicamento implements Serializable {
         this.nombre = nombre;
     }
 
-    public Integer getPrecio() {
+    public Float getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Float precio) {
         this.precio = precio;
     }
 
@@ -149,19 +153,19 @@ public class Medicamento implements Serializable {
         this.contraindicaciones = contraindicaciones;
     }
 
-    public String getPresentacion() {
+    public Integer getPresentacion() {
         return presentacion;
     }
 
-    public void setPresentacion(String presentacion) {
+    public void setPresentacion(Integer presentacion) {
         this.presentacion = presentacion;
     }
 
-    public String getDosisUsual() {
+    public Integer getDosisUsual() {
         return dosisUsual;
     }
 
-    public void setDosisUsual(String dosisUsual) {
+    public void setDosisUsual(Integer dosisUsual) {
         this.dosisUsual = dosisUsual;
     }
 
@@ -173,22 +177,48 @@ public class Medicamento implements Serializable {
         this.cantidad = cantidad;
     }
 
+    public Boolean getEsPos() {
+        return esPos;
+    }
+
+    public void setEsPos(Boolean esPos) {
+        this.esPos = esPos;
+    }
+
     @XmlTransient
-    public Collection<MedicoEspecialista> getMedicoEspecialistaCollection() {
-        return medicoEspecialistaCollection;
+    public Collection<Medico> getMedicoCollection() {
+        return medicoCollection;
     }
 
-    public void setMedicoEspecialistaCollection(Collection<MedicoEspecialista> medicoEspecialistaCollection) {
-        this.medicoEspecialistaCollection = medicoEspecialistaCollection;
+    public void setMedicoCollection(Collection<Medico> medicoCollection) {
+        this.medicoCollection = medicoCollection;
     }
 
     @XmlTransient
-    public Collection<MedicoGeneral> getMedicoGeneralCollection() {
-        return medicoGeneralCollection;
+    public Collection<Laboratorio> getLaboratorioCollection() {
+        return laboratorioCollection;
     }
 
-    public void setMedicoGeneralCollection(Collection<MedicoGeneral> medicoGeneralCollection) {
-        this.medicoGeneralCollection = medicoGeneralCollection;
+    public void setLaboratorioCollection(Collection<Laboratorio> laboratorioCollection) {
+        this.laboratorioCollection = laboratorioCollection;
+    }
+
+    @XmlTransient
+    public Collection<RecetaMedica> getRecetaMedicaCollection() {
+        return recetaMedicaCollection;
+    }
+
+    public void setRecetaMedicaCollection(Collection<RecetaMedica> recetaMedicaCollection) {
+        this.recetaMedicaCollection = recetaMedicaCollection;
+    }
+
+    @XmlTransient
+    public Collection<CantidadMedicamento> getCantidadMedicamentoCollection() {
+        return cantidadMedicamentoCollection;
+    }
+
+    public void setCantidadMedicamentoCollection(Collection<CantidadMedicamento> cantidadMedicamentoCollection) {
+        this.cantidadMedicamentoCollection = cantidadMedicamentoCollection;
     }
 
     @Override
