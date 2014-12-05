@@ -485,7 +485,9 @@ public class BeanAdministrador implements Serializable {
         try {
             String email = registro.getUsuario().getEmail();
             String nombreUsuario = registro.getUsuario().getNombre();
-            crud.eliminar(registro.getUsuario());
+            Usuario aux = registro.getUsuario();
+            crud.eliminar(registro);
+            crud.eliminar(aux);
             beanGeneral.enviarCorreo(getAdministrador().getUsuario().getEmail(), email,
                     "Solicitud de registro rechazada", "Señ@r " + nombreUsuario + ",\n\n"
                     + "Lamentamos informarle que su solicitud de registro ha sido rechazada."
